@@ -130,7 +130,7 @@ class TournamentSubScreenState extends State<TournamentSubScreen>
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => my_tournamentCreateEntityScreen(),
+                      builder: (context) => MyTournamentCreateEntityScreen(),
                     ),
                   );
                 },

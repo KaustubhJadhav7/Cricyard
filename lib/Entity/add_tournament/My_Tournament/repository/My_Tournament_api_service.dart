@@ -210,17 +210,22 @@ import 'package:http_parser/http_parser.dart';
 
 import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:cricyard/providers/token_manager.dart';
+import 'package:cricyard/data/network/base_network_service.dart';
+
 import '/resources/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'dart:typed_data';
 
 class MyTournamentApiService {
   final String baseUrl = ApiConstants.baseUrl;
-  final NetworkApiService networkService = NetworkApiService();
+  BaseNetworkService networkService = NetworkApiService();
 
   Future<List<Map<String, dynamic>>> getEntities(String token) async {
     try {
-      final response = await networkService.getGetApiResponse('$baseUrl/My_Tournament/My_Tournament');
+      // final response = await networkService.getGetApiResponse('$baseUrl/My_Tournament/My_Tournament');
+      final response = await networkService
+          .getGetApiResponse(ApiConstants.getEntitiesMyTournament);
+
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -231,8 +236,11 @@ class MyTournamentApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(
       String token, int page, int size) async {
     try {
+      // final response = await networkService.getGetApiResponse(
+      //     '$baseUrl/My_Tournament/My_Tournament/getall/page?page=$page&size=$size');
       final response = await networkService.getGetApiResponse(
-          '$baseUrl/My_Tournament/My_Tournament/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationMyTournament}?page=$page&size=$size');
+
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -244,10 +252,13 @@ class MyTournamentApiService {
   Future<Map<String, dynamic>> createEntity(
       String token, Map<String, dynamic> entity) async {
     try {
+      // final response = await networkService.getPostApiResponse(
+      //   '$baseUrl/My_Tournament/My_Tournament',
+      //   entity,
+      // );
       final response = await networkService.getPostApiResponse(
-        '$baseUrl/My_Tournament/My_Tournament',
-        entity,
-      );
+          ApiConstants.createEntityMyTournament, entity);
+
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -258,7 +269,8 @@ class MyTournamentApiService {
   Future<void> uploadlogoimage(String token, String ref, String refTableNmae,
       String selectedFilePath, Uint8List image_timageBytes) async {
     try {
-      String apiUrl = "$baseUrl/FileUpload/Uploadeddocs/$ref/$refTableNmae";
+      // String apiUrl = "$baseUrl/FileUpload/Uploadeddocs/$ref/$refTableNmae";
+      String apiUrl = '${ApiConstants.uploadLogoImage}/$ref/$refTableNmae';
 
       final Uint8List fileBytes = image_timageBytes!;
       final mimeType = logolookupMimeType(selectedFilePath);
@@ -309,10 +321,14 @@ class MyTournamentApiService {
   Future<void> updateEntity(
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
+      // await networkService.getPutApiResponse(
+      //   '$baseUrl/My_Tournament/My_Tournament/$entityId',
+      //   entity,
+      // );
       await networkService.getPutApiResponse(
-        '$baseUrl/My_Tournament/My_Tournament/$entityId',
-        entity,
-      );
+          ApiConstants.updateEntityMyTournament
+              .replaceFirst('{entityId}', entityId.toString()),
+          entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -320,7 +336,10 @@ class MyTournamentApiService {
 
   Future<void> deleteEntity(String token, int entityId) async {
     try {
-      await networkService.getDeleteApiResponse('$baseUrl/My_Tournament/My_Tournament/$entityId');
+      // await networkService.getDeleteApiResponse('$baseUrl/My_Tournament/My_Tournament/$entityId');
+      await networkService.getDeleteApiResponse(ApiConstants
+          .deleteEntityMyTournament
+          .replaceFirst('{entityId}', entityId.toString()));
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
@@ -328,8 +347,11 @@ class MyTournamentApiService {
 
   Future<List<Map<String, dynamic>>> getTournamentName(String token) async {
     try {
-      final response = await networkService.getGetApiResponse(
-          '$baseUrl/Tournament_List_ListFilter1/Tournament_List_ListFilter1');
+      // final response = await networkService.getGetApiResponse(
+      //     '$baseUrl/Tournament_List_ListFilter1/Tournament_List_ListFilter1');
+      final response = await networkService
+          .getGetApiResponse(ApiConstants.getTournamentName);
+
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -337,14 +359,17 @@ class MyTournamentApiService {
     }
   }
 
-  Future<Map<String, dynamic>> registerTournament(Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> registerTournament(
+      Map<String, dynamic> entity) async {
     try {
-      final token = await TokenManager.getToken();
+      // final response = await networkService.getPostApiResponse(
+      //   '$baseUrl/tournament/Register_tournament',
+      //   entity,
+      // token: token,
+      // );
       final response = await networkService.getPostApiResponse(
-        '$baseUrl/tournament/Register_tournament',
-        entity,
-        // token: token,
-      );
+          ApiConstants.registerTournament, entity);
+
       return response;
     } catch (e) {
       throw Exception('Failed to register tournament: $e');
@@ -353,8 +378,11 @@ class MyTournamentApiService {
 
   Future<List<Map<String, dynamic>>> getEnrolledTournament(String token) async {
     try {
-      final response = await networkService.getGetApiResponse(
-          '$baseUrl/My_Tournament/My_Tournament/myTour');
+      // final response = await networkService.getGetApiResponse(
+      //     '$baseUrl/My_Tournament/My_Tournament/myTour');
+      final response = await networkService
+          .getGetApiResponse(ApiConstants.getEnrolledTournament);
+
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -364,8 +392,11 @@ class MyTournamentApiService {
 
   Future<List<Map<String, dynamic>>> getMyTournament(String token) async {
     try {
-      final response = await networkService.getGetApiResponse(
-          '$baseUrl/My_Tournament/My_Tournament/creted/myTour');
+      // final response = await networkService.getGetApiResponse(
+      //     '$baseUrl/My_Tournament/My_Tournament/creted/myTour');
+      final response =
+          await networkService.getGetApiResponse(ApiConstants.getMyTournament);
+
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -375,8 +406,11 @@ class MyTournamentApiService {
 
   Future<List<Map<String, dynamic>>> getAllByUserId(String token) async {
     try {
-      final response = await networkService.getGetApiResponse(
-          '$baseUrl/tournament/Register_tournament/userid');
+      // final response = await networkService.getGetApiResponse(
+      //     '$baseUrl/tournament/Register_tournament/userid');
+      final response =
+          await networkService.getGetApiResponse(ApiConstants.getAllByUserId);
+
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {

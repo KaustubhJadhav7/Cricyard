@@ -8,7 +8,7 @@ import '../../../../widgets/custom_icon_button.dart';
 import '../../../ReuseableWidgets/BottomAppBarWidget.dart';
 import 'my_data_ui.dart';
 import 'widgets/scoreboardcardlist_item_widget.dart';
-import 'package:cricyard/Entity/add_tournament/My_Tournament/viewmodel/My_Tournament_api_service.dart';
+import 'package:cricyard/Entity/add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
 
 class MyTournamnetScreen extends StatefulWidget {
   const MyTournamnetScreen({Key? key}) : super(key: key);

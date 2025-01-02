@@ -11,7 +11,7 @@ import '../../../../Utils/size_utils.dart';
 import '../../../../core/utils/image_constant.dart';
 import '../../../../theme/theme_helper.dart';
 import '../../../../views/widgets/custom_image_view.dart';
-import '../viewmodel/My_Tournament_api_service.dart';
+import '../repository/My_Tournament_api_service.dart';
 
 class TournamentForm extends StatefulWidget {
   @override

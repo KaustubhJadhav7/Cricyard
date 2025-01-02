@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cricyard/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
-import '../../../../../Entity/add_tournament/My_Tournament/viewmodel/My_Tournament_api_service.dart';
+import '../../../../../Entity/add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
 import '../../../../../Entity/team/viewmodels/Teams_api_service.dart';
 import '../../../../../Utils/image_constant.dart';
 import '../../../../../Utils/size_utils.dart';

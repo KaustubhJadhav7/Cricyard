@@ -5,6 +5,10 @@ import 'core/utils/size_utils.dart';
 import 'routes/app_routes.dart';
 import 'views/screens/MenuScreen/merch/provider/product_data_provider.dart';
 import 'theme/theme_helper.dart';
+import 'package:cricyard/Entity/absent_hurt/Absent_hurt/viewmodel/absent_hurt_viewmodel.dart';
+import 'package:cricyard/Entity/add_tournament/My_Tournament/viewmodel/My_Tournament_viewmodel.dart';
+import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
+// lib\views\screens\practice_match\viewmodel\practice_matchview_model.dart
 
 //const simplePeriodicTask = "simplePeriodicTask";
 
@@ -44,6 +48,15 @@ void main() async {
       ChangeNotifierProvider(
         create: (context) => ProductProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (context) => PracticeMatchviewModel(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AbsentHurtProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MyTournamentProvider(),
+      )
     ],
     child: MyApp(),
   ));

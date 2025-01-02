@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../Entity/add_tournament/My_Tournament/viewmodel/My_Tournament_api_service.dart';
+import '../../../../../Entity/add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
 import '../../../../../Entity/matches/Match/viewmodel/Match_api_service.dart';
 import '../../../../../Entity/team/viewmodels/Teams_api_service.dart';
 import '../../../../../Utils/size_utils.dart';

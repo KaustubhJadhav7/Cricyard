@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/My_Tournament_api_service.dart';
+import '../repository/My_Tournament_api_service.dart';
 import 'My_Tournament_create_entity_screen.dart';
 import 'My_Tournament_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -14,9 +14,12 @@ import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
+import '../viewmodel/My_Tournament_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class my_tournament_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
+  
 
   @override
   _my_tournament_entity_list_screenState createState() =>
@@ -29,6 +32,7 @@ class _my_tournament_entity_list_screenState
   List<Map<String, dynamic>> entities = [];
   List<Map<String, dynamic>> filteredEntities = [];
   List<Map<String, dynamic>> serachEntities = [];
+  
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
@@ -46,6 +50,7 @@ class _my_tournament_entity_list_screenState
     fetchEntities();
     _scrollController.addListener(_scrollListener);
     fetchwithoutpaging();
+    
   }
 
   Future<void> fetchwithoutpaging() async {
@@ -322,7 +327,7 @@ class _my_tournament_entity_list_screenState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => my_tournamentCreateEntityScreen(),
+              builder: (context) => MyTournamentCreateEntityScreen(),
             ),
           ).then((_) {
             fetchEntities();

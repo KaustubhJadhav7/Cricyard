@@ -72,18 +72,22 @@
 // }
 import '../../../../resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart';
+import 'package:cricyard/data/network/base_network_service.dart';
 
 class AbsentHurtApiService {
   final String baseUrl = ApiConstants.baseUrl;
-  final NetworkApiService _networkApiService = NetworkApiService();
+  // final NetworkApiService _networkApiService = NetworkApiService();
+  BaseNetworkService _networkApiService = NetworkApiService();
 
   // Constructor to inject NetworkApiService
   // AbsentHurtApiService(this._networkApiService);
 
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Absent_hurt/Absent_hurt');
+      // final response = await _networkApiService.getGetApiResponse(
+      //     '$baseUrl/Absent_hurt/Absent_hurt');
+      final response = await _networkApiService.getGetApiResponse(ApiConstants.getEntitiesAbsenthurt);
+
       // Assuming the response is a List of maps
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
@@ -91,11 +95,13 @@ class AbsentHurtApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
+      // final response = await _networkApiService.getGetApiResponse(
+      //     '$baseUrl/Absent_hurt/Absent_hurt/getall/page?page=$page&size=$size');
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Absent_hurt/Absent_hurt/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationAbsenthurt}?page=$page&size=$size');
+
       // Assuming the response has 'content' key with the data
       return (response['content'] as List).cast<Map<String, dynamic>>();
     } catch (e) {
@@ -103,11 +109,10 @@ class AbsentHurtApiService {
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
-      final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/Absent_hurt/Absent_hurt', entity);
+      final response = await _networkApiService.getPostApiResponse(ApiConstants.createEntityAbsenthurt, entity);
+
       // Assuming the response is a Map<String, dynamic>
       return response as Map<String, dynamic>;
     } catch (e) {
@@ -119,17 +124,17 @@ class AbsentHurtApiService {
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
-          '$baseUrl/Absent_hurt/Absent_hurt/$entityId', entity);
-      print(entity);
+  ApiConstants.updateEntityAbsenthurt.replaceFirst('{entityId}', entityId.toString()), entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/Absent_hurt/Absent_hurt/$entityId');
+  ApiConstants.deleteEntityAbsenthurt.replaceFirst('{entityId}', entityId.toString()));
+
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
