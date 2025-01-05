@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Cricket_api_service.dart';
+import '../repository/Cricket_api_service.dart';
 import 'Cricket_create_entity_screen.dart';
 import 'Cricket_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -14,6 +13,9 @@ import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
+import 'package:provider/provider.dart';
+import '../viewmodel/Cricket_viewmodel.dart';
+import '../model/cricket_model.dart';
 
 class cricket_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
@@ -25,197 +27,197 @@ class cricket_entity_list_screen extends StatefulWidget {
 
 class _cricket_entity_list_screenState
     extends State<cricket_entity_list_screen> {
+      
   final CricketApiService apiService = CricketApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
-
-  bool showCardView = true; // Add this variable to control the view mode
-  TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
-
-  bool isLoading = false; // Add this variable to track loading state
-  int currentPage = 0;
-  int pageSize = 10; // Adjust this based on your backend API
+  CricketEntity cricketEntity = CricketEntity();
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> searchEntities = [];
+  // bool showCardView = true; // Add this variable to control the view mode
+  // late stt.SpeechToText _speech;
+  // bool isLoading = false; // Add this variable to track loading state
+  // int currentPage = 0;
+  // int pageSize = 10; // Adjust this based on your backend API
 
   final ScrollController _scrollController = ScrollController();
+  late CricketListModel cricketListModel;
+  
   @override
   void initState() {
-    _speech = stt.SpeechToText();
+    final cricketProvider = Provider.of<CricketProvider>(context, listen: false);
     super.initState();
-    fetchEntities();
     _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
+    cricketProvider.fetchEntities();
+    cricketProvider.fetchWithoutPaging();
   }
 
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Cricket entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Cricket: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities(token!);
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Cricket entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Cricket: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Cricket data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(token, currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Cricket data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   void _scrollListener() {
+    final cricketProvider = Provider.of<CricketProvider>(context);
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      fetchEntities();
+      cricketProvider.fetchEntities();
     }
   }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(token!, entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['audio_language']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
-    });
-  }
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['audio_language']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // void _startListening() async {
+  //   final cricketProvider = Provider.of<CricketProvider>(context);
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             cricketProvider.searchController.text = result.recognizedWords;
+  //             cricketProvider.searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
-
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    // _speech.cancel();
     super.dispose();
   }
 
@@ -225,6 +227,7 @@ class _cricket_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final cricketProvider = Provider.of<CricketProvider>(context);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -244,10 +247,10 @@ class _cricket_entity_list_screenState
           Switch(
             activeColor: Colors.greenAccent,
             inactiveThumbColor: Colors.white,
-            value: showCardView,
+            value: cricketListModel.showCardView,
             onChanged: (value) {
               setState(() {
-                showCardView = value;
+                cricketListModel.showCardView = value;
               });
             },
           ),
@@ -255,18 +258,18 @@ class _cricket_entity_list_screenState
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          cricketListModel.currentPage = 1;
+          cricketListModel.entities.clear();
+          await cricketProvider.fetchEntities();
         },
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: searchController,
+                controller: cricketProvider.searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  cricketProvider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -280,7 +283,7 @@ class _cricket_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      cricketProvider.startListening();
                     },
                   ),
                 ),
@@ -288,10 +291,10 @@ class _cricket_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: cricketListModel.filteredEntities.length + (cricketListModel.isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < cricketListModel.filteredEntities.length) {
+                    final entity = cricketListModel.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
@@ -314,10 +317,10 @@ class _cricket_entity_list_screenState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => cricketCreateEntityScreen(),
+              builder: (context) => CricketCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            cricketProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -326,7 +329,7 @@ class _cricket_entity_list_screenState
   }
 
   Widget _buildListItem(Map<String, dynamic> entity) {
-    return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
+    return cricketListModel.showCardView ? _buildCardView(entity) : _buildNormalView(entity);
   }
 
   // Function to build card view for a list item
@@ -343,6 +346,7 @@ class _cricket_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
+    final cricketProvider = Provider.of<CricketProvider>(context);
 
     return SizedBox(
       width: double.maxFinite,
@@ -438,10 +442,10 @@ class _cricket_entity_list_screenState
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                cricketUpdateEntityScreen(entity: entity),
+                                CricketUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          cricketProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -462,8 +466,8 @@ class _cricket_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    cricketProvider.deleteEntity(entity)
+                                        .then((value) => {cricketProvider.fetchEntities()});
                                   },
                                 ),
                               ],

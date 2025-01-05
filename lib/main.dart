@@ -7,12 +7,14 @@ import 'views/screens/MenuScreen/merch/provider/product_data_provider.dart';
 import 'theme/theme_helper.dart';
 import 'package:cricyard/Entity/absent_hurt/Absent_hurt/viewmodel/absent_hurt_viewmodel.dart';
 import 'package:cricyard/Entity/add_tournament/My_Tournament/viewmodel/My_Tournament_viewmodel.dart';
+import 'package:cricyard/Entity/contact_us/Contact_us/viewmodel/Contact_us_viewmodel.dart';
+import 'package:cricyard/Entity/cricket/Cricket/viewmodel/Cricket_viewmodel.dart';
+import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
 import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
+
 // lib\views\screens\practice_match\viewmodel\practice_matchview_model.dart
-
 //const simplePeriodicTask = "simplePeriodicTask";
-
-// void showNotification(String v, FlutterLocalNotificationsPlugin flp) async {
+// void showNotification(String v, FlutterLocalNotificationsPlugin flpe) async {
 //   var android = const AndroidNotificationDetails(
 //     'channel id',
 //     'channel NAME',
@@ -55,8 +57,17 @@ void main() async {
         create: (_) => AbsentHurtProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => ContactUsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => CricketProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => MyTournamentProvider(),
-      )
+      ),
+      ChangeNotifierProvider(
+        create: (_) => EventManagementProvider(),
+      ),
     ],
     child: MyApp(),
   ));
@@ -225,7 +236,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'CricYard',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.spalshscreen,
+          initialRoute: AppRoutes.splashscreen,
           routes: AppRoutes.routes,
         );
       },

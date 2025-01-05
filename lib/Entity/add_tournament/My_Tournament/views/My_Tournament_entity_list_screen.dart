@@ -451,7 +451,7 @@ class _my_tournament_entity_list_screenState
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                my_tournamentUpdateEntityScreen(entity: entity),
+                                MyTournamentUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
                           fetchEntities();

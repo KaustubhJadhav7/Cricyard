@@ -318,8 +318,7 @@ class MyTournamentApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity( int entityId, Map<String, dynamic> entity) async {
     try {
       // await networkService.getPutApiResponse(
       //   '$baseUrl/My_Tournament/My_Tournament/$entityId',

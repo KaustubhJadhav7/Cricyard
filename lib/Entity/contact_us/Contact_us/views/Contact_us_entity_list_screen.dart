@@ -1,7 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Contact_us_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Contact_us_api_service.dart';
 import 'Contact_us_create_entity_screen.dart';
 import 'Contact_us_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -14,6 +15,8 @@ import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
+import '../viewmodel/Contact_us_viewmodel.dart';
+
 
 class contact_us_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
@@ -134,7 +137,7 @@ class _contact_us_entity_list_screenState
   Future<void> deleteEntity(Map<String, dynamic> entity) async {
     try {
       final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
+      await apiService.deleteEntity( entity['id']);
       setState(() {
         entities.remove(entity);
       });
@@ -229,6 +232,7 @@ class _contact_us_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final contactUsProvider = Provider.of<ContactUsProvider>(context);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(

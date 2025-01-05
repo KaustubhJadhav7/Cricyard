@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:cricyard/views/screens/MenuScreen/profile_screen/views/profile_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournamnet_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/views/tournamnetScreen.dart';
-
 import 'package:cricyard/views/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,6 @@ import '../views/screens/profileManagement/profile_settings_f.dart';
 import '../views/screens/signupF/create_account_f.dart';
 import '../views/screens/signupF/registration_details_f.dart';
 
-// ignore_for_file: must_be_immutable
 class AppRoutes {
   Map<String, dynamic> userData = {};
   var isLogin = false;
@@ -70,7 +68,7 @@ class AppRoutes {
   static const String appNavigationScreen = '/app_navigation_screen';
 
   static const String initialRoute = '/initialRoute';
-  static const String spalshscreen = '/splash';
+  static const String splashscreen = '/splash';
   static const String forgotPasswordscreen = '/forgotPassword';
   static const String profilescreen = '/profilescreen';
   static const String dashboard = '/dashboard';
@@ -105,7 +103,7 @@ class AppRoutes {
   static const String notification = '/notification';
   static const String notification1 = '/notification1';
   static const String score = '/score';
-  static const String scorecopy = '/scorecopy';
+  static const String scorecopy = '/scorecopy'; 
   static const String matches = '/matches';
   static const String rtc1 = '/rtc1';
   static const String rtc2 = '/rtc2';
@@ -123,7 +121,7 @@ class AppRoutes {
   static const String account = '/account';
 
   static Map<String, WidgetBuilder> routes = {
-    spalshscreen: (context) => const SplashScreen(),
+    splashscreen: (context) => const SplashScreen(),
     videoplayer: (context) => const VideoPlayerWidget(),
     account: (context) => const CreateAccountF(),
 

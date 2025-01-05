@@ -221,6 +221,8 @@ class MyTournamentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  
+
   void toggleViewMode() {
     showCardView = !showCardView;
     notifyListeners();

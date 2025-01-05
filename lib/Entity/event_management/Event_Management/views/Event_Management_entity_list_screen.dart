@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Event_Management_api_service.dart';
+import '../repository/Event_Management_api_service.dart';
 import 'Event_Management_create_entity_screen.dart';
 import 'Event_Management_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -14,6 +14,8 @@ import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
+import 'package:provider/provider.dart';
+import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
 
 class event_management_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
@@ -43,127 +45,137 @@ class _event_management_entity_list_screenState
   void initState() {
     _speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
+    // fetchwithoutpaging();
+    // fetchEntities();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final eventProvider =
+          Provider.of<EventManagementProvider>(context, listen: false);
+
+      // Fetch data using the provider
+      eventProvider.fetchEntities();
+      eventProvider.fetchWithoutPaging();
+    });
     _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
   }
 
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(
-          // token!
-          );
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Event_Management entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Event_Management: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities(
+  //         // token!
+  //         );
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Event_Management entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Event_Management: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(
-              // token, 
-            currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Event_Management data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(
+  //             // token,
+  //           currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Event_Management data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      fetchEntities();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final eventProvider =
+            Provider.of<EventManagementProvider>(context, listen: false);
+        eventProvider.fetchEntities();
+      });
     }
   }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(
-        // token!, 
-      entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(
+  //         // token!,
+  //         entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   void _searchEntities(String keyword) {
     setState(() {
@@ -211,7 +223,6 @@ class _event_management_entity_list_screenState
           print('Speech recognition error: $error');
         },
       );
-
       if (available) {
         _speech.listen(
           onResult: (result) {
@@ -243,6 +254,8 @@ class _event_management_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final eventProvider =
+        Provider.of<EventManagementProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -275,7 +288,7 @@ class _event_management_entity_list_screenState
         onRefresh: () async {
           currentPage = 1;
           entities.clear();
-          await fetchEntities();
+          await eventProvider.fetchEntities();
         },
         child: Column(
           children: [
@@ -335,7 +348,7 @@ class _event_management_entity_list_screenState
               builder: (context) => event_managementCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            eventProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -361,7 +374,8 @@ class _event_management_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
-
+    final eventProvider =
+        Provider.of<EventManagementProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -460,7 +474,7 @@ class _event_management_entity_list_screenState
                                     entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          eventProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -481,8 +495,9 @@ class _event_management_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    eventProvider.deleteEntity(entity).then(
+                                        (value) =>
+                                            {eventProvider.fetchEntities()});
                                   },
                                 ),
                               ],

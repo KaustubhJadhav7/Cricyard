@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
 import 'package:flutter/material.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
@@ -9,9 +10,9 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
-
-import '../viewmodel/Event_Management_api_service.dart';
-import '/providers/token_manager.dart';
+import 'package:provider/provider.dart';
+import '../repository/Event_Management_api_service.dart';
+// import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
 class event_managementCreateEntityScreen extends StatefulWidget {
@@ -25,39 +26,38 @@ class event_managementCreateEntityScreen extends StatefulWidget {
 class _event_managementCreateEntityScreenState
     extends State<event_managementCreateEntityScreen> {
   final EventManagementApiService apiService = EventManagementApiService();
-  final Map<String, dynamic> formData = {};
-  final _formKey = GlobalKey<FormState>();
+  // final formKey = GlobalKey<FormState>();
 
-  DateTime selectedDateTime = DateTime.now();
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+  // final Map<String, dynamic> formData = {};
+  // DateTime selectedDateTime = DateTime.now();
+  // Future<void> selectDateTime(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDateTime,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null) {
+  //     final TimeOfDay? pickedTime = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+  //     );
+  //     print(pickedTime);
+  //     if (pickedTime != null) {
+  //       setState(() {
+  //         selectedDateTime = DateTime(
+  //           picked.year,
+  //           picked.month,
+  //           picked.day,
+  //           pickedTime.hour,
+  //           pickedTime.minute,
+  //         );
+  //       });
+  //     }
+  //   }
+  // }
 
-    if (picked != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-      );
-      print(pickedTime);
-      if (pickedTime != null) {
-        setState(() {
-          selectedDateTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
-    }
-  }
-
-  bool isactive = false;
+  // bool isactive = false;
 
   @override
   void initState() {
@@ -67,7 +67,6 @@ class _event_managementCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -107,30 +106,20 @@ class _event_managementCreateEntityScreenState
   //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
-
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
-  //   // Now you can process the extracted text as needed
-  //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
   //     formData['description'] = extractedText;
   //   });
@@ -138,6 +127,8 @@ class _event_managementCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final eventProvider =
+        Provider.of<EventManagementProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -156,7 +147,7 @@ class _event_managementCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: eventProvider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -173,7 +164,7 @@ class _event_managementCreateEntityScreenState
                           focusNode: FocusNode(),
                           hintText: "Please Enter Practice Match",
                           onsaved: (value) =>
-                              formData['practice_match'] = value,
+                              eventProvider.formData['practice_match'] = value,
                         )
                       ]),
                 ),
@@ -191,7 +182,8 @@ class _event_managementCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Admin Name",
-                          onsaved: (value) => formData['admin_name'] = value,
+                          onsaved: (value) =>
+                              eventProvider.formData['admin_name'] = value,
                         )
                       ]),
                 ),
@@ -209,23 +201,25 @@ class _event_managementCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Ground",
-                          onsaved: (value) => formData['ground'] = value,
+                          onsaved: (value) =>
+                              eventProvider.formData['ground'] = value,
                         )
                       ]),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  initialValue:
-                      DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
+                  initialValue: DateFormat('yyyy-MM-dd HH:mm')
+                      .format(eventProvider.selectedDateTime),
                   decoration: const InputDecoration(
                     labelText: 'datetime',
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
                   readOnly: true,
-                  onTap: () => _selectDateTime(context),
+                  onTap: () => eventProvider.selectDateTime(context),
                   onSaved: (value) {
-                    formData['datetime'] =
-                        DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+                    eventProvider.formData['datetime'] =
+                        DateFormat('yyyy-MM-dd HH:mm')
+                            .format(eventProvider.selectedDateTime);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -242,7 +236,8 @@ class _event_managementCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Name",
-                          onsaved: (value) => formData['name'] = value,
+                          onsaved: (value) =>
+                              eventProvider.formData['name'] = value,
                         )
                       ]),
                 ),
@@ -262,60 +257,91 @@ class _event_managementCreateEntityScreenState
                               focusNode: FocusNode(),
                               hintText: "Enter Description",
                               onsaved: (value) =>
-                                  formData['description'] = value,
+                                  eventProvider.formData['description'] = value,
                               margin: getMargin(top: 6))
                         ])),
                 Switch(
-                  value: isactive,
+                  value: eventProvider.isActive,
                   onChanged: (newValue) {
-                    setState(() {
-                      isactive = newValue;
-                    });
+                    context
+                        .read<EventManagementProvider>()
+                        .toggleActive(newValue);
                   },
                 ),
                 const SizedBox(width: 8),
                 const Text('Active'),
                 const SizedBox(width: 8),
+                // CustomButton(
+                //   height: getVerticalSize(50),
+                //   text: "Submit",
+                //   margin: getMargin(top: 24, bottom: 5),
+                //   onTap: () async {
+                //     if (formKey.currentState!.validate()) {
+                //       formKey.currentState!.save();
+                //       formData['active'] = isactive;
+                //       try {
+                //         print(formData);
+                //         Map<String, dynamic> createdEntity =
+                //             await apiService.createEntity(
+                //               // token!,
+                //             formData);
+                //         Navigator.pop(context);
+                //       } catch (e) {
+                //         showDialog(
+                //           context: context,
+                //           builder: (BuildContext context) {
+                //             return AlertDialog(
+                //               title: const Text('Error'),
+                //               content:
+                //                   Text('Failed to create Event_Management: $e'),
+                //               actions: [
+                //                 TextButton(
+                //                   child: const Text('OK'),
+                //                   onPressed: () {
+                //                     Navigator.of(context).pop();
+                //                   },
+                //                 ),
+                //               ],
+                //             );
+                //           },
+                //         );
+                //       }
+                //     }
+                //   },
+                // ),
                 CustomButton(
                   height: getVerticalSize(50),
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-
-                      formData['active'] = isactive;
-
-                      final token = await TokenManager.getToken();
-                      try {
-                        print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(
-                              // token!, 
-                            formData);
-
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content:
-                                  Text('Failed to create Event_Management: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                    await eventProvider.submitForm(
+                      context,
+                      eventProvider.formKey,
+                      eventProvider.formData,
+                      eventProvider.isActive,
+                      (data) async {
+                        return await apiService.createEntity(data);
+                      },
+                    );
+                    // If there's an error, display a dialog.
+                    if (eventProvider.errorMessage != null) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: Text(eventProvider.errorMessage!),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
                   },
                 ),

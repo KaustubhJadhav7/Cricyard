@@ -9,7 +9,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Event_Management_api_service.dart';
+import '../repository/Event_Management_api_service.dart';
 import '/providers/token_manager.dart';
 
 import 'package:flutter/services.dart';

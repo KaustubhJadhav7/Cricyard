@@ -8,7 +8,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Contact_us_api_service.dart';
+import '../repository/Contact_us_api_service.dart';
 import '/providers/token_manager.dart';
 
 import 'package:flutter/services.dart';
@@ -147,9 +147,6 @@ class _contact_usUpdateEntityScreenState
                               hintText: "Enter Description",
                               initialValue: widget.entity['description'],
                               maxLines: 5,
-
-                              // ValidationProperties
-
                               onsaved: (value) {
                                 widget.entity['description'] = value;
                               },
@@ -179,15 +176,11 @@ class _contact_usUpdateEntityScreenState
                       _formKey.currentState!.save();
 
                       widget.entity['active'] = isactive;
-
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
                         await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
+                            widget.entity['id'], // Assuming 'id' is the key in your entity map
                             widget.entity);
-
                         Navigator.pop(context);
                       } catch (e) {
                         // ignore: use_build_context_synchronously

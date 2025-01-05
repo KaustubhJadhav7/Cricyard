@@ -1,16 +1,15 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
+import 'package:provider/provider.dart';
 import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
-
-import '../viewmodel/Contact_us_api_service.dart';
-import '/providers/token_manager.dart';
+import '../viewmodel/Contact_us_viewmodel.dart';
+import '../repository/Contact_us_api_service.dart';
 import 'package:flutter/services.dart';
 
 class contact_usCreateEntityScreen extends StatefulWidget {
@@ -21,8 +20,7 @@ class contact_usCreateEntityScreen extends StatefulWidget {
       _contact_usCreateEntityScreenState();
 }
 
-class _contact_usCreateEntityScreenState
-    extends State<contact_usCreateEntityScreen> {
+class _contact_usCreateEntityScreenState extends State<contact_usCreateEntityScreen> {
   final ContactUsApiService apiService = ContactUsApiService();
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
@@ -38,7 +36,7 @@ class _contact_usCreateEntityScreenState
   //   try {
   //     final ImagePicker _picker = ImagePicker();
 
-  //     // Show options for gallery or camera using a dialog
+  // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
   //       builder: (BuildContext context) {
@@ -108,6 +106,7 @@ class _contact_usCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final contactUsProvider = Provider.of<ContactUsProvider>(context);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -225,15 +224,11 @@ class _contact_usCreateEntityScreenState
 
                       formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
-
+                        Map<String, dynamic> createdEntity = await apiService.createEntity(formData);
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
