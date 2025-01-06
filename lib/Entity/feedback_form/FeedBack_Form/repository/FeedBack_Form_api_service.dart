@@ -79,7 +79,7 @@ class FeedbackFormApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService networkApiService = NetworkApiService();
 
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await networkApiService.getGetApiResponse(
         '$baseUrl/FeedBack_Form/FeedBack_Form',
@@ -91,8 +91,7 @@ class FeedbackFormApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
         '$baseUrl/FeedBack_Form/FeedBack_Form/getall/page?page=$page&size=$size',
@@ -104,8 +103,7 @@ class FeedbackFormApiService {
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity( Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
         '$baseUrl/FeedBack_Form/FeedBack_Form',
@@ -118,8 +116,7 @@ class FeedbackFormApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
         '$baseUrl/FeedBack_Form/FeedBack_Form/$entityId',
@@ -131,7 +128,7 @@ class FeedbackFormApiService {
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
         '$baseUrl/FeedBack_Form/FeedBack_Form/$entityId',

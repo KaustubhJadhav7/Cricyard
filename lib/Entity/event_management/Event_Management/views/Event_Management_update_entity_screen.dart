@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../repository/Event_Management_api_service.dart';
 import '/providers/token_manager.dart';
-
+import 'package:provider/provider.dart';
+import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
 import 'package:flutter/services.dart';
 
 class event_managementUpdateEntityScreen extends StatefulWidget {
@@ -27,37 +28,36 @@ class event_managementUpdateEntityScreen extends StatefulWidget {
 class _event_managementUpdateEntityScreenState
     extends State<event_managementUpdateEntityScreen> {
   final EventManagementApiService apiService = EventManagementApiService();
-  final _formKey = GlobalKey<FormState>();
+  // final formKey = GlobalKey<FormState>();
 
   DateTime selectedDateTime = DateTime.now();
 
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (picked != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-      );
-      print(pickedTime);
-      if (pickedTime != null) {
-        setState(() {
-          selectedDateTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
-    }
-  }
+  // Future<void> selectDateTime(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDateTime,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null) {
+  //     final TimeOfDay? pickedTime = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+  //     );
+  //     print(pickedTime);
+  //     if (pickedTime != null) {
+  //       setState(() {
+  //         selectedDateTime = DateTime(
+  //           picked.year,
+  //           picked.month,
+  //           picked.day,
+  //           pickedTime.hour,
+  //           pickedTime.minute,
+  //         );
+  //       });
+  //     }
+  //   }
+  // }
 
   bool isactive = false;
 
@@ -70,6 +70,8 @@ class _event_managementUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final eventProvider =
+        Provider.of<EventManagementProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -88,7 +90,7 @@ class _event_managementUpdateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: eventProvider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -161,7 +163,7 @@ class _event_managementUpdateEntityScreenState
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
                   // readOnly: true, // Set to true to prevent user input
-                  onTap: () => _selectDateTime(context),
+                  onTap: () => eventProvider.selectDateTime(context),
                   onSaved: (value) {
                     widget.entity['datetime'] =
                         DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
@@ -231,22 +233,20 @@ class _event_managementUpdateEntityScreenState
                   text: "Update",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (eventProvider.formKey.currentState!.validate()) {
+                      eventProvider.formKey.currentState!.save();
 
                       widget.entity['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
                         await apiService.updateEntity(
-                            // token!,
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);
 
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

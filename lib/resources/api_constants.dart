@@ -20,6 +20,12 @@ class ApiConstants {
   static const String getEnrolledTournament = '$baseUrl/My_Tournament/My_Tournament/myTour';
   static const String getMyTournament = '$baseUrl/My_Tournament/My_Tournament/creted/myTour';
   static const String getAllByUserId = '$baseUrl/tournament/Register_tournament/userid';
+  // EventManagement 
+  static const String getEntitiesEventManagement = '$baseUrl/Event_Management/Event_Management';
+  static const String getAllWithPaginationEventManagement = '$baseUrl/Event_Management/Event_Management/getall/page';
+  static const String createEntityEventManagement = '$baseUrl/Event_Management/Event_Management';
+  static const String updateEntityEventManagement = '$baseUrl/Event_Management/Event_Management/{entityId}';
+  static const String deleteEntityEventManagement = '$baseUrl/Event_Management/Event_Management/{entityId}';
 
 
 

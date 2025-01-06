@@ -10,6 +10,7 @@ import 'package:cricyard/Entity/add_tournament/My_Tournament/viewmodel/My_Tourna
 import 'package:cricyard/Entity/contact_us/Contact_us/viewmodel/Contact_us_viewmodel.dart';
 import 'package:cricyard/Entity/cricket/Cricket/viewmodel/Cricket_viewmodel.dart';
 import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
+import 'package:cricyard/Entity/feedback_form/FeedBack_Form/viewmodel/FeedBack_Form_viewmodel.dart';
 import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
 
 // lib\views\screens\practice_match\viewmodel\practice_matchview_model.dart
@@ -67,6 +68,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => EventManagementProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FeedbackProvider(),
       ),
     ],
     child: MyApp(),

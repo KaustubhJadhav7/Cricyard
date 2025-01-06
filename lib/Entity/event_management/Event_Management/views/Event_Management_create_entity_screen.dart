@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../repository/Event_Management_api_service.dart';
 // import '/providers/token_manager.dart';
+import '../model/Event_management_model.dart';
 import 'package:flutter/services.dart';
 
 class event_managementCreateEntityScreen extends StatefulWidget {
@@ -26,6 +27,8 @@ class event_managementCreateEntityScreen extends StatefulWidget {
 class _event_managementCreateEntityScreenState
     extends State<event_managementCreateEntityScreen> {
   final EventManagementApiService apiService = EventManagementApiService();
+  late EventManagementModel eventModel;
+  late EventManagementControllers eventControllers;
   // final formKey = GlobalKey<FormState>();
 
   // final Map<String, dynamic> formData = {};

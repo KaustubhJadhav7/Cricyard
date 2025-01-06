@@ -38,12 +38,9 @@
 //       dio.options.headers['Authorization'] = 'Bearer $token';
 //       final response = await dio
 //           .post('$baseUrl/Event_Management/Event_Management', data: entity);
-
 //       print(entity);
-
 //       // Assuming the response is a Map<String, dynamic>
 //       Map<String, dynamic> responseData = response.data;
-
 //       return responseData;
 //     } catch (e) {
 //       throw Exception('Failed to create entity: $e');
@@ -71,17 +68,19 @@
 //     }
 //   }
 // }
+
 import 'package:cricyard/data/network/network_api_service.dart';
 import '/resources/api_constants.dart';
+import 'package:cricyard/data/network/base_network_service.dart';
+
 
 class EventManagementApiService {
   final String baseUrl = ApiConstants.baseUrl;
-  final NetworkApiService networkService = NetworkApiService();
+  BaseNetworkService networkService = NetworkApiService();
 
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await networkService.getGetApiResponse(
-          '$baseUrl/Event_Management/Event_Management');
+      final response = await networkService.getGetApiResponse(ApiConstants.getEntitiesEventManagement);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -92,7 +91,7 @@ class EventManagementApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkService.getGetApiResponse(
-          '$baseUrl/Event_Management/Event_Management/getall/page?page=$page&size=$size');
+          ApiConstants.getAllWithPaginationEventManagement);
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -103,9 +102,8 @@ class EventManagementApiService {
 
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
-      final response = await networkService.getPostApiResponse(
-        '$baseUrl/Event_Management/Event_Management',
-        entity,
+      final response = await networkService.getPostApiResponse(ApiConstants.createEntityEventManagement,
+        entity
       );
       return response;
     } catch (e) {
@@ -116,7 +114,7 @@ class EventManagementApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkService.getPutApiResponse(
-        '$baseUrl/Event_Management/Event_Management/$entityId',
+        ApiConstants.updateEntityEventManagement.replaceFirst('{entityId}', entityId.toString()),
         entity,
       );
     } catch (e) {
@@ -127,7 +125,7 @@ class EventManagementApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await networkService.getDeleteApiResponse(
-          '$baseUrl/Event_Management/Event_Management/$entityId');
+          ApiConstants.deleteEntityEventManagement.replaceFirst('{entityId}', entityId.toString()));
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

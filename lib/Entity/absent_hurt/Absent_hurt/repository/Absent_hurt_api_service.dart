@@ -75,7 +75,7 @@ import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:cricyard/data/network/base_network_service.dart';
 
 class AbsentHurtApiService {
-  final String baseUrl = ApiConstants.baseUrl;
+  // final String baseUrl = ApiConstants.baseUrl;
   // final NetworkApiService _networkApiService = NetworkApiService();
   BaseNetworkService _networkApiService = NetworkApiService();
 

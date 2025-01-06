@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,8 +10,8 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/FeedBack_Form_api_service.dart';
-import '/providers/token_manager.dart';
+import '../repository/FeedBack_Form_api_service.dart';
+import '../viewmodel/FeedBack_Form_viewmodel.dart';
 import 'package:flutter/services.dart';
 
 class feedback_formCreateEntityScreen extends StatefulWidget {
@@ -24,16 +25,16 @@ class feedback_formCreateEntityScreen extends StatefulWidget {
 class _feedback_formCreateEntityScreenState
     extends State<feedback_formCreateEntityScreen> {
   final FeedbackFormApiService apiService = FeedbackFormApiService();
-  final Map<String, dynamic> formData = {};
-  final _formKey = GlobalKey<FormState>();
+  // final Map<String, dynamic> formData = {};
+  // final _formKey = GlobalKey<FormState>();
 
-  bool _isemail_fieldEmailValid = true;
-  void _validateemail_fieldEmail(String email) {
-    setState(() {
-      _isemail_fieldEmailValid =
-          RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
-    });
-  }
+  // bool isemail_fieldEmailValid = true;
+  // void validateemail_fieldEmail(String email) {
+  //   setState(() {
+  //     isemail_fieldEmailValid =
+  //         RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
+  //   });
+  // }
 
   @override
   void initState() {
@@ -43,7 +44,6 @@ class _feedback_formCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -88,23 +88,17 @@ class _feedback_formCreateEntityScreenState
 
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
   //   // Now you can process the extracted text as needed
   //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
@@ -114,6 +108,7 @@ class _feedback_formCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final feedbackProvider = Provider.of<FeedbackProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -132,7 +127,7 @@ class _feedback_formCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: feedbackProvider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -148,7 +143,7 @@ class _feedback_formCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Name",
-                          onsaved: (value) => formData['name'] = value,
+                          onsaved: (value) => feedbackProvider.formData['name'] = value,
                         )
                       ]),
                 ),
@@ -167,7 +162,7 @@ class _feedback_formCreateEntityScreenState
                               focusNode: FocusNode(),
                               hintText: "Enter Phone Number",
                               onsaved: (value) =>
-                                  formData['phone_number'] = value,
+                                  feedbackProvider.formData['phone_number'] = value,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -188,13 +183,13 @@ class _feedback_formCreateEntityScreenState
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Email Field",
-                              errorText: _isemail_fieldEmailValid
+                              errorText: feedbackProvider.isEmailFieldEmailValid
                                   ? null
                                   : 'Please enter a valid email',
                               onsaved: (value) =>
-                                  formData['email_field'] = value,
+                                  feedbackProvider.formData['email_field'] = value,
                               onChanged: (value) {
-                                _validateemail_fieldEmail(value);
+                                feedbackProvider.validateEmailFieldEmail(value);
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -213,7 +208,7 @@ class _feedback_formCreateEntityScreenState
                               focusNode: FocusNode(),
                               hintText: "Enter Share Your Experience",
                               onsaved: (value) =>
-                                  formData['share_your_experience'] = value,
+                                  feedbackProvider.formData['share_your_experience'] = value,
                               margin: getMargin(top: 6))
                         ])),
                 const SizedBox(width: 8),
@@ -222,14 +217,14 @@ class _feedback_formCreateEntityScreenState
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (feedbackProvider.formKey.currentState!.validate()) {
+                      feedbackProvider.formKey.currentState!.save();
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
-                        print(formData);
+                        print(feedbackProvider.formData);
                         Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                          await apiService.createEntity(feedbackProvider.formData);
 
                         Navigator.pop(context);
                       } catch (e) {

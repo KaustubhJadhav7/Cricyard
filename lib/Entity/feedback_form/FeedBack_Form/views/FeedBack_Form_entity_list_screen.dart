@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/feedback_form/FeedBack_Form/viewmodel/FeedBack_Form_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/FeedBack_Form_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/FeedBack_Form_api_service.dart';
 import 'FeedBack_Form_create_entity_screen.dart';
 import 'FeedBack_Form_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -29,193 +31,197 @@ class _feedback_form_entity_list_screenState
   List<Map<String, dynamic>> entities = [];
   List<Map<String, dynamic>> filteredEntities = [];
   List<Map<String, dynamic>> serachEntities = [];
+  
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
+  late stt.SpeechToText speech;
+  
 
   bool isLoading = false; // Add this variable to track loading state
   int currentPage = 0;
   int pageSize = 10; // Adjust this based on your backend API
 
-  final ScrollController _scrollController = ScrollController();
+  
   @override
   void initState() {
-    _speech = stt.SpeechToText();
+    // speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('FeedBack_Form entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch FeedBack_Form: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch FeedBack_Form data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['phone_number']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['email_field']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['share_your_experience']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final feedbackProvider = Provider.of<FeedbackProvider>(context, listen: false);
+      feedbackProvider.fetchEntities();
+      feedbackProvider.fetchWithoutPaging();
+      feedbackProvider.scrollController.addListener(feedbackProvider.scrollListener);
+      feedbackProvider.fetchWithoutPaging();
     });
+    // fetchEntities();
+    // scrollController.addListener(.scrollListener);
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('FeedBack_Form entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch FeedBack_Form: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch FeedBack_Form data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _scrollListener() {
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.maxScrollExtent) {
+  //     fetchEntities();
+  //   }
+  // }
+
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['phone_number']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['email_field']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['share_your_experience']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void startListening() async {
+  //   if (!speech.isListening) {
+  //     bool available = await speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             search_Entities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void stopListening() {
+  //   if (speech.isListening) {
+  //     speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    speech.cancel();
     super.dispose();
   }
 
@@ -225,6 +231,7 @@ class _feedback_form_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final feedbackProvider = Provider.of<FeedbackProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -257,16 +264,16 @@ class _feedback_form_entity_list_screenState
         onRefresh: () async {
           currentPage = 1;
           entities.clear();
-          await fetchEntities();
+          await feedbackProvider.fetchEntities();
         },
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: searchController,
+                controller: feedbackProvider.searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  feedbackProvider.search_Entities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -280,7 +287,7 @@ class _feedback_form_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      feedbackProvider.startListening();
                     },
                   ),
                 ),
@@ -303,7 +310,7 @@ class _feedback_form_entity_list_screenState
                     );
                   }
                 },
-                controller: _scrollController,
+                controller: feedbackProvider.scrollController,
               ),
             ),
           ],
@@ -317,7 +324,7 @@ class _feedback_form_entity_list_screenState
               builder: (context) => feedback_formCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            feedbackProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -343,6 +350,7 @@ class _feedback_form_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
+    final feedbackProvider = Provider.of<FeedbackProvider>(context, listen: false);
 
     return SizedBox(
       width: double.maxFinite,
@@ -441,7 +449,7 @@ class _feedback_form_entity_list_screenState
                                 feedback_formUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          feedbackProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -462,8 +470,8 @@ class _feedback_form_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    feedbackProvider.deleteEntity(entity)
+                                        .then((value) => {feedbackProvider.fetchEntities()});
                                   },
                                 ),
                               ],

@@ -16,6 +16,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
 import 'package:provider/provider.dart';
 import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
+import '../model/Event_management_model.dart';
 
 class event_management_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
@@ -28,6 +29,8 @@ class event_management_entity_list_screen extends StatefulWidget {
 class _event_management_entity_list_screenState
     extends State<event_management_entity_list_screen> {
   final EventManagementApiService apiService = EventManagementApiService();
+  late EventManagementModel eventModel;
+  late EventManagementControllers eventControllers;
   List<Map<String, dynamic>> entities = [];
   List<Map<String, dynamic>> filteredEntities = [];
   List<Map<String, dynamic>> serachEntities = [];
@@ -54,8 +57,8 @@ class _event_management_entity_list_screenState
       // Fetch data using the provider
       eventProvider.fetchEntities();
       eventProvider.fetchWithoutPaging();
+      eventControllers.scrollController.addListener(_scrollListener);
     });
-    _scrollController.addListener(_scrollListener);
   }
 
   // Future<void> fetchwithoutpaging() async {
@@ -177,70 +180,75 @@ class _event_management_entity_list_screenState
   //   }
   // }
 
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['practice_match']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['admin_name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['ground']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['datetime']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
-    });
-  }
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['practice_match']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['admin_name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['ground']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['datetime']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       final eventProvider =
+  //           Provider.of<EventManagementProvider>(context, listen: false);
+  //           eventProvider.searchEntities(result.recognizedWords);
+  //           eventProvider.fetchEntities();
+  //         });
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -297,7 +305,7 @@ class _event_management_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  eventProvider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -311,7 +319,10 @@ class _event_management_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      eventProvider.startListening(
+                        searchController: searchController, // Pass the required parameter
+                        context: context, // Pass context if required in the provider
+                      );
                     },
                   ),
                 ),

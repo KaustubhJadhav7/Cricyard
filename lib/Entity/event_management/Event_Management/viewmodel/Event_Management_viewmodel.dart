@@ -2,27 +2,51 @@ import 'package:flutter/foundation.dart';
 import '../repository/Event_Management_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/material.dart';
-
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import '../model/Event_management_model.dart';
 
 class EventManagementProvider with ChangeNotifier {
   final EventManagementApiService _apiService = EventManagementApiService();
-  
-  List<Map<String, dynamic>> _entities = [];
-  List<Map<String, dynamic>> _filteredEntities = [];
-  List<Map<String, dynamic>> _searchEntities = [];
+  late EventManagementModel eventModel;
+  late EventManagementControllers eventControllers;
+
+  // List<Map<String, dynamic>> _entities = [];
+  // List<Map<String, dynamic>> _filteredEntities = [];
+  // List<Map<String, dynamic>> _searchEntities = [];
   final Map<String, dynamic> formData = {};
   final formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
-  int _currentPage = 0;
-  int _pageSize = 10;
-
-  List<Map<String, dynamic>> get entities => _entities;
-  List<Map<String, dynamic>> get filteredEntities => _filteredEntities;
-  bool get isLoading => _isLoading;
+  // bool _isLoading = false;
+  // int _currentPage = 0;
+  // int _pageSize = 10;
+  // late stt.SpeechToText speech;
+  // final ScrollController scrollController = ScrollController();
+  // List<Map<String, dynamic>> get entities => _entities;
+  // List<Map<String, dynamic>> get filteredEntities => _filteredEntities;
+  // bool get isLoading => _isLoading;
 
   void _setLoading(bool value) {
-    _isLoading = value;
+    eventModel.isLoading = value;
     notifyListeners();
+  }
+
+  // final ScrollController scrollController = ScrollController();
+
+  EventManagementProvider() {
+    eventControllers.scrollController.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    if (eventControllers.scrollController.position.pixels ==
+        eventControllers.scrollController.position.maxScrollExtent) {
+      fetchEntities(); // Call your fetchEntities logic here
+    }
+  }
+
+  void stopListening() {
+    if (eventControllers.speech.isListening) {
+      eventControllers.speech.stop();
+      notifyListeners();
+    }
   }
 
   bool isActive = false;
@@ -34,45 +58,41 @@ class EventManagementProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
   Future<void> fetchEntities() async {
-  if (_isLoading) return; // Prevent simultaneous fetches
-  
-  _setLoading(true); // Set loading state
-  try {
-    final token = await TokenManager.getToken();
-    if (token != null) {
-      // Fetch paginated data from the API
-      final fetchedEntities = await _apiService.getAllWithPagination(
-        // token, // Ensure token is passed
-        _currentPage,
-        _pageSize,
-      );
-
-      if (fetchedEntities.isNotEmpty) {
-        _entities.addAll(fetchedEntities); // Append fetched data
-        _filteredEntities = List.from(_entities); // Sync filtered list
-        _currentPage++; // Increment for next fetch
+    if (eventModel.isLoading) return; // Prevent simultaneous fetches
+    _setLoading(true); // Set loading state
+    try {
+      final token = await TokenManager.getToken();
+      if (token != null) {
+        // Fetch paginated data from the API
+        final fetchedEntities = await _apiService.getAllWithPagination(
+          // token, // Ensure token is passed
+          eventModel.currentPage,
+          eventModel.pageSize,
+        );
+        if (fetchedEntities.isNotEmpty) {
+          eventModel.entities.addAll(fetchedEntities); // Append fetched data
+          eventModel.filteredEntities =
+              List.from(eventModel.entities); // Sync filtered list
+          eventModel.currentPage++; // Increment for next fetch
+        }
+        notifyListeners(); // Notify UI about the changes
       }
-      notifyListeners(); // Notify UI about the changes
+    } catch (e) {
+      debugPrint('Failed to fetch entities: $e');
+      throw Exception(
+          'Failed to fetch entities: $e'); // Retain error for visibility
+    } finally {
+      _setLoading(false); // Reset loading state
     }
-  } catch (e) {
-    debugPrint('Failed to fetch entities: $e');
-    throw Exception('Failed to fetch entities: $e'); // Retain error for visibility
-  } finally {
-    _setLoading(false); // Reset loading state
   }
-}
-
 
   Future<void> fetchWithoutPaging() async {
     try {
       final token = await TokenManager.getToken();
       if (token != null) {
         final fetchedEntities = await _apiService.getEntities();
-        _searchEntities = fetchedEntities;
+        eventModel.searchEntities = fetchedEntities;
         notifyListeners();
       }
     } catch (e) {
@@ -82,25 +102,56 @@ class EventManagementProvider with ChangeNotifier {
   }
 
   Future<void> deleteEntity(Map<String, dynamic> entity) async {
-  try {
-    final token = await TokenManager.getToken();
-    if (token != null) {
-      await _apiService.deleteEntity(
-        entity['id'], // Use the 'id' field from the entity map
-      );
-      _entities.removeWhere((e) => e['id'] == entity['id']); // Use 'entity['id']' here
-      _filteredEntities = List.from(_entities);
-      notifyListeners();
+    try {
+      final token = await TokenManager.getToken();
+      if (token != null) {
+        await _apiService.deleteEntity(
+          entity['id'], // Use the 'id' field from the entity map
+        );
+        eventModel.entities.removeWhere(
+            (e) => e['id'] == entity['id']); // Use 'entity['id']' here
+        eventModel.filteredEntities = List.from(eventModel.entities);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Failed to delete entity: $e');
+      rethrow;
     }
-  } catch (e) {
-    debugPrint('Failed to delete entity: $e');
-    rethrow;
   }
-}
 
+  Future<void> startListening({
+    required TextEditingController searchController,
+    required BuildContext context,
+  }) async {
+    if (!eventControllers.speech.isListening) {
+      bool available = await eventControllers.speech.initialize(
+        onStatus: (status) {
+          debugPrint('Speech recognition status: $status');
+        },
+        onError: (error) {
+          debugPrint('Speech recognition error: $error');
+        },
+      );
+
+      if (available) {
+        eventControllers.speech.listen(
+          onResult: (result) {
+            if (result.finalResult) {
+              searchController.text = result.recognizedWords;
+
+              // Trigger the search operation
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                searchEntities(result.recognizedWords);
+              });
+            }
+          },
+        );
+      }
+    }
+  }
 
   void searchEntities(String keyword) {
-    _filteredEntities = _searchEntities
+    eventModel.filteredEntities = eventModel.searchEntities
         .where((entity) =>
             entity['practice_match']
                 .toString()
@@ -218,9 +269,9 @@ class EventManagementProvider with ChangeNotifier {
   }
 
   void resetPagination() {
-    _currentPage = 0;
-    _entities.clear();
-    _filteredEntities.clear();
+    eventModel.currentPage = 0;
+    eventModel.entities.clear();
+    eventModel.filteredEntities.clear();
     notifyListeners();
   }
 }
