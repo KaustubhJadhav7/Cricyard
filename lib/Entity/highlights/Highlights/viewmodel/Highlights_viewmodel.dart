@@ -95,6 +95,18 @@ class HighlightsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> createHighlight(Map<String, dynamic> formData) async {
+    _setLoading(true);
+    try {
+      await _apiService.createEntity(formData);
+      // Additional logic (if any) after successful creation
+    } catch (e) {
+      throw Exception('Failed to create highlight: $e');
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   void stopListening() {
     if (speech.isListening) {
       speech.stop();

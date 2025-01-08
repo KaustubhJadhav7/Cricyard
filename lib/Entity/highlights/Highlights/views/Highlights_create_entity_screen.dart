@@ -103,7 +103,8 @@ class _highlightsCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
-    final highlightProvider = Provider.of<HighlightsProvider>(context);
+    final highlightProvider =
+        Provider.of<HighlightsProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -207,11 +208,11 @@ class _highlightsCreateEntityScreenState
 
                       formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
                         print(formData);
 
-                        await apiService.createEntity(formData);
+                        await highlightProvider.createHighlight(formData);
 
                         Navigator.pop(context);
                       } catch (e) {
