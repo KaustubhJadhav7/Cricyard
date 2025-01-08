@@ -77,10 +77,10 @@ class HighlightsApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService _networkApiService = NetworkApiService();
 
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Highlights/Highlights');
+      final response = await _networkApiService
+          .getGetApiResponse('$baseUrl/Highlights/Highlights');
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -89,11 +89,12 @@ class HighlightsApiService {
   }
 
   Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+      int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
           '$baseUrl/Highlights/Highlights/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+      final entities =
+          (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -111,8 +112,7 @@ class HighlightsApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
           '$baseUrl/Highlights/Highlights/$entityId', entity);
@@ -121,10 +121,10 @@ class HighlightsApiService {
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
-      await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/Highlights/Highlights/$entityId');
+      await _networkApiService
+          .getDeleteApiResponse('$baseUrl/Highlights/Highlights/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

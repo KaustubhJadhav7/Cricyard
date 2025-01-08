@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/leaderboard/LeaderBoard/viewmodel/LeaderBoard_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +11,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/LeaderBoard_api_service.dart';
+import '../repository/LeaderBoard_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -37,7 +39,6 @@ class _leaderboardCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -77,28 +78,20 @@ class _leaderboardCreateEntityScreenState
   //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
-
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
   //   // Now you can process the extracted text as needed
   //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
@@ -108,6 +101,7 @@ class _leaderboardCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final leaderboardProvider = Provider.of<LeaderboardProvider>(context);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -256,61 +250,97 @@ class _leaderboardCreateEntityScreenState
                               margin: getMargin(top: 6))
                         ])),
                 Switch(
-                  value: isactive,
+                  value: leaderboardProvider.isActive,
                   onChanged: (newValue) {
-                    setState(() {
-                      isactive = newValue;
-                    });
+                    leaderboardProvider.toggleActive(newValue);
                   },
                 ),
                 const SizedBox(width: 8),
                 const Text('Active'),
                 const SizedBox(width: 8),
-                CustomButton(
-                  height: getVerticalSize(50),
-                  text: "Submit",
-                  margin: getMargin(top: 24, bottom: 5),
-                  onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                // CustomButton(
+                //   height: getVerticalSize(50),
+                //   text: "Submit",
+                //   margin: getMargin(top: 24, bottom: 5),
+                //   onTap: () async {
+                //     if (_formKey.currentState!.validate()) {
+                //       _formKey.currentState!.save();
 
-                      formData['active'] = isactive;
+                //       formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
-                      try {
-                        print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                //       try {
+                //         print(formData);
+                //         Map<String, dynamic> createdEntity =
+                //             await apiService.createEntity(formData);
 
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: Text('Failed to create LeaderBoard: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    }
-                  },
-                ),
+                //         Navigator.pop(context);
+                //       } catch (e) {
+                //         // ignore: use_build_context_synchronously
+                //         showDialog(
+                //           context: context,
+                //           builder: (BuildContext context) {
+                //             return AlertDialog(
+                //               title: const Text('Error'),
+                //               content: Text('Failed to create LeaderBoard: $e'),
+                //               actions: [
+                //                 TextButton(
+                //                   child: const Text('OK'),
+                //                   onPressed: () {
+                //                     Navigator.of(context).pop();
+                //                   },
+                //                 ),
+                //               ],
+                //             );
+                //           },
+                //         );
+                //       }
+                //     }
+                //   },
+                // ),
+                leaderboardProvider.isLoading
+                    ? const CircularProgressIndicator()
+                    : CustomButton(
+                        height: getVerticalSize(50),
+                        text: "Submit",
+                        margin: getMargin(top: 24, bottom: 5),
+                        onTap: () async {
+                          final formKey = GlobalKey<FormState>();
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState!.save();
+
+                            try {
+                              await leaderboardProvider.createLeaderboard();
+                              Navigator.pop(context);
+                            } catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: Text(leaderboardProvider.errorMessage ?? ''),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          }
+                        },
+                      ),
               ],
             ),
           ),
         ),
       ),
+
+      
     );
   }
+  
 }

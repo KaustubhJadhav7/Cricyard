@@ -233,7 +233,6 @@ class _find_friendsCreateEntityScreenState
 
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

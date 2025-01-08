@@ -77,7 +77,7 @@ class LeaderboardApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService _networkApiService = NetworkApiService();
 
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await _networkApiService.getGetApiResponse(
           '$baseUrl/LeaderBoard/LeaderBoard');
@@ -88,8 +88,7 @@ class LeaderboardApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
           '$baseUrl/LeaderBoard/LeaderBoard/getall/page?page=$page&size=$size');
@@ -100,8 +99,7 @@ class LeaderboardApiService {
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await _networkApiService.getPostApiResponse(
           '$baseUrl/LeaderBoard/LeaderBoard', entity);
@@ -111,8 +109,7 @@ class LeaderboardApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
           '$baseUrl/LeaderBoard/LeaderBoard/$entityId', entity);
@@ -121,7 +118,7 @@ class LeaderboardApiService {
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await _networkApiService.getDeleteApiResponse(
           '$baseUrl/LeaderBoard/LeaderBoard/$entityId');

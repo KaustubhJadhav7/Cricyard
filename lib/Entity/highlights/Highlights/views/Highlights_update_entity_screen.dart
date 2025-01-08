@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/highlights/Highlights/model/Highlights_model.dart';
+import 'package:cricyard/Entity/highlights/Highlights/viewmodel/Highlights_viewmodel.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,8 +11,6 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Highlights_api_service.dart';
-import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
 class highlightsUpdateEntityScreen extends StatefulWidget {
@@ -24,8 +25,9 @@ class highlightsUpdateEntityScreen extends StatefulWidget {
 
 class _highlightsUpdateEntityScreenState
     extends State<highlightsUpdateEntityScreen> {
-  final HighlightsApiService apiService = HighlightsApiService();
-  final _formKey = GlobalKey<FormState>();
+  final HighlightModel _highlightModel = HighlightModel();
+
+  HighlightModel get highlightModel => _highlightModel;
 
   bool isactive = false;
 
@@ -38,6 +40,8 @@ class _highlightsUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final highlightsProvider =
+        Provider.of<HighlightsProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -56,7 +60,7 @@ class _highlightsUpdateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: highlightsProvider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -135,12 +139,14 @@ class _highlightsUpdateEntityScreenState
                 SizedBox(height: 16),
                 Row(
                   children: [
-                    Switch(
-                      value: isactive,
-                      onChanged: (newValue) {
-                        setState(() {
-                          isactive = newValue;
-                        });
+                    Consumer<HighlightsProvider>(
+                      builder: (context, provider, child) {
+                        return Switch(
+                          value: highlightModel.isActive,
+                          onChanged: (newValue) {
+                            provider.toggleActive(newValue);
+                          },
+                        );
                       },
                     ),
                     const SizedBox(width: 8),
@@ -152,15 +158,14 @@ class _highlightsUpdateEntityScreenState
                   text: "Update",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (highlightsProvider.formKey.currentState!.validate()) {
+                      highlightsProvider.formKey.currentState!.save();
 
                       widget.entity['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
+                        await highlightsProvider.updateEntity(
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

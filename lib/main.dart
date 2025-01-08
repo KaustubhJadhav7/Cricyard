@@ -1,3 +1,4 @@
+import 'package:cricyard/Entity/highlights/Highlights/viewmodel/Highlights_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import 'package:cricyard/Entity/cricket/Cricket/viewmodel/Cricket_viewmodel.dart
 import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Event_Management_viewmodel.dart';
 import 'package:cricyard/Entity/feedback_form/FeedBack_Form/viewmodel/FeedBack_Form_viewmodel.dart';
 import 'package:cricyard/Entity/friends/Find_Friends/viewmodel/Find_Friends_viewmodel.dart';
+import 'package:cricyard/Entity/leaderboard/LeaderBoard/viewmodel/LeaderBoard_viewmodel.dart';
 import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
 
 // lib\views\screens\practice_match\viewmodel\practice_matchview_model.dart
@@ -75,6 +77,12 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => FindFriendsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => HighlightsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LeaderboardProvider(),
       ),
     ],
     child: MyApp(),

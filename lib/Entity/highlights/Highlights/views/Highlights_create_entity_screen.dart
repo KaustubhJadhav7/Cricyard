@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,9 +10,10 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/Highlights_api_service.dart';
+// import '../repository/Highlights_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
+import '../viewmodel/highlights_viewmodel.dart';
 
 class highlightsCreateEntityScreen extends StatefulWidget {
   const highlightsCreateEntityScreen({super.key});
@@ -23,7 +25,7 @@ class highlightsCreateEntityScreen extends StatefulWidget {
 
 class _highlightsCreateEntityScreenState
     extends State<highlightsCreateEntityScreen> {
-  final HighlightsApiService apiService = HighlightsApiService();
+  // final HighlightsApiService apiService = HighlightsApiService();
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
@@ -37,7 +39,6 @@ class _highlightsCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -77,28 +78,21 @@ class _highlightsCreateEntityScreenState
   //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
 
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
   //   // Now you can process the extracted text as needed
   //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
@@ -108,6 +102,7 @@ class _highlightsCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final highlightProvider = Provider.of<HighlightsViewModel>(context);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -214,8 +209,9 @@ class _highlightsCreateEntityScreenState
                       final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+
+                        await highlightProvider.createHighlight(
+                            token!, formData);
 
                         Navigator.pop(context);
                       } catch (e) {

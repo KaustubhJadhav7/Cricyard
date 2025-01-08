@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/leaderboard/LeaderBoard/viewmodel/LeaderBoard_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,7 +11,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/LeaderBoard_api_service.dart';
+import '../repository/LeaderBoard_api_service.dart';
 import '/providers/token_manager.dart';
 
 class leaderboardUpdateEntityScreen extends StatefulWidget {
@@ -23,8 +26,7 @@ class leaderboardUpdateEntityScreen extends StatefulWidget {
 
 class _leaderboardUpdateEntityScreenState
     extends State<leaderboardUpdateEntityScreen> {
-  final LeaderboardApiService apiService = LeaderboardApiService();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   bool isactive = false;
 
@@ -37,6 +39,8 @@ class _leaderboardUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final leaderboardProvider =
+        Provider.of<LeaderboardProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -55,7 +59,7 @@ class _leaderboardUpdateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 Padding(
@@ -209,9 +213,7 @@ class _leaderboardUpdateEntityScreenState
                     Switch(
                       value: isactive,
                       onChanged: (newValue) {
-                        setState(() {
-                          isactive = newValue;
-                        });
+                        leaderboardProvider.toggleActive(newValue);
                       },
                     ),
                     const SizedBox(width: 8),
@@ -223,15 +225,13 @@ class _leaderboardUpdateEntityScreenState
                   text: "Update",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
 
                       widget.entity['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
+                        await leaderboardProvider.updateEntity(
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

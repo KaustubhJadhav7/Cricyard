@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/LIve_Cricket_api_service.dart';
+import '../repository/LIve_Cricket_api_service.dart';
 import 'LIve_Cricket_create_entity_screen.dart';
 import 'LIve_Cricket_update_entity_screen.dart';
 import '/providers/token_manager.dart';

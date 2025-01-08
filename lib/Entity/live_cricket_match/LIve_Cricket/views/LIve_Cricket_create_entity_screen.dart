@@ -9,7 +9,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/LIve_Cricket_api_service.dart';
+import '../repository/LIve_Cricket_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
