@@ -1,25 +1,22 @@
 import 'dart:io';
-import 'package:cricyard/providers/token_manager.dart';
 import 'package:dio/dio.dart';
 import '../exceptions/app_exceptions.dart';
-import 'base_network_service.dart';
+import 'no_token_base_network_service.dart';
+import 'dart:convert';
 
-class NetworkApiService extends BaseNetworkService {
+class NoTokenNetworkApiService extends NoTokenBaseNetworkService {
   final Dio _dio = Dio();
 
   NetworkApiService() {
     // Optionally configure Dio, e.g. add interceptors
-    _dio.options.connectTimeout = const Duration(seconds: 10); // 10 seconds
-    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.connectTimeout = const Duration(seconds: 30); // 30 seconds
+    _dio.options.receiveTimeout = const Duration(seconds: 30);
   }
 
   @override
   Future<dynamic> getGetApiResponse(String? url) async {
     try {
-      final token = await TokenManager.getToken();
-
       final headers = {
-        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json', // Add other headers if needed
       };
       final response = await _dio.get(
@@ -39,11 +36,8 @@ class NetworkApiService extends BaseNetworkService {
   @override
   Future<dynamic> getPostApiResponse(String? url, dynamic body) async {
     try {
-      print("Token Value:  ");
-      final token = await TokenManager.getToken();
-      print(token);
+      print('url is: $url');
       final headers = {
-        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json', // Add other headers if needed
       };
       final response = await _dio.post(
@@ -51,12 +45,14 @@ class NetworkApiService extends BaseNetworkService {
         data: body,
         options: Options(headers: headers),
       );
+      print('response is: ${_handleResponse(response)}');
       return _handleResponse(response);
     } on DioException catch (e) {
       return _handleDioError(e);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } catch (e) {
+      print('error is $e');
       throw FetchDataException('An unexpected error occurred: $e');
     }
   }
@@ -64,10 +60,7 @@ class NetworkApiService extends BaseNetworkService {
   @override
   Future<dynamic> getPutApiResponse(String? url, dynamic body) async {
     try {
-      final token = await TokenManager.getToken();
-
       final headers = {
-        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json', // Add other headers if needed
       };
       final response = await _dio.put(
@@ -88,10 +81,7 @@ class NetworkApiService extends BaseNetworkService {
   @override
   Future<dynamic> getDeleteApiResponse(String? url) async {
     try {
-      final token = await TokenManager.getToken();
-
       final headers = {
-        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json', // Add other headers if needed
       };
       final response = await _dio.delete(
@@ -117,6 +107,13 @@ class NetworkApiService extends BaseNetworkService {
           if (response.data == null || response.data.toString().isEmpty) {
             return null;
           }
+          //-----
+          print('response data is: ${response.data}');
+
+          if (response.data is String) {
+            return jsonDecode(response.data);
+          }
+          //-----
           return response.data;
         } catch (e) {
           throw FetchDataException('Error parsing response: $e');

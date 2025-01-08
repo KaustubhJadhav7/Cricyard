@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'package:cricyard/core/app_export.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
@@ -94,6 +92,7 @@ class _LoginScreenFState extends State<LoginScreenF> {
       urlPath: "/token/session",
       data: {"email": userInput, "password": password},
     );
+
     print(dataReceived);
 
     if (dataReceived.containsKey('ClientException')) {
@@ -208,6 +207,7 @@ class _LoginScreenFState extends State<LoginScreenF> {
       var user_item = dataReceived['item'];
 
       await TokenManager.setToken(token);
+      print("Token is: "+token);
 
       if (stayLoggedIn) {
         await _saveLoggedInUserData(token, user);

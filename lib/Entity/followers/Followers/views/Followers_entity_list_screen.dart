@@ -1,10 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/followers/Followers/viewmodel/Followers_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Followers_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Followers_api_service.dart';
 import 'Followers_create_entity_screen.dart';
 import 'Followers_update_entity_screen.dart';
-import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../../theme/app_style.dart';
@@ -16,7 +17,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
 
 class followers_entity_list_screen extends StatefulWidget {
-  static const String routeName = '/entity-list';
+  // static const String routeName = '/entity-list';
 
   @override
   _followers_entity_list_screenState createState() =>
@@ -25,207 +26,211 @@ class followers_entity_list_screen extends StatefulWidget {
 
 class _followers_entity_list_screenState
     extends State<followers_entity_list_screen> {
-  final FollowersApiService apiService = FollowersApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  // final FollowersApiService apiService = FollowersApiService();
+  
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> serachEntities = [];
 
-  bool showCardView = true; // Add this variable to control the view mode
-  TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
+  // bool showCardView = true; // Add this variable to control the view mode
+  // TextEditingController searchController = TextEditingController();
+  // late stt.SpeechToText speech;
 
-  bool isLoading = false; // Add this variable to track loading state
-  int currentPage = 0;
-  int pageSize = 10; // Adjust this based on your backend API
+  // bool isLoading = false; // Add this variable to track loading state
+  // int currentPage = 0;
+  // int pageSize = 10; // Adjust this based on your backend API
 
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    _speech = stt.SpeechToText();
-    super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(
-          // token!
-          );
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Followers entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Followers: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(
-              // token, 
-            currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Followers data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(
-        // token!, 
-      entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['user_id']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['follower_id']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final followerProvider = Provider.of<FollowersProvider>(context, listen: false);
+      followerProvider.fetchEntities();
+      followerProvider.fetchWithoutPaging();
+      followerProvider.fetchWithoutPaging();
+      followerProvider.scrollController.addListener(followerProvider.scrollListener);
     });
+    super.initState();
+    // fetchEntities();
+    // fetchwithoutpaging();
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities(
+  //         // token!
+  //         );
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Followers entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Followers: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(
+  //           currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Followers data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _scrollListener() {
+  //   if (scrollController.position.pixels ==
+  //       scrollController.position.maxScrollExtent) {
+  //     fetchEntities();
+  //   }
+  // }
+
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     await apiService.deleteEntity(
+  //       // token!, 
+  //     entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['user_id']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['follower_id']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void startListening() async {
+  //   if (!speech.isListening) {
+  //     bool available = await speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void stopListening() {
+  //   if (speech.isListening) {
+  //     speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final followerProvider = Provider.of<FollowersProvider>(context, listen: false);
+    followerProvider.speech.cancel();
+    });
     super.dispose();
   }
 
@@ -235,48 +240,52 @@ class _followers_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final followerProvider = Provider.of<FollowersProvider>(context, listen: false);
     return SafeArea(
-        child: Scaffold(
-      appBar: CustomAppBar(
-        height: getVerticalSize(49),
-        leadingWidth: 40,
-        leading: AppbarImage(
-            height: getSize(24),
-            width: getSize(24),
-            svgPath: ImageConstant.imgArrowleft,
-            margin: getMargin(left: 16, top: 12, bottom: 13),
-            onTap: () {
-              onTapArrowleft1(context);
-            }),
-        centerTitle: true,
-        title: AppbarTitle(text: " Followers"),
-        actions: [
-          Switch(
-            activeColor: Colors.greenAccent,
-            inactiveThumbColor: Colors.white,
-            value: showCardView,
-            onChanged: (value) {
-              setState(() {
-                showCardView = value;
-              });
-            },
-          ),
-        ],
+  child: Scaffold(
+    appBar: CustomAppBar(
+      height: getVerticalSize(49),
+      leadingWidth: 40,
+      leading: AppbarImage(
+        height: getSize(24),
+        width: getSize(24),
+        svgPath: ImageConstant.imgArrowleft,
+        margin: getMargin(left: 16, top: 12, bottom: 13),
+        onTap: () {
+          onTapArrowleft1(context);
+        },
       ),
+      centerTitle: true,
+      title: AppbarTitle(text: " Followers"),
+      actions: [
+        Consumer<FollowersProvider>(
+          builder: (context, provider, child) {
+            return Switch(
+              activeColor: Colors.greenAccent,
+              inactiveThumbColor: Colors.white,
+              value: provider.showCardView,
+              onChanged: (value) {
+                provider.showCardView = value; // Update using the provider
+              },
+            );
+          },
+        ),
+      ],
+    ),
       body: RefreshIndicator(
         onRefresh: () async {
-          currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          followerProvider.currentPage = 1;
+          followerProvider.entities.clear();
+          await followerProvider.fetchEntities();
         },
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: searchController,
+                controller: followerProvider.searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  followerProvider.searchEntitiesByKeyword(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -290,7 +299,7 @@ class _followers_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      followerProvider.startListening();
                     },
                   ),
                 ),
@@ -298,11 +307,11 @@ class _followers_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: followerProvider.filteredEntities.length + (followerProvider.isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
-                    return _buildListItem(entity);
+                  if (index < followerProvider.filteredEntities.length) {
+                    final entity = followerProvider.filteredEntities[index];
+                    return _buildListItem(context, entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
                     return const Padding(
@@ -313,7 +322,7 @@ class _followers_entity_list_screenState
                     );
                   }
                 },
-                controller: _scrollController,
+                controller: scrollController,
               ),
             ),
           ],
@@ -327,7 +336,7 @@ class _followers_entity_list_screenState
               builder: (context) => followersCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            followerProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -335,9 +344,12 @@ class _followers_entity_list_screenState
     ));
   }
 
-  Widget _buildListItem(Map<String, dynamic> entity) {
-    return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
-  }
+  Widget _buildListItem(BuildContext context, Map<String, dynamic> entity) {
+  final provider = Provider.of<FollowersProvider>(context, listen: false);
+  return provider.showCardView
+      ? _buildCardView(entity)
+      : _buildNormalView(entity);
+}
 
   // Function to build card view for a list item
   Widget _buildCardView(Map<String, dynamic> entity) {
@@ -353,7 +365,7 @@ class _followers_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
-
+    final followerProvider = Provider.of<FollowersProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -451,7 +463,7 @@ class _followers_entity_list_screenState
                                 followersUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          followerProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -472,8 +484,8 @@ class _followers_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    followerProvider.deleteEntity(entity)
+                                        .then((value) => {followerProvider.fetchEntities()});
                                   },
                                 ),
                               ],

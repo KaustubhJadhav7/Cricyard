@@ -67,6 +67,9 @@ class AppRoutes {
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
+  static const String testApi = '/testApi';
+
+
   static const String initialRoute = '/initialRoute';
   static const String splashscreen = '/splash';
   static const String forgotPasswordscreen = '/forgotPassword';
@@ -124,6 +127,9 @@ class AppRoutes {
     splashscreen: (context) => const SplashScreen(),
     videoplayer: (context) => const VideoPlayerWidget(),
     account: (context) => const CreateAccountF(),
+
+
+
 
     // redisclient: (context) => VideoFeedScreenPage2(),
 

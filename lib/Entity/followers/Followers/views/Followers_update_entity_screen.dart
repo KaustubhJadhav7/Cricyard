@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,9 +10,10 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Followers_api_service.dart';
+import '../repository/Followers_api_service.dart';
+import '../viewmodel/Followers_viewmodel.dart';
 import '/providers/token_manager.dart';
-
+import '../models/Followers_model.dart';
 import 'package:flutter/services.dart';
 
 class followersUpdateEntityScreen extends StatefulWidget {
@@ -26,7 +29,8 @@ class followersUpdateEntityScreen extends StatefulWidget {
 class _followersUpdateEntityScreenState
     extends State<followersUpdateEntityScreen> {
   final FollowersApiService apiService = FollowersApiService();
-  final _formKey = GlobalKey<FormState>();
+  final FollowersModel model = FollowersModel();
+  
 
   bool isactive = false;
 
@@ -39,6 +43,7 @@ class _followersUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final followerProvider = Provider.of<FollowersProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -57,7 +62,7 @@ class _followersUpdateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: followerProvider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -173,8 +178,8 @@ class _followersUpdateEntityScreenState
                   text: "Update",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (followerProvider.formKey.currentState!.validate()) {
+                      followerProvider.formKey.currentState!.save();
 
                       widget.entity['active'] = isactive;
 

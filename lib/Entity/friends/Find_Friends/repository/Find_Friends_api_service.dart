@@ -2,13 +2,10 @@
 import 'package:dio/dio.dart';
 // import '../../../views/screens/LogoutService/Logoutservice.dart';
 // import '/resources/api_constants.dart';
-
 // class find_friendsApiService {
 //   final String baseUrl = ApiConstants.baseUrl;
 //   final Dio dio = Dio();
-
 //   final String token = TokenManager.getToken().toString();
-
 //   Future<List<Map<String, dynamic>>> getEntities() async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -119,11 +116,9 @@ import 'package:dio/dio.dart';
 //   Future<void> addFriend(String token, int userId) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-
 //       var response = await dio.post(
 //         '$baseUrl/Find_Friends/Find_Friends/Add/$userId',
 //       );
-
 //       if (response.statusCode == 200) {
 //         // Friend added successfully
 //         print('Friend added successfully');
@@ -151,11 +146,9 @@ import 'package:dio/dio.dart';
 //   Future<bool> deleteFriendById(int id, String token) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-
 //       final response = await dio.delete(
 //         '$baseUrl/Find_Friends/Find_Friends/$id',
 //       );
-
 //       if (response.statusCode == 200) {
 //         // Friend deleted successfully
 //         print('Friend deleted successfully');
@@ -171,7 +164,8 @@ import 'package:dio/dio.dart';
 //     }
 //   }
 // }
-import 'package:cricyard/providers/token_manager.dart';
+// import 'package:cricyard/providers/token_manager.dart';
+
 import '../../../../views/screens/LogoutService/Logoutservice.dart';
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart';
@@ -183,7 +177,7 @@ class FindFriendsApiService {
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response =
-          await _networkApiService.getGetApiResponse('$baseUrl/Find_Friends/Find_Friends');
+          await _networkApiService.getGetApiResponse(ApiConstants.findFriends);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -195,30 +189,29 @@ class FindFriendsApiService {
       String token, int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '${ApiConstants.pagination}?page=$page&size=$size');
+      final entities =
+          (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends', entity);
+          ApiConstants.findFriends, entity);
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends/$entityId', entity);
+          '${ApiConstants.findFriends}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -226,8 +219,8 @@ class FindFriendsApiService {
 
   Future<void> deleteEntity(String token, int entityId) async {
     try {
-      await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends/$entityId');
+      await _networkApiService
+          .getDeleteApiResponse('${ApiConstants.findFriends}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
@@ -236,7 +229,7 @@ class FindFriendsApiService {
   Future<List<Map<String, dynamic>>> getAllFriends(String token) async {
     try {
       final response =
-          await _networkApiService.getGetApiResponse('$baseUrl/Find_Friends/Find_Friends/myFriends');
+          await _networkApiService.getGetApiResponse(ApiConstants.myFriends);
       if (response == null) {
         LogoutService.logout();
       }
@@ -250,7 +243,7 @@ class FindFriendsApiService {
   Future<List<Map<String, dynamic>>> getAllUsers(String token) async {
     try {
       final response =
-          await _networkApiService.getGetApiResponse('$baseUrl/api/getuser/accountid');
+          await _networkApiService.getGetApiResponse(ApiConstants.users);
       if (response == null) {
         LogoutService.logout();
       }
@@ -263,8 +256,8 @@ class FindFriendsApiService {
 
   Future<void> addFriend(String token, int userId) async {
     try {
-      final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends/Add/$userId', {});
+      final response = await _networkApiService
+          .getPostApiResponse('${ApiConstants.addFriend}/$userId', {});
       if (response == null || response['statusCode'] != 200) {
         throw Exception('Failed to add friend');
       }
@@ -284,8 +277,8 @@ class FindFriendsApiService {
 
   Future<bool> deleteFriendById(int id, String token) async {
     try {
-      final response = await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/Find_Friends/Find_Friends/$id');
+      final response = await _networkApiService
+          .getDeleteApiResponse('${ApiConstants.deleteFriend}/$id');
       if (response == null || response['statusCode'] != 200) {
         print('Failed to delete friend');
         return false;

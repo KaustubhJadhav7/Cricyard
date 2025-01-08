@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../Entity/friends/Find_Friends/viewmodel/Find_Friends_api_service.dart';
+import '../../../../Entity/friends/Find_Friends/repository/Find_Friends_api_service.dart';
 
 class ShowallFriendsScreen extends StatefulWidget {
   @override

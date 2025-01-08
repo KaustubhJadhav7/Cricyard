@@ -1,7 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Find_Friends_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Find_Friends_api_service.dart';
 import 'Find_Friends_create_entity_screen.dart';
 import 'Find_Friends_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -14,6 +15,7 @@ import '../../../../views/widgets/app_bar/appbar_image.dart';
 import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
+import '../viewmodel/Find_Friends_viewmodel.dart';
 
 class find_friends_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
@@ -26,196 +28,202 @@ class find_friends_entity_list_screen extends StatefulWidget {
 class _find_friends_entity_list_screenState
     extends State<find_friends_entity_list_screen> {
   final FindFriendsApiService apiService = FindFriendsApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> serachEntities = [];
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
+  late stt.SpeechToText speech;
 
   bool isLoading = false; // Add this variable to track loading state
   int currentPage = 0;
   int pageSize = 10; // Adjust this based on your backend API
 
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    _speech = stt.SpeechToText();
-    super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities();
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Find_Friends entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Find_Friends: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Find_Friends data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['find_friends']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final friendProvider =
+          Provider.of<FindFriendsProvider>(context, listen: false);
+      speech = stt.SpeechToText();
+      friendProvider.fetchEntities();
+      scrollController.addListener(scrollListener);
+      friendProvider.fetchWithoutPaging();
     });
+    super.initState();
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Find_Friends entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Find_Friends: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(token, currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Find_Friends data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  void scrollListener() {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final friendProvider =
+            Provider.of<FindFriendsProvider>(context, listen: false);
+        friendProvider.fetchEntities();
+      });
     }
   }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(token!, entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['find_friends']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    speech.cancel();
     super.dispose();
   }
 
@@ -225,6 +233,8 @@ class _find_friends_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final friendsProvider =
+        Provider.of<FindFriendsProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -256,8 +266,8 @@ class _find_friends_entity_list_screenState
       body: RefreshIndicator(
         onRefresh: () async {
           currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          friendsProvider.model.entities.clear();
+          await friendsProvider.fetchEntities();
         },
         child: Column(
           children: [
@@ -266,7 +276,7 @@ class _find_friends_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  friendsProvider.searchEntitiesByKeyword(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -280,7 +290,7 @@ class _find_friends_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      friendsProvider.startListening();
                     },
                   ),
                 ),
@@ -288,10 +298,10 @@ class _find_friends_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: friendsProvider.model.filteredEntities.length + (isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < friendsProvider.model.filteredEntities.length) {
+                    final entity = friendsProvider.model.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
@@ -303,7 +313,7 @@ class _find_friends_entity_list_screenState
                     );
                   }
                 },
-                controller: _scrollController,
+                controller: scrollController,
               ),
             ),
           ],
@@ -317,7 +327,7 @@ class _find_friends_entity_list_screenState
               builder: (context) => find_friendsCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            friendsProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -343,7 +353,8 @@ class _find_friends_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
-
+    final friendsProvider =
+        Provider.of<FindFriendsProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -441,7 +452,7 @@ class _find_friends_entity_list_screenState
                                 find_friendsUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          friendsProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -462,8 +473,9 @@ class _find_friends_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    friendsProvider
+                                        .deleteEntity(entity)
+                                        .then((value) => {friendsProvider.fetchEntities()});
                                   },
                                 ),
                               ],

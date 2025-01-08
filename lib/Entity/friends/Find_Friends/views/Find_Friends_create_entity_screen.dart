@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -10,7 +11,8 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import '../../../../views/widgets/custom_dropdown_field.dart';
 
-import '../viewmodel/Find_Friends_api_service.dart';
+import '../repository/Find_Friends_api_service.dart';
+import '../viewmodel/Find_Friends_viewmodel.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -25,8 +27,8 @@ class find_friendsCreateEntityScreen extends StatefulWidget {
 class _find_friendsCreateEntityScreenState
     extends State<find_friendsCreateEntityScreen> {
   final FindFriendsApiService apiService = FindFriendsApiService();
-  final Map<String, dynamic> formData = {};
-  final _formKey = GlobalKey<FormState>();
+  // final Map<String, dynamic> formData = {};
+  // final _formKey = GlobalKey<FormState>();
 
   var selectedfind_friends; // Initialize with the default value \n");
   List<String> find_friendsList = [
@@ -44,7 +46,6 @@ class _find_friendsCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -89,21 +90,16 @@ class _find_friendsCreateEntityScreenState
 
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
 
   //   // Now you can process the extracted text as needed
@@ -115,6 +111,8 @@ class _find_friendsCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final friendsProvider =
+        Provider.of<FindFriendsProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -133,7 +131,7 @@ class _find_friendsCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: friendsProvider.model.formKey,
             child: Column(
               children: [
                 CustomDropdownFormField(
@@ -159,7 +157,7 @@ class _find_friendsCreateEntityScreenState
                   onChanged: (value) {
                     setState(() {
                       var selectedfind_friends = value!;
-                      formData['find_friends'] = value;
+                      friendsProvider.model.formData['find_friends'] = value;
                     });
                   },
                   // ValidationProperties
@@ -168,7 +166,7 @@ class _find_friendsCreateEntityScreenState
                     if (selectedfind_friends.isEmpty) {
                       selectedfind_friends = "no value";
                     }
-                    formData['find_friends'] = selectedfind_friends;
+                    friendsProvider.model.formData['find_friends'] = selectedfind_friends;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -185,7 +183,7 @@ class _find_friendsCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Name",
-                          onsaved: (value) => formData['name'] = value,
+                          onsaved: (value) => friendsProvider.model.formData['name'] = value,
                         )
                       ]),
                 ),
@@ -205,15 +203,13 @@ class _find_friendsCreateEntityScreenState
                               focusNode: FocusNode(),
                               hintText: "Enter Description",
                               onsaved: (value) =>
-                                  formData['description'] = value,
+                                  friendsProvider.model.formData['description'] = value,
                               margin: getMargin(top: 6))
                         ])),
                 Switch(
-                  value: isactive,
+                  value: friendsProvider.isActive,
                   onChanged: (newValue) {
-                    setState(() {
-                      isactive = newValue;
-                    });
+                    friendsProvider.toggleIsActive(newValue);
                   },
                 ),
                 const SizedBox(width: 8),
@@ -224,16 +220,16 @@ class _find_friendsCreateEntityScreenState
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (friendsProvider.model.formKey.currentState!.validate()) {
+                      friendsProvider.model.formKey.currentState!.save();
 
-                      formData['active'] = isactive;
+                      friendsProvider.model.formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
-                        print(formData);
+                        print(friendsProvider.model.formData);
                         Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                            await apiService.createEntity(friendsProvider.model.formData);
 
                         Navigator.pop(context);
                       } catch (e) {

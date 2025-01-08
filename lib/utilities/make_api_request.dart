@@ -95,9 +95,16 @@ import 'package:cricyard/providers/token_manager.dart';
 import 'package:dio/dio.dart';
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart';
+import 'package:cricyard/data/network/no_token_base_network_service.dart';
+import 'package:cricyard/data/network/no-token_network_api_service.dart';
 
 const String baseUrl = ApiConstants.baseUrl;
-final NetworkApiService networkApiService = NetworkApiService(); // Object of NetworkApiService
+final NetworkApiService networkApiService = NetworkApiService();
+
+// final NoTokenBaseNetworkService networkService =
+//     NoTokenBaseNetworkService(); // Object of NetworkApiService
+
+final NoTokenBaseNetworkService _service = NoTokenNetworkApiService();
 
 // This function is refactored to use NetworkApiService
 Future<Map<String, dynamic>> sendData({
@@ -107,10 +114,15 @@ Future<Map<String, dynamic>> sendData({
 }) async {
   String backendServiceHost = ApiConstants.baseUrl + urlPath;
   try {
+    print(backendServiceHost);
+    print('Request data is: $data /n');
     // Using NetworkApiService to perform a POST request
-    final response = await networkApiService.getPostApiResponse(backendServiceHost, data);
+    final response =
+        await _service.getPostApiResponse(backendServiceHost, data);
 
+    print("My Response: $response");
     if (response is Map<String, dynamic>) {
+      print("Parsed Response: $response");
       return response;
     } else {
       return {'error': 'Invalid response format'};
@@ -124,7 +136,8 @@ Future<Map<String, dynamic>> sendData({
 Future<Map<String, dynamic>> getUser(int userId) async {
   try {
     // Replace Dio call with NetworkApiService's GET method
-    final response = await networkApiService.getGetApiResponse('$baseUrl/token/getuser/$userId');
+    final response = await _service
+        .getGetApiResponse('$baseUrl/token/getuser/$userId');
 
     if (response is Map<String, dynamic>) {
       return response;
@@ -140,13 +153,13 @@ Future<Map<String, dynamic>> getUser(int userId) async {
 Future<int> checkUrlValidity(String url) async {
   try {
     final response = await networkApiService.getGetApiResponse(url);
-    
+
     if (response != null) {
-      return 200;  // Return success code if the response is valid
+      return 200; // Return success code if the response is valid
     } else {
-      return 404;  // Return 404 if no response or invalid response
+      return 404; // Return 404 if no response or invalid response
     }
   } catch (e) {
-    return 404;  // Return 404 if any error occurs (e.g., connection error)
+    return 404; // Return 404 if any error occurs (e.g., connection error)
   }
 }

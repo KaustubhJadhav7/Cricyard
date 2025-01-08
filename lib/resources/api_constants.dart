@@ -1,6 +1,7 @@
 class ApiConstants {
   // static const baseUrl = 'http://localhost:9292';
-  static const baseUrl = 'http://3.6.250.12:30198';
+  // static const baseUrl = 'http://3.6.250.12:30198';
+  static const baseUrl = 'http://43.205.171.168:30198';
 
   // AbsentHurt
   static const getEntitiesAbsenthurt = '$baseUrl/Absent_hurt/Absent_hurt';
@@ -26,6 +27,14 @@ class ApiConstants {
   static const String createEntityEventManagement = '$baseUrl/Event_Management/Event_Management';
   static const String updateEntityEventManagement = '$baseUrl/Event_Management/Event_Management/{entityId}';
   static const String deleteEntityEventManagement = '$baseUrl/Event_Management/Event_Management/{entityId}';
+
+  static const String findFriendsBase = '$baseUrl/Find_Friends/Find_Friends';
+  static const String findFriends = '$findFriendsBase';
+  static const String myFriends = '$findFriendsBase/myFriends';
+  static const String addFriend = '$findFriendsBase/Add';
+  static const String deleteFriend = '$findFriendsBase';
+  static const String users = '$baseUrl/api/getuser/accountid';
+  static const String pagination = '$findFriendsBase/getall/page';
 
 
 

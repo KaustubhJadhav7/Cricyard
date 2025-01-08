@@ -71,7 +71,6 @@
 //   }
 // }
 
-import 'package:dio/dio.dart';
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart';
 
