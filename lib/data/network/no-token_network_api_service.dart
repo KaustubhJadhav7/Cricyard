@@ -36,7 +36,7 @@ class NoTokenNetworkApiService extends NoTokenBaseNetworkService {
   @override
   Future<dynamic> getPostApiResponse(String? url, dynamic body) async {
     try {
-      print('url is: $url');
+      // print('url is: $url');
       final headers = {
         'Content-Type': 'application/json', // Add other headers if needed
       };
@@ -45,7 +45,7 @@ class NoTokenNetworkApiService extends NoTokenBaseNetworkService {
         data: body,
         options: Options(headers: headers),
       );
-      print('response is: ${_handleResponse(response)}');
+      // print('RESPONSE IS: ${_handleResponse(response)}');
       return _handleResponse(response);
     } on DioException catch (e) {
       return _handleDioError(e);

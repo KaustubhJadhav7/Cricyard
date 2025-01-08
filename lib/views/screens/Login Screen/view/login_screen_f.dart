@@ -207,7 +207,7 @@ class _LoginScreenFState extends State<LoginScreenF> {
       var user_item = dataReceived['item'];
 
       await TokenManager.setToken(token);
-      print("Token is: "+token);
+      // print("Token is: "+token);
 
       if (stayLoggedIn) {
         await _saveLoggedInUserData(token, user);

@@ -115,14 +115,14 @@ Future<Map<String, dynamic>> sendData({
   String backendServiceHost = ApiConstants.baseUrl + urlPath;
   try {
     print(backendServiceHost);
-    print('Request data is: $data /n');
+    // print('Request data is: $data /n');
     // Using NetworkApiService to perform a POST request
     final response =
         await _service.getPostApiResponse(backendServiceHost, data);
 
-    print("My Response: $response");
+    // print("My Response: $response");
     if (response is Map<String, dynamic>) {
-      print("Parsed Response: $response");
+      // print("Parsed Response: $response");
       return response;
     } else {
       return {'error': 'Invalid response format'};
