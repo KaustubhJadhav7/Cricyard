@@ -11,6 +11,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
 // import '../repository/Highlights_api_service.dart';
+import '../repository/Highlights_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 import '../viewmodel/highlights_viewmodel.dart';
@@ -25,7 +26,7 @@ class highlightsCreateEntityScreen extends StatefulWidget {
 
 class _highlightsCreateEntityScreenState
     extends State<highlightsCreateEntityScreen> {
-  // final HighlightsApiService apiService = HighlightsApiService();
+  final HighlightsApiService apiService = HighlightsApiService();
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
@@ -102,7 +103,7 @@ class _highlightsCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
-    final highlightProvider = Provider.of<HighlightsViewModel>(context);
+    final highlightProvider = Provider.of<HighlightsProvider>(context);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -210,8 +211,7 @@ class _highlightsCreateEntityScreenState
                       try {
                         print(formData);
 
-                        await highlightProvider.createHighlight(
-                            token!, formData);
+                        await apiService.createEntity(formData);
 
                         Navigator.pop(context);
                       } catch (e) {

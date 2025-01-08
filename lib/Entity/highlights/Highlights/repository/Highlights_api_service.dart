@@ -101,8 +101,7 @@ class HighlightsApiService {
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await _networkApiService.getPostApiResponse(
           '$baseUrl/Highlights/Highlights', entity);

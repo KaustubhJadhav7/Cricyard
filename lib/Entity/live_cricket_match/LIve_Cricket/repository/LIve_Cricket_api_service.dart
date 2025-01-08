@@ -113,8 +113,7 @@ class LiveCricketApiService {
   }
 
   // Create a new live cricket entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
           '$baseUrl/LIve_Cricket/LIve_Cricket', entity, 

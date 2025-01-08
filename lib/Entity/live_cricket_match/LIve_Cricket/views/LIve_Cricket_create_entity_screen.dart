@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/live_cricket_match/Live_Cricket/viewmodel/Live_Cricket_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -25,7 +27,7 @@ class _live_cricketCreateEntityScreenState
     extends State<live_cricketCreateEntityScreen> {
   final LiveCricketApiService apiService = LiveCricketApiService();
   final Map<String, dynamic> formData = {};
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   bool isactive = false;
 
@@ -108,6 +110,8 @@ class _live_cricketCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final liveCricketProvider =
+          Provider.of<LiveCricketProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -126,7 +130,7 @@ class _live_cricketCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 Padding(
@@ -217,16 +221,16 @@ class _live_cricketCreateEntityScreenState
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
 
                       formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
+                      // final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                        
+                            await liveCricketProvider.createEntity(formData);
 
                         Navigator.pop(context);
                       } catch (e) {
