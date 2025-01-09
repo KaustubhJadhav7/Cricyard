@@ -92,7 +92,6 @@ class _live_cricket_entity_list_screenState
   //     setState(() {
   //       isLoading = true;
   //     });
-
   //     final token = await TokenManager.getToken();
   //     if (token != null) {
   //       final fetchedEntities =
@@ -103,7 +102,6 @@ class _live_cricket_entity_list_screenState
   //         filteredEntities = entities.toList(); // Update only filteredEntities
   //         currentPage++;
   //       });
-
   //       print(' entity is .. $filteredEntities');
   //     }
   //   } catch (e) {
@@ -208,7 +206,6 @@ class _live_cricket_entity_list_screenState
   //         print('Speech recognition error: $error');
   //       },
   //     );
-
   //     if (available) {
   //       _speech.listen(
   //         onResult: (result) {

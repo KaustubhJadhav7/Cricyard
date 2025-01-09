@@ -25,7 +25,7 @@ class live_cricketCreateEntityScreen extends StatefulWidget {
 
 class _live_cricketCreateEntityScreenState
     extends State<live_cricketCreateEntityScreen> {
-  final LiveCricketApiService apiService = LiveCricketApiService();
+  // final LiveCricketApiService apiService = LiveCricketApiService();
   final Map<String, dynamic> formData = {};
   final formKey = GlobalKey<FormState>();
 
@@ -39,7 +39,6 @@ class _live_cricketCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -79,26 +78,19 @@ class _live_cricketCreateEntityScreenState
   //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
-
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
 
   //   // Now you can process the extracted text as needed

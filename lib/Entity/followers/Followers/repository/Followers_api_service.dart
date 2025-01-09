@@ -79,7 +79,8 @@ class FollowersApiService {
 
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await _networkApiService.getGetApiResponse('$baseUrl/Followers/Followers');
+      final response = await _networkApiService
+          .getGetApiResponse(ApiConstants.getEntitiesFollowers);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -87,11 +88,13 @@ class FollowersApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(
+      int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Followers/Followers/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '${ApiConstants.getAllWithPaginationFollowers}?page=$page&size=$size');
+      final entities =
+          (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -102,7 +105,7 @@ class FollowersApiService {
     try {
       print("in post api $entity");
       final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/Followers/Followers', entity);
+          ApiConstants.createEntityFollowers, entity);
       print(entity);
 
       Map<String, dynamic> responseData = response;
@@ -115,7 +118,7 @@ class FollowersApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
-          '$baseUrl/Followers/Followers/$entityId', entity);
+          '${ApiConstants.updateEntityFollowers}/$entityId', entity);
       print(entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
@@ -125,7 +128,7 @@ class FollowersApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/Followers/Followers/$entityId');
+          '${ApiConstants.deleteEntityFollowers}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

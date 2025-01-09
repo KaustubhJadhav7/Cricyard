@@ -1,4 +1,4 @@
-import 'package:cricyard/Entity/matches/Match/viewmodel/Match_api_service.dart';
+import 'package:cricyard/Entity/matches/Match/repository/Match_api_service.dart';
 import 'package:cricyard/core/app_export.dart';
 import 'package:cricyard/views/screens/MenuScreen/NewStreamFolder/LiveMatchStreamingActual/streamVideoWidget.dart';
 import 'package:flutter/material.dart';

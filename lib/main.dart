@@ -1,5 +1,6 @@
 import 'package:cricyard/Entity/highlights/Highlights/viewmodel/Highlights_viewmodel.dart';
 import 'package:cricyard/Entity/live_cricket_match/Live_Cricket/viewmodel/Live_Cricket_viewmodel.dart';
+import 'package:cricyard/Entity/live_score_update/Live_Score_Update/viewmodel/Live_Score_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -87,6 +88,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => LiveCricketProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LiveScoreUpdateProvider(),
       ),
     ],
     child: MyApp(),

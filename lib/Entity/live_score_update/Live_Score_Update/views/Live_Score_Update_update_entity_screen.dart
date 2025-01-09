@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/live_score_update/Live_Score_Update/viewmodel/Live_Score_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,7 +11,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Live_Score_Update_api_service.dart';
+import '../repository/Live_Score_Update_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -38,6 +41,8 @@ class _live_score_updateUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final liveScoreProvider =
+          Provider.of<LiveScoreUpdateProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -192,8 +197,7 @@ class _live_score_updateUpdateEntityScreenState
 
                       final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
+                        await liveScoreProvider.updateEntity(
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

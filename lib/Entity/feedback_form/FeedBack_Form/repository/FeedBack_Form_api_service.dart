@@ -81,7 +81,7 @@ class FeedbackFormApiService {
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/FeedBack_Form/FeedBack_Form',
+        ApiConstants.getEntitiesFeedbackForm,
         // token,
       );
       return (response as List).cast<Map<String, dynamic>>();
@@ -93,7 +93,7 @@ class FeedbackFormApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/FeedBack_Form/FeedBack_Form/getall/page?page=$page&size=$size',
+        '${ApiConstants.getAllWithPaginationFeedbackForm}?page=$page&size=$size',
         // token,
       );
       return (response['content'] as List).cast<Map<String, dynamic>>();
@@ -105,7 +105,7 @@ class FeedbackFormApiService {
   Future<Map<String, dynamic>> createEntity( Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/FeedBack_Form/FeedBack_Form',
+        ApiConstants.createEntityFeedbackForm,
         // token,
         entity,
       );
@@ -118,7 +118,7 @@ class FeedbackFormApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-        '$baseUrl/FeedBack_Form/FeedBack_Form/$entityId',
+        '${ApiConstants.updateEntityFeedbackForm}/$entityId',
         // token,
         entity,
       );
@@ -130,7 +130,7 @@ class FeedbackFormApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-        '$baseUrl/FeedBack_Form/FeedBack_Form/$entityId',
+        '${ApiConstants.deleteEntityFeedbackForm}/$entityId',
         // token,
       );
     } catch (e) {

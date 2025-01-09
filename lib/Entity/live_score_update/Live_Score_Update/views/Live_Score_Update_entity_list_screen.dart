@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/live_score_update/Live_Score_Update/viewmodel/Live_Score_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Live_Score_Update_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Live_Score_Update_api_service.dart';
 import 'Live_Score_Update_create_entity_screen.dart';
 import 'Live_Score_Update_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -26,204 +28,212 @@ class live_score_update_entity_list_screen extends StatefulWidget {
 class _live_score_update_entity_list_screenState
     extends State<live_score_update_entity_list_screen> {
   final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> searchEntities = [];
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
+  // late stt.SpeechToText _speech;
 
   bool isLoading = false; // Add this variable to track loading state
   int currentPage = 0;
   int pageSize = 10; // Adjust this based on your backend API
 
-  final ScrollController _scrollController = ScrollController();
+
+
+  final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    _speech = stt.SpeechToText();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final liveScoreProvider =
+          Provider.of<LiveScoreUpdateProvider>(context, listen: false);
+    // _speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities();
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Live_Score_Update entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Live_Score_Update: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Live_Score_Update data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['live_commentary']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['boundary']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['wickets']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
+    liveScoreProvider.fetchEntities();
+    scrollController.addListener(_scrollListener);
+    liveScoreProvider.fetchWithoutPaging();
     });
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         searchEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Live_Score_Update entity is .. $searchEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Live_Score_Update: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Live_Score_Update data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  void _scrollListener() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final liveScoreProvider =
+          Provider.of<LiveScoreUpdateProvider>(context, listen: false);
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      liveScoreProvider.fetchEntities();
     }
+  });
   }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = searchEntities
+  //         .where((entity) =>
+  //             entity['live_commentary']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['boundary']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['wickets']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    // _speech.cancel();
     super.dispose();
   }
 
@@ -233,6 +243,8 @@ class _live_score_update_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final liveScoreProvider =
+          Provider.of<LiveScoreUpdateProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -264,8 +276,8 @@ class _live_score_update_entity_list_screenState
       body: RefreshIndicator(
         onRefresh: () async {
           currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          liveScoreProvider.entities.clear();
+          await liveScoreProvider.fetchEntities();
         },
         child: Column(
           children: [
@@ -274,7 +286,7 @@ class _live_score_update_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  liveScoreProvider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -288,7 +300,7 @@ class _live_score_update_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      liveScoreProvider.startListening();
                     },
                   ),
                 ),
@@ -296,10 +308,10 @@ class _live_score_update_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: liveScoreProvider.filteredEntities.length + (isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < liveScoreProvider.filteredEntities.length) {
+                    final entity = liveScoreProvider.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
@@ -311,7 +323,7 @@ class _live_score_update_entity_list_screenState
                     );
                   }
                 },
-                controller: _scrollController,
+                controller: scrollController,
               ),
             ),
           ],
@@ -325,7 +337,7 @@ class _live_score_update_entity_list_screenState
               builder: (context) => live_score_updateCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            liveScoreProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -333,7 +345,7 @@ class _live_score_update_entity_list_screenState
     ));
   }
 
-  Widget _buildListItem(Map<String, dynamic> entity) {
+  Widget _buildListItem(dynamic entity) {
     return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
   }
 
@@ -350,6 +362,8 @@ class _live_score_update_entity_list_screenState
   // Function to build normal view for a list item
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
+    final liveScoreProvider =
+          Provider.of<LiveScoreUpdateProvider>(context, listen: false);
     final values = entity.values.elementAt(21) ?? 'Authsec';
 
     return SizedBox(
@@ -450,7 +464,7 @@ class _live_score_update_entity_list_screenState
                                     entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          liveScoreProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -471,8 +485,8 @@ class _live_score_update_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    liveScoreProvider.deleteEntity(entity)
+                                        .then((value) => {liveScoreProvider.fetchEntities()});
                                   },
                                 ),
                               ],

@@ -84,9 +84,9 @@ class LiveCricketApiService {
       final token = await TokenManager.getToken();
       if (token != null) {
         final response = await networkApiService.getGetApiResponse(
-            '$baseUrl/LIve_Cricket/LIve_Cricket', 
-            // token
-            );
+          ApiConstants.getEntitiesLiveCricket,
+          // token
+        );
         final entities = (response as List).cast<Map<String, dynamic>>();
         return entities;
       } else {
@@ -102,10 +102,11 @@ class LiveCricketApiService {
       String token, int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/LIve_Cricket/LIve_Cricket/getall/page?page=$page&size=$size', 
-          // token
-          );
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+        '${ApiConstants.getAllWithPaginationLiveCricket}?page=$page&size=$size',
+        // token
+      );
+      final entities =
+          (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all without pagination: $e');
@@ -116,9 +117,9 @@ class LiveCricketApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/LIve_Cricket/LIve_Cricket', entity, 
-          // token
-          );
+        ApiConstants.createEntityLiveCricket, entity,
+        // token
+      );
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -130,9 +131,9 @@ class LiveCricketApiService {
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/LIve_Cricket/LIve_Cricket/$entityId', entity, 
-          // token
-          );
+        '${ApiConstants.updateEntityLiveCricket}/$entityId', entity,
+        // token
+      );
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -142,9 +143,9 @@ class LiveCricketApiService {
   Future<void> deleteEntity(String token, int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/LIve_Cricket/LIve_Cricket/$entityId', 
-          // token
-          );
+        '${ApiConstants.deleteEntityLiveCricket}/$entityId',
+        // token
+      );
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

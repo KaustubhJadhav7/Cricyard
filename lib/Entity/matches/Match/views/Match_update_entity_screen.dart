@@ -12,7 +12,7 @@ import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../viewmodel/Match_api_service.dart';
+import '../repository/Match_api_service.dart';
 import '/providers/token_manager.dart';
 
 import 'package:flutter/services.dart';
@@ -311,7 +311,6 @@ class _matchUpdateEntityScreenState extends State<matchUpdateEntityScreen> {
                       final token = await TokenManager.getToken();
                       try {
                         await apiService.updateEntity(
-                            token!,
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

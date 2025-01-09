@@ -87,7 +87,7 @@ class LiveScoreUpdateApiService {
       final token = await TokenManager.getToken();
       if (token != null) {
         final response = await networkApiService.getGetApiResponse(
-            '$baseUrl/Live_Score_Update/Live_Score_Update', 
+            ApiConstants.getEntitiesLiveScoreUpdate, 
             // token
             );
         final entities = (response as List).cast<Map<String, dynamic>>();
@@ -101,11 +101,10 @@ class LiveScoreUpdateApiService {
   }
 
   // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Live_Score_Update/Live_Score_Update/getall/page?page=$page&size=$size', 
+          '${ApiConstants.getAllWithPaginationLiveScoreUpdate}?page=$page&size=$size', 
           // token
           );
       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
@@ -116,11 +115,10 @@ class LiveScoreUpdateApiService {
   }
 
   // Create a new live score update entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Live_Score_Update/Live_Score_Update', entity, 
+          ApiConstants.createEntityLiveScoreUpdate, entity, 
           // token
           );
       return response;
@@ -130,11 +128,10 @@ class LiveScoreUpdateApiService {
   }
 
   // Update a live score update entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Live_Score_Update/Live_Score_Update/$entityId', entity,
+          '${ApiConstants.updateEntityLiveScoreUpdate}/$entityId', entity,
           //  token
            );
     } catch (e) {
@@ -143,10 +140,10 @@ class LiveScoreUpdateApiService {
   }
 
   // Delete a live score update entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Live_Score_Update/Live_Score_Update/$entityId', 
+          '${ApiConstants.deleteEntityLiveScoreUpdate}/$entityId', 
           // token
           );
     } catch (e) {

@@ -36,12 +36,9 @@
 //       print("in post api$entity");
 //       dio.options.headers['Authorization'] = 'Bearer $token';
 //       final response = await dio.post('$baseUrl/Cricket/Cricket', data: entity);
-
 //       print(entity);
-
 //       // Assuming the response is a Map<String, dynamic>
 //       Map<String, dynamic> responseData = response.data;
-
 //       return responseData;
 //     } catch (e) {
 //       throw Exception('Failed to create entity: $e');
@@ -77,7 +74,7 @@ class CricketApiService {
 
   Future<List<Map<String, dynamic>>> getEntities(String token) async {
     try {
-      final response = await networkService.getGetApiResponse('$baseUrl/Cricket/Cricket');
+      final response = await networkService.getGetApiResponse(ApiConstants.getEntitiesCricket);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -89,7 +86,7 @@ class CricketApiService {
       String token, int page, int size) async {
     try {
       final response = await networkService.getGetApiResponse(
-          '$baseUrl/Cricket/Cricket/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationCricket}?page=$page&size=$size');
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -101,7 +98,7 @@ class CricketApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkService.getPostApiResponse(
-        '$baseUrl/Cricket/Cricket',
+        ApiConstants.createEntityCricket,
         entity,
       );
       return response;
@@ -113,7 +110,7 @@ class CricketApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkService.getPutApiResponse(
-        '$baseUrl/Cricket/Cricket/$entityId',
+        '${ApiConstants.updateEntityCricket}/$entityId',
         entity,
       );
     } catch (e) {
@@ -123,7 +120,7 @@ class CricketApiService {
 
   Future<void> deleteEntity(String token, int entityId) async {
     try {
-      await networkService.getDeleteApiResponse('$baseUrl/Cricket/Cricket/$entityId');
+      await networkService.getDeleteApiResponse('${ApiConstants.deleteEntityCricket}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

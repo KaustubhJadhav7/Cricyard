@@ -9,7 +9,7 @@ import 'package:cricyard/views/screens/MenuScreen/Matches/tour_graphs/tour_score
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../Entity/matches/Match/viewmodel/Match_api_service.dart';
+import '../../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../../../../Entity/matches/Match/views/Match_update_entity_screen.dart';
 import '../../../../../Entity/matches/Start_Match/viewmodel/Start_Match_api_service.dart';
 import '../../../../../Entity/runs/Score_board/Score_board_api_service.dart';

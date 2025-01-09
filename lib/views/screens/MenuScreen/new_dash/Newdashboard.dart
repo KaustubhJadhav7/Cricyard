@@ -13,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../Entity/matches/Match/viewmodel/Match_api_service.dart';
+import '../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../../../providers/tab_navigation_provider.dart';
 import '../../ReuseableWidgets/BottomAppBarWidget.dart';
 import '../Notification/GetAllNotification.dart';

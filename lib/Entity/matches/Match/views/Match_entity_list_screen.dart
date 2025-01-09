@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Match_api_service.dart';
+import '../repository/Match_api_service.dart';
 import 'Match_create_entity_screen.dart';
 import 'Match_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -85,7 +85,7 @@ class _match_entity_list_screenState extends State<match_entity_list_screen> {
       final token = await TokenManager.getToken();
       if (token != null) {
         final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
+            await apiService.getAllWithPagination(currentPage, pageSize);
         print(' data is $fetchedEntities');
         setState(() {
           entities.addAll(fetchedEntities); // Add new data to the existing list
@@ -130,7 +130,7 @@ class _match_entity_list_screenState extends State<match_entity_list_screen> {
   Future<void> deleteEntity(Map<String, dynamic> entity) async {
     try {
       final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
+      await apiService.deleteEntity(entity['id']);
       setState(() {
         entities.remove(entity);
       });

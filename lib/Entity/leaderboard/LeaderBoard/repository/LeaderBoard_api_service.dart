@@ -80,7 +80,7 @@ class LeaderboardApiService {
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/LeaderBoard/LeaderBoard');
+          ApiConstants.getEntitiesLeaderboard);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -91,7 +91,7 @@ class LeaderboardApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/LeaderBoard/LeaderBoard/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationLeaderboard}?page=$page&size=$size');
       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -102,7 +102,7 @@ class LeaderboardApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/LeaderBoard/LeaderBoard', entity);
+          ApiConstants.createEntityLeaderboard, entity);
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -112,7 +112,7 @@ class LeaderboardApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
-          '$baseUrl/LeaderBoard/LeaderBoard/$entityId', entity);
+          '${ApiConstants.updateEntityLeaderboard}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -121,7 +121,7 @@ class LeaderboardApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await _networkApiService.getDeleteApiResponse(
-          '$baseUrl/LeaderBoard/LeaderBoard/$entityId');
+          '${ApiConstants.deleteEntityLeaderboard}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

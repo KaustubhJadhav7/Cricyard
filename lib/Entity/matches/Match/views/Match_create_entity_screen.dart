@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 import '../../../add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
 import '../../../team/viewmodels/Teams_api_service.dart';
-import '../viewmodel/Match_api_service.dart';
+import '../repository/Match_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/live_score_update/Live_Score_Update/viewmodel/Live_Score_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +11,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/Live_Score_Update_api_service.dart';
+import '../repository/Live_Score_Update_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -37,7 +39,6 @@ class _live_score_updateCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -99,8 +100,6 @@ class _live_score_updateCreateEntityScreenState
 
   //   String extractedText = extractedTextBuffer.toString().trim();
 
-  //   // Now you can process the extracted text as needed
-  //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
   //     formData['description'] = extractedText;
   //   });
@@ -108,6 +107,8 @@ class _live_score_updateCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final liveScoreProvider =
+        Provider.of<LiveScoreUpdateProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -240,13 +241,10 @@ class _live_score_updateCreateEntityScreenState
                       _formKey.currentState!.save();
 
                       formData['active'] = isactive;
-
-                      final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
 
+                        await liveScoreProvider.createEntity(formData);
                         Navigator.pop(context);
                       } catch (e) {
                         // ignore: use_build_context_synchronously

@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:cricyard/core/app_export.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../Entity/matches/Match/viewmodel/Match_api_service.dart';
+import '../../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../../../../theme/custom_button_style.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 import '../scoring/matchScore.dart';

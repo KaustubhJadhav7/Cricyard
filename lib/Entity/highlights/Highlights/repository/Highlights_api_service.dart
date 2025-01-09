@@ -80,7 +80,7 @@ class HighlightsApiService {
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await _networkApiService
-          .getGetApiResponse('$baseUrl/Highlights/Highlights');
+          .getGetApiResponse(ApiConstants.getEntitiesHighlights);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -92,7 +92,7 @@ class HighlightsApiService {
       int page, int size) async {
     try {
       final response = await _networkApiService.getGetApiResponse(
-          '$baseUrl/Highlights/Highlights/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationHighlights}?page=$page&size=$size');
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -104,7 +104,7 @@ class HighlightsApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await _networkApiService.getPostApiResponse(
-          '$baseUrl/Highlights/Highlights', entity);
+          ApiConstants.createEntityHighlights, entity);
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -114,7 +114,7 @@ class HighlightsApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await _networkApiService.getPutApiResponse(
-          '$baseUrl/Highlights/Highlights/$entityId', entity);
+          '${ApiConstants.updateEntityHighlights}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -123,7 +123,7 @@ class HighlightsApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await _networkApiService
-          .getDeleteApiResponse('$baseUrl/Highlights/Highlights/$entityId');
+          .getDeleteApiResponse('${ApiConstants.deleteEntityHighlights}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
