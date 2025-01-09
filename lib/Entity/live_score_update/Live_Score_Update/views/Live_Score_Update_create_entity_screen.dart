@@ -25,7 +25,7 @@ class live_score_updateCreateEntityScreen extends StatefulWidget {
 
 class _live_score_updateCreateEntityScreenState
     extends State<live_score_updateCreateEntityScreen> {
-  final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
+  // final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 

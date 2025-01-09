@@ -27,7 +27,7 @@ class live_score_update_entity_list_screen extends StatefulWidget {
 
 class _live_score_update_entity_list_screenState
     extends State<live_score_update_entity_list_screen> {
-  final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
+  // final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
   
   // List<Map<String, dynamic>> entities = [];
   // List<Map<String, dynamic>> filteredEntities = [];

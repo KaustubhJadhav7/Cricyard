@@ -27,7 +27,7 @@ class live_score_updateUpdateEntityScreen extends StatefulWidget {
 
 class _live_score_updateUpdateEntityScreenState
     extends State<live_score_updateUpdateEntityScreen> {
-  final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
+  // final LiveScoreUpdateApiService apiService = LiveScoreUpdateApiService();
   final _formKey = GlobalKey<FormState>();
 
   bool isactive = false;
@@ -195,7 +195,6 @@ class _live_score_updateUpdateEntityScreenState
 
                       widget.entity['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
                         await liveScoreProvider.updateEntity(
                             widget.entity[
