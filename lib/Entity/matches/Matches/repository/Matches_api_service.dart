@@ -1,15 +1,14 @@
 // import 'package:dio/dio.dart';
-// import '../../../providers/token_manager.dart';
 // import '/resources/api_constants.dart';
 
-// class start_matchApiService {
+// class matchesApiService {
 //   final String baseUrl = ApiConstants.baseUrl;
 //   final Dio dio = Dio();
 
 //   Future<List<Map<String, dynamic>>> getEntities(String token) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       final response = await dio.get('$baseUrl/Start_Match/Start_Match');
+//       final response = await dio.get('$baseUrl/Matches/Matches');
 //       final entities = (response.data as List).cast<Map<String, dynamic>>();
 //       return entities;
 //     } catch (e) {
@@ -21,8 +20,8 @@
 //       String token, int page, int Size) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       final response = await dio.get(
-//           '$baseUrl/Start_Match/Start_Match/getall/page?page=$page&size=$Size');
+//       final response = await dio
+//           .get('$baseUrl/Matches/Matches/getall/page?page=$page&size=$Size');
 //       final entities =
 //           (response.data['content'] as List).cast<Map<String, dynamic>>();
 //       return entities;
@@ -31,14 +30,12 @@
 //     }
 //   }
 
-//   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
+//   Future<Map<String, dynamic>> createEntity(
+//       String token, Map<String, dynamic> entity) async {
 //     try {
-//       final token = await TokenManager.getToken();
-
 //       print("in post api$entity");
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       final response =
-//           await dio.post('$baseUrl/Start_Match/Start_Match', data: entity);
+//       final response = await dio.post('$baseUrl/Matches/Matches', data: entity);
 
 //       print(entity);
 
@@ -47,7 +44,7 @@
 
 //       return responseData;
 //     } catch (e) {
-//       throw Exception('Failed to Start Match: $e');
+//       throw Exception('Failed to create entity: $e');
 //     }
 //   }
 
@@ -55,7 +52,7 @@
 //       String token, int entityId, Map<String, dynamic> entity) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       await dio.put('$baseUrl/Start_Match/Start_Match/$entityId', data: entity);
+//       await dio.put('$baseUrl/Matches/Matches/$entityId', data: entity);
 //       print(entity);
 //     } catch (e) {
 //       throw Exception('Failed to update entity: $e');
@@ -65,23 +62,22 @@
 //   Future<void> deleteEntity(String token, int entityId) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       await dio.delete('$baseUrl/Start_Match/Start_Match/$entityId');
+//       await dio.delete('$baseUrl/Matches/Matches/$entityId');
 //     } catch (e) {
 //       throw Exception('Failed to delete entity: $e');
 //     }
 //   }
 // }
 import 'package:cricyard/data/network/network_api_service.dart';
-import '../../../../providers/token_manager.dart';
 import '/resources/api_constants.dart';
 
-class StartMatchApiService {
+class MatchesApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService networkService = NetworkApiService();
 
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await networkService.getGetApiResponse('$baseUrl/Start_Match/Start_Match');
+      final response = await networkService.getGetApiResponse('$baseUrl/Matches/Matches');
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -89,11 +85,10 @@ class StartMatchApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkService.getGetApiResponse(
-          '$baseUrl/Start_Match/Start_Match/getall/page?page=$page&size=$size');
+          '$baseUrl/Matches/Matches/getall/page?page=$page&size=$size');
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -102,11 +97,10 @@ class StartMatchApiService {
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
+  Future<dynamic> createEntity(Map<String, dynamic> entity) async {
     try {
-      final token = await TokenManager.getToken();
       final response = await networkService.getPostApiResponse(
-        '$baseUrl/Start_Match/Start_Match',
+        '$baseUrl/Matches/Matches',
         entity,
       );
       return response;
@@ -115,11 +109,10 @@ class StartMatchApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkService.getPutApiResponse(
-        '$baseUrl/Start_Match/Start_Match/$entityId',
+        '$baseUrl/Matches/Matches/$entityId',
         entity,
       );
     } catch (e) {
@@ -127,9 +120,9 @@ class StartMatchApiService {
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
-      await networkService.getDeleteApiResponse('$baseUrl/Start_Match/Start_Match/$entityId');
+      await networkService.getDeleteApiResponse('$baseUrl/Matches/Matches/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/matches/Matches/repository/Matches_api_service.dart';
+import 'package:cricyard/Entity/matches/Matches/viewmodels/Matches_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -10,8 +13,8 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
 
-import '../viewmodels/Matches_api_service.dart';
-import '/providers/token_manager.dart';
+// import '../repository/Matches_api_service.dart';
+// import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
 class matchesCreateEntityScreen extends StatefulWidget {
@@ -27,20 +30,20 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
-  DateTime selectedDate = DateTime.now();
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
+  // DateTime selectedDate = DateTime.now();
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  //   }
+  // }
 
   bool isactive = false;
 
@@ -123,6 +126,8 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final matchesProvider =
+        Provider.of<MatchesProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -199,7 +204,7 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
                 ),
                 const SizedBox(height: 16),
                 GestureDetector(
-                  onTap: () => _selectDate(context),
+                  onTap: () => matchesProvider.selectDate(context),
                   child: AbsorbPointer(
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -207,10 +212,12 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
                         suffixIcon: Icon(Icons.calendar_today),
                       ),
                       controller: TextEditingController(
-                        text: DateFormat('yyyy-MM-dd').format(selectedDate),
+                        text: DateFormat('yyyy-MM-dd')
+                            .format(matchesProvider.selectedDate),
                       ),
                       onSaved: (value) => formData['date_field'] =
-                          DateFormat('yyyy-MM-dd').format(selectedDate),
+                          DateFormat('yyyy-MM-dd')
+                              .format(matchesProvider.selectedDate),
                     ),
                   ),
                 ),
@@ -236,9 +243,7 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
                 Switch(
                   value: isactive,
                   onChanged: (newValue) {
-                    setState(() {
-                      isactive = newValue;
-                    });
+                    matchesProvider.toggleActive(newValue);
                   },
                 ),
                 const SizedBox(width: 8),
@@ -254,11 +259,10 @@ class _matchesCreateEntityScreenState extends State<matchesCreateEntityScreen> {
 
                       formData['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+
+                        await matchesProvider.createEntity(formData);
 
                         Navigator.pop(context);
                       } catch (e) {

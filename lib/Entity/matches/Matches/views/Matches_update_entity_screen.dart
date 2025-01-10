@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/matches/Matches/viewmodels/Matches_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +12,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodels/Matches_api_service.dart';
+import '../repository/Matches_api_service.dart';
 import '/providers/token_manager.dart';
 
 class matchesUpdateEntityScreen extends StatefulWidget {
@@ -23,25 +26,24 @@ class matchesUpdateEntityScreen extends StatefulWidget {
 }
 
 class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
-  final MatchesApiService apiService = MatchesApiService();
   final _formKey = GlobalKey<FormState>();
 
-  DateTime selectedDate = DateTime.now();
+  // DateTime selectedDate = DateTime.now();
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    print(picked);
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   print(picked);
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  //   }
+  // }
 
   bool isactive = false;
 
@@ -54,6 +56,8 @@ class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final matchesProvider =
+        Provider.of<MatchesProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -137,7 +141,7 @@ class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
                       ]),
                 ),
                 GestureDetector(
-                  onTap: () => _selectDate(context),
+                  onTap: () => matchesProvider.selectDate(context),
                   child: AbsorbPointer(
                     child: TextFormField(
                       initialValue: DateFormat('yyyy-MM-dd')
@@ -147,8 +151,8 @@ class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
                         suffixIcon: Icon(Icons.calendar_today),
                       ),
                       onSaved: (value) {
-                        widget.entity['date_field'] =
-                            DateFormat('yyyy-MM-dd').format(selectedDate);
+                        widget.entity['date_field'] = DateFormat('yyyy-MM-dd')
+                            .format(matchesProvider.selectedDate);
                       },
                     ),
                   ),
@@ -183,9 +187,7 @@ class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
                     Switch(
                       value: isactive,
                       onChanged: (newValue) {
-                        setState(() {
-                          isactive = newValue;
-                        });
+                        matchesProvider.toggleActive(newValue);
                       },
                     ),
                     const SizedBox(width: 8),
@@ -202,17 +204,14 @@ class _matchesUpdateEntityScreenState extends State<matchesUpdateEntityScreen> {
 
                       widget.entity['active'] = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
+                        await matchesProvider.updateEntity(
                             widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
+                                'id'],
                             widget.entity);
 
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

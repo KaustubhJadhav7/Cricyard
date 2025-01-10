@@ -267,7 +267,7 @@ class MyTournamentProvider with ChangeNotifier {
   Future<void> fetchtournament_nameItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getTournamentName(token!);
+      final selectTdata = await apiService.getTournamentName();
       print('tournament_name data is : $selectTdata');
       if (selectTdata != null && selectTdata.isNotEmpty) {
         tournament_nameItems = selectTdata;

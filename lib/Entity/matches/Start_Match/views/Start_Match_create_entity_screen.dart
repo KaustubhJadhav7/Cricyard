@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/matches/Start_Match/viewmodel/Start_Match_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -10,7 +12,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
 
-import '../viewmodel/Start_Match_api_service.dart';
+import '../repository/Start_Match_api_service.dart';
 
 class start_matchCreateEntityScreen extends StatefulWidget {
   const start_matchCreateEntityScreen({super.key});
@@ -26,20 +28,20 @@ class _start_matchCreateEntityScreenState
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
-  DateTime selectedDate = DateTime.now();
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
+  // DateTime selectedDate = DateTime.now();
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  //   }
+  // }
 
   bool isactive = false;
 
@@ -50,6 +52,8 @@ class _start_matchCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final startMatchProvider =
+        Provider.of<StartMatchProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -144,7 +148,7 @@ class _start_matchCreateEntityScreenState
                 ),
                 const SizedBox(height: 16),
                 GestureDetector(
-                  onTap: () => _selectDate(context),
+                  onTap: () => startMatchProvider.selectDate(context),
                   child: AbsorbPointer(
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -152,10 +156,12 @@ class _start_matchCreateEntityScreenState
                         suffixIcon: Icon(Icons.calendar_today),
                       ),
                       controller: TextEditingController(
-                        text: DateFormat('yyyy-MM-dd').format(selectedDate),
+                        text: DateFormat('yyyy-MM-dd')
+                            .format(startMatchProvider.selectedDate),
                       ),
                       onSaved: (value) => formData['date_field'] =
-                          DateFormat('yyyy-MM-dd').format(selectedDate),
+                          DateFormat('yyyy-MM-dd')
+                              .format(startMatchProvider.selectedDate),
                     ),
                   ),
                 ),
@@ -182,7 +188,7 @@ class _start_matchCreateEntityScreenState
                   value: isactive,
                   onChanged: (newValue) {
                     setState(() {
-                      isactive = newValue;
+                      startMatchProvider.toggleActive(newValue);
                     });
                   },
                 ),
@@ -201,8 +207,7 @@ class _start_matchCreateEntityScreenState
 
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(formData);
+                            await startMatchProvider.createEntity(formData);
 
                         Navigator.pop(context);
                       } catch (e) {

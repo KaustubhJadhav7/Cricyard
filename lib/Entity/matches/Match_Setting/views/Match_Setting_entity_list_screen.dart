@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/matches/Match/views/Match_create_entity_screen.dart';
+import 'package:cricyard/Entity/matches/Match_Setting/viewmodel/Match_Setting_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Match_Setting_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Match_Setting_api_service.dart';
 import 'Match_Setting_create_entity_screen.dart';
 import 'Match_Setting_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -28,214 +31,215 @@ class _match_setting_entity_list_screenState
   final MatchSettingApiService apiService = MatchSettingApiService();
   List<Map<String, dynamic>> entities = [];
   List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  List<Map<String, dynamic>> searchEntities = [];
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
-  late stt.SpeechToText _speech;
+  late stt.SpeechToText speech;
 
   bool isLoading = false; // Add this variable to track loading state
   int currentPage = 0;
   int pageSize = 10; // Adjust this based on your backend API
 
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    _speech = stt.SpeechToText();
+    speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Match_Setting entity is .. $serachEntities');
+    final provider = Provider.of<MatchSettingProvider>(context, listen: false);
+    provider.fetchEntities();
+    provider.fetchWithoutPaging();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+        provider.fetchEntities();
       }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Match_Setting: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Match_Setting data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['disable_wagon_wheel_for_dot_ball']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['disable_wagon_wheel_for_1s_2s_and_3s']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['disable_shot_selection']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['count_wide_as_a_legal_delivery']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['count_no_ball_as_a_legal_delivery']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['for_overs']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
     });
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         searchEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Match_Setting entity is .. $searchEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Match_Setting: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Match_Setting data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void scrollListener() {
+  //   if (scrollController.position.pixels ==
+  //       scrollController.position.maxScrollExtent) {
+  //     fetchEntities();
+  //   }
+  // }
+
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void searchEntitiesByKeyword(String keyword) {
+  //   setState(() {
+  //     filteredEntities = searchEntities
+  //         .where((entity) =>
+  //             entity['name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['disable_wagon_wheel_for_dot_ball']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['disable_wagon_wheel_for_1s_2s_and_3s']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['disable_shot_selection']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['count_wide_as_a_legal_delivery']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['count_no_ball_as_a_legal_delivery']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['for_overs']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void startListening() async {
+  //   if (!speech.isListening) {
+  //     bool available = await speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             searchEntitiesByKeyword(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void _stopListening() {
+  //   if (speech.isListening) {
+  //     speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
-    _speech.cancel();
+    speech.cancel();
     super.dispose();
   }
 
@@ -245,6 +249,7 @@ class _match_setting_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final matchSettingProvider = Provider.of<MatchSettingProvider>(context);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -277,7 +282,7 @@ class _match_setting_entity_list_screenState
         onRefresh: () async {
           currentPage = 1;
           entities.clear();
-          await fetchEntities();
+          await matchSettingProvider.fetchEntities();
         },
         child: Column(
           children: [
@@ -286,7 +291,7 @@ class _match_setting_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  matchSettingProvider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -300,7 +305,7 @@ class _match_setting_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      matchSettingProvider.startListening();
                     },
                   ),
                 ),
@@ -323,7 +328,7 @@ class _match_setting_entity_list_screenState
                     );
                   }
                 },
-                controller: _scrollController,
+                controller: scrollController,
               ),
             ),
           ],
@@ -334,10 +339,10 @@ class _match_setting_entity_list_screenState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => match_settingCreateEntityScreen(),
+              builder: (context) => matchCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            matchSettingProvider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -363,7 +368,7 @@ class _match_setting_entity_list_screenState
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
-
+    final matchSettingProvider = Provider.of<MatchSettingProvider>(context);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -461,7 +466,7 @@ class _match_setting_entity_list_screenState
                                 match_settingUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          matchSettingProvider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -482,8 +487,8 @@ class _match_setting_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    matchSettingProvider.deleteEntity(entity)
+                                        .then((value) => {matchSettingProvider.fetchEntities()});
                                   },
                                 ),
                               ],

@@ -49,7 +49,7 @@ class _RegisterTournamentState extends State<RegisterTournament> {
   Future<void> _loadtournament_nameItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getTournamentName(token!);
+      final selectTdata = await apiService.getTournamentName();
       print(' tournament_name   data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {

@@ -1,11 +1,27 @@
+import 'package:cricyard/Entity/matches/Match/model/Match_model.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import '../repository/Match_api_service.dart'; // Replace with the correct import for your MatchApiService
+import '../repository/Match_api_service.dart'; 
+import '../../../add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
+import '../../../team/viewmodels/Teams_api_service.dart';
 
 class MatchProvider with ChangeNotifier {
-  final MatchApiService _apiService = MatchApiService();
+  final MatchApiService apiService = MatchApiService();
   final TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+  // MatchModel match = MatchModel.fromRawJson(response);
+
+  Map<String, dynamic> entity = {};
+
+  void updateField(String key, dynamic value) {
+    entity[key] = value;
+    notifyListeners();
+  }
+
+  Future<void> updateEntity() async {
+    // API call to update entity
+    await apiService.updateEntity(entity['id'], entity);
+  }
 
   stt.SpeechToText _speech = stt.SpeechToText();
 
@@ -31,7 +47,7 @@ class MatchProvider with ChangeNotifier {
 
   Future<void> fetchWithoutPaging() async {
     try {
-      final fetchedEntities = await _apiService.getEntities();
+      final fetchedEntities = await apiService.getEntities();
       _searchEntities = fetchedEntities;
       notifyListeners();
     } catch (e) {
@@ -45,7 +61,7 @@ class MatchProvider with ChangeNotifier {
       notifyListeners();
 
         final fetchedEntities =
-            await _apiService.getAllWithPagination(_currentPage, _pageSize);
+            await apiService.getAllWithPagination(_currentPage, _pageSize);
         _entities.addAll(fetchedEntities);
         _filteredEntities = _entities.toList();
         _currentPage++;
@@ -61,7 +77,7 @@ class MatchProvider with ChangeNotifier {
 
   Future<void> deleteEntity(Map<String, dynamic> entity) async {
     try {
-      await _apiService.deleteEntity(entity['id']);
+      await apiService.deleteEntity(entity['id']);
       _entities.remove(entity);
       _filteredEntities = _entities.toList();
       notifyListeners();
@@ -141,6 +157,105 @@ class MatchProvider with ChangeNotifier {
 
   void toggleViewMode() {
     _showCardView = !_showCardView;
+    notifyListeners();
+  }
+
+  final teamsApiService teamApiService = teamsApiService();
+  final MyTournamentApiService tournamentApiService = MyTournamentApiService();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateTime = DateTime.now();
+  bool isActive = false;
+
+  List<Map<String, dynamic>> tournamentNameItems = [];
+  String? selectedTournamentName;
+
+  List<Map<String, dynamic>> teamNameItems = [];
+  String? selectedTeam1Name;
+  String? selectedTeam2Name;
+
+  final Map<String, dynamic> formData = {};
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+      notifyListeners();
+    }
+  }
+
+  Future<void> selectDateTime(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+      );
+
+      if (pickedTime != null) {
+        selectedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> loadTournamentNameItems() async {
+    try {
+      // final token = await TokenManager.getToken();
+      final selectTdata = await tournamentApiService.getTournamentName();
+
+      if (selectTdata != null && selectTdata.isNotEmpty) {
+        tournamentNameItems = selectTdata;
+      } else {
+        tournamentNameItems = [];
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to load tournament names: $e');
+    }
+  }
+
+  Future<void> loadTeamNameItems() async {
+    try {
+      final selectTdata = await teamApiService.getMyTeam();
+
+      if (selectTdata != null && selectTdata.isNotEmpty) {
+        teamNameItems = selectTdata;
+      } else {
+        teamNameItems = [];
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to load teams: $e');
+    }
+  }
+
+  void toggleIsActive(bool value) {
+    isActive = value;
+    notifyListeners();
+  }
+
+  void updateFormData(String key, dynamic value) {
+    formData[key] = value;
     notifyListeners();
   }
 
