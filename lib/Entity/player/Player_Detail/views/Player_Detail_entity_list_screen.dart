@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/player/Player_Detail/model/Player_Detail_model.dart';
+import 'package:cricyard/Entity/player/Player_Detail/viewmodel/Player_Detail_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Player_Detail_api_service.dart';
+import 'package:provider/provider.dart';
 import 'Player_Detail_create_entity_screen.dart';
 import 'Player_Detail_update_entity_screen.dart';
-import '/providers/token_manager.dart';
-import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../../theme/app_style.dart';
 import '../../../../utils/size_utils.dart';
@@ -25,10 +25,10 @@ class player_detail_entity_list_screen extends StatefulWidget {
 
 class _player_detail_entity_list_screenState
     extends State<player_detail_entity_list_screen> {
-  final PlayerDetailApiService apiService = PlayerDetailApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  // final PlayerDetailApiService apiService = PlayerDetailApiService();
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> serachEntities = [];
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
@@ -41,169 +41,174 @@ class _player_detail_entity_list_screenState
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     _speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
+    provider.fetchEntities();
     _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
+    provider.fetchWithoutPaging();
+  });
   }
 
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Player_Detail entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Player_Detail: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities(token!);
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Player_Detail entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Player_Detail: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(token, currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
 
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Player_Detail data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Player_Detail data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   void _scrollListener() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      fetchEntities();
+      provider.fetchEntities();
     }
+  });
   }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(token!, entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['player_name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['phone_number']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
-    });
-  }
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['player_name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['phone_number']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -217,6 +222,7 @@ class _player_detail_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -248,8 +254,8 @@ class _player_detail_entity_list_screenState
       body: RefreshIndicator(
         onRefresh: () async {
           currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          provider.entities.clear();
+          await provider.fetchEntities();
         },
         child: Column(
           children: [
@@ -258,7 +264,7 @@ class _player_detail_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  provider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -272,7 +278,7 @@ class _player_detail_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      provider.startListening();
                     },
                   ),
                 ),
@@ -280,10 +286,10 @@ class _player_detail_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: provider.filteredEntities.length + (isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < provider.filteredEntities.length) {
+                    final entity = provider.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
@@ -309,7 +315,7 @@ class _player_detail_entity_list_screenState
               builder: (context) => player_detailCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            provider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -317,12 +323,12 @@ class _player_detail_entity_list_screenState
     ));
   }
 
-  Widget _buildListItem(Map<String, dynamic> entity) {
+  Widget _buildListItem(PlayerDetailModel entity) {
     return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
   }
 
   // Function to build card view for a list item
-  Widget _buildCardView(Map<String, dynamic> entity) {
+  Widget _buildCardView(PlayerDetailModel entity) {
     return Card(
         elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -333,9 +339,9 @@ class _player_detail_entity_list_screenState
 
   // Function to build normal view for a list item
 
-  Widget _buildNormalView(Map<String, dynamic> entity) {
+  Widget _buildNormalView(PlayerDetailModel entity) {
     final values = entity.values.elementAt(21) ?? 'Authsec';
-
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -371,7 +377,7 @@ class _player_detail_entity_list_screenState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          entity['id'].toString(),
+                          entity.id.toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: AppStyle.txtGreenSemiBold16,
@@ -433,7 +439,7 @@ class _player_detail_entity_list_screenState
                                 player_detailUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          provider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -454,8 +460,8 @@ class _player_detail_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    provider.deleteEntity(entity)
+                                        .then((value) => {provider.fetchEntities()});
                                   },
                                 ),
                               ],
@@ -482,7 +488,7 @@ class _player_detail_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['player_name'] ?? 'No Player Name Available',
+                    entity.playerName ?? 'No Player Name Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -504,7 +510,7 @@ class _player_detail_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['phone_number'] ?? 'No Phone Number Available',
+                    entity.phoneNumber ?? 'No Phone Number Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,

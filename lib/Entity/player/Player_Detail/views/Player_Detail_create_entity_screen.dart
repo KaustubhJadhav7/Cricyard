@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/player/Player_Detail/viewmodel/Player_Detail_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +11,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/Player_Detail_api_service.dart';
+import '../repository/Player_Detail_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -23,8 +25,7 @@ class player_detailCreateEntityScreen extends StatefulWidget {
 
 class _player_detailCreateEntityScreenState
     extends State<player_detailCreateEntityScreen> {
-  final PlayerDetailApiService apiService = PlayerDetailApiService();
-  final Map<String, dynamic> formData = {};
+  // final PlayerDetailApiService apiService = PlayerDetailApiService();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -106,6 +107,7 @@ class _player_detailCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -140,7 +142,7 @@ class _player_detailCreateEntityScreenState
                         CustomTextFormField(
                           focusNode: FocusNode(),
                           hintText: "Please Enter Player Name",
-                          onsaved: (value) => formData['player_name'] = value,
+                          onsaved: (value) => provider.formData['player_name'] = value,
                         )
                       ]),
                 ),
@@ -159,7 +161,7 @@ class _player_detailCreateEntityScreenState
                               focusNode: FocusNode(),
                               hintText: "Enter Phone Number",
                               onsaved: (value) =>
-                                  formData['phone_number'] = value,
+                                  provider.formData['phone_number'] = value,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -176,11 +178,10 @@ class _player_detailCreateEntityScreenState
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      final token = await TokenManager.getToken();
                       try {
-                        print(formData);
+                        print(provider.formData);
                         Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                            await provider.createEntity(provider.formData);
 
                         Navigator.pop(context);
                       } catch (e) {

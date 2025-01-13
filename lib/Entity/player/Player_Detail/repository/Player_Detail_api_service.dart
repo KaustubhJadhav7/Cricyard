@@ -71,6 +71,8 @@
 //   }
 // }
 
+import 'package:cricyard/Entity/player/Player_Detail/model/Player_Detail_model.dart';
+
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart'; // Import NetworkApiService
 
@@ -79,10 +81,10 @@ class PlayerDetailApiService {
   final NetworkApiService networkApiService = NetworkApiService();
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<PlayerDetailModel>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Player_Detail/Player_Detail');
-      final entities = (response as List).cast<Map<String, dynamic>>();
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesPlayerDetail);
+      final entities = (response as List).cast<PlayerDetailModel>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
@@ -90,12 +92,11 @@ class PlayerDetailApiService {
   }
 
   // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<PlayerDetailModel>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Player_Detail/Player_Detail/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '${ApiConstants.getAllWithPaginationPlayerDetail}?page=$page&size=$size');
+      final entities = (response['content'] as List).cast<PlayerDetailModel>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -103,11 +104,10 @@ class PlayerDetailApiService {
   }
 
   // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Player_Detail/Player_Detail', entity);
+          ApiConstants.createEntityPlayerDetail, entity);
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -115,21 +115,20 @@ class PlayerDetailApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, PlayerDetailModel entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Player_Detail/Player_Detail/$entityId', entity);
+          '${ApiConstants.updateEntityPlayerDetail}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
   // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Player_Detail/Player_Detail/$entityId');
+          '${ApiConstants.deleteEntityPlayerDetail}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

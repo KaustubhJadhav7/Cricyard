@@ -1,4 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/player/Player_Detail/model/Player_Detail_model.dart';
+import 'package:cricyard/Entity/player/Player_Detail/viewmodel/Player_Detail_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,12 +12,12 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Player_Detail_api_service.dart';
+import '../repository/Player_Detail_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
 class player_detailUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final PlayerDetailModel entity;
 
   player_detailUpdateEntityScreen({required this.entity});
 
@@ -24,8 +28,7 @@ class player_detailUpdateEntityScreen extends StatefulWidget {
 
 class _player_detailUpdateEntityScreenState
     extends State<player_detailUpdateEntityScreen> {
-  final PlayerDetailApiService apiService = PlayerDetailApiService();
-  final _formKey = GlobalKey<FormState>();
+  // final PlayerDetailApiService apiService = PlayerDetailApiService();
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _player_detailUpdateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PlayerDetailProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -52,7 +56,7 @@ class _player_detailUpdateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: provider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -68,11 +72,11 @@ class _player_detailUpdateEntityScreenState
                         CustomTextFormField(
                             focusNode: FocusNode(),
                             hintText: "Please Enter Player Name",
-                            initialValue: widget.entity['player_name'],
+                            initialValue: widget.entity.playerName,
 
                             // ValidationProperties
                             onsaved: (value) =>
-                                widget.entity['player_name'] = value,
+                                widget.entity.updateField('player_name', value),
                             margin: getMargin(top: 7))
                       ]),
                 ),
@@ -89,7 +93,7 @@ class _player_detailUpdateEntityScreenState
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Phone Number",
-                              initialValue: widget.entity['phone_number'],
+                              initialValue: widget.entity.phoneNumber,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -99,7 +103,8 @@ class _player_detailUpdateEntityScreenState
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['phone_number'] = value;
+                                // widget.entity['phone_number'] = value;
+                                widget.entity.updateField('phone_number', value);
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -109,20 +114,15 @@ class _player_detailUpdateEntityScreenState
                   text: "Update",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (provider.formKey.currentState!.validate()) {
+                      provider.formKey.currentState!.save();
 
-                      final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
+                        await provider.updateEntity(widget.entity.id,
                             widget.entity);
 
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

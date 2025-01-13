@@ -79,7 +79,7 @@ class RetiredOutApiService {
   // Fetch all entities
   Future<List<Map<String, dynamic>>> getEntities(String token) async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Retired_out/Retired_out');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesRetiredOut);
       // Assuming the response is a List of entities
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
@@ -93,7 +93,7 @@ class RetiredOutApiService {
       String token, int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Retired_out/Retired_out/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationRetiredOut}?page=$page&size=$size');
       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -106,7 +106,7 @@ class RetiredOutApiService {
       String token, Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Retired_out/Retired_out', entity);
+          ApiConstants.createEntityRetiredOut, entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -119,7 +119,7 @@ class RetiredOutApiService {
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Retired_out/Retired_out/$entityId', entity);
+          '${ApiConstants.updateEntityRetiredOut}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -129,7 +129,7 @@ class RetiredOutApiService {
   Future<void> deleteEntity(String token, int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Retired_out/Retired_out/$entityId');
+          '${ApiConstants.deleteEntityRetiredOut}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

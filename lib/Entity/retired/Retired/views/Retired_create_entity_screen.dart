@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/retired/Retired/viewmodels/Retired_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -10,9 +12,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import '../../../../views/widgets/custom_dropdown_field.dart';
 
-import '../viewmodels/Retired_api_service.dart';
-import '/providers/token_manager.dart';
-import 'package:flutter/services.dart';
+// import '../repository/Retired_api_service.dart';
 
 class retiredCreateEntityScreen extends StatefulWidget {
   const retiredCreateEntityScreen({super.key});
@@ -23,9 +23,9 @@ class retiredCreateEntityScreen extends StatefulWidget {
 }
 
 class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
-  final RetiredApiService apiService = RetiredApiService();
-  final Map<String, dynamic> formData = {};
-  final _formKey = GlobalKey<FormState>();
+  // final RetiredApiService apiService = RetiredApiService();
+  // final Map<String, dynamic> formData = {};
+  final formKey = GlobalKey<FormState>();
 
   bool isactive = false;
 
@@ -35,42 +35,42 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
     '  qr_code  ',
   ];
 
-  String? selectedcan_batter_bat_again;
-  Future<void> _showcan_batter_bat_againSelectionDialog(
-      BuildContext context) async {
-    final result = await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('Select can_batter_bat_again'),
-          children: [
-            RadioListTile<String>(
-              title: const Text('bar_code'),
-              value: 'bar_code',
-              groupValue: selectedcan_batter_bat_again,
-              onChanged: (value) {
-                setState(() {
-                  selectedcan_batter_bat_again = value;
-                  Navigator.pop(context, value);
-                });
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('qr_code'),
-              value: 'qr_code',
-              groupValue: selectedcan_batter_bat_again,
-              onChanged: (value) {
-                setState(() {
-                  selectedcan_batter_bat_again = value;
-                  Navigator.pop(context, value);
-                });
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // String? selectedcan_batter_bat_again;
+  // Future<void> _showcan_batter_bat_againSelectionDialog(
+  //     BuildContext context) async {
+  //   final result = await showDialog<String>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return SimpleDialog(
+  //         title: const Text('Select can_batter_bat_again'),
+  //         children: [
+  //           RadioListTile<String>(
+  //             title: const Text('bar_code'),
+  //             value: 'bar_code',
+  //             groupValue: selectedcan_batter_bat_again,
+  //             onChanged: (value) {
+  //               setState(() {
+  //                 selectedcan_batter_bat_again = value;
+  //                 Navigator.pop(context, value);
+  //               });
+  //             },
+  //           ),
+  //           RadioListTile<String>(
+  //             title: const Text('qr_code'),
+  //             value: 'qr_code',
+  //             groupValue: selectedcan_batter_bat_again,
+  //             onChanged: (value) {
+  //               setState(() {
+  //                 selectedcan_batter_bat_again = value;
+  //                 Navigator.pop(context, value);
+  //               });
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void initState() {
@@ -80,8 +80,6 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
-  //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
   //       builder: (BuildContext context) {
@@ -117,33 +115,22 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
   //     );
   //   } catch (e) {
   //     print("OCR Error: $e");
-  //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
-
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
-  //   // Now you can process the extracted text as needed
-  //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
   //     formData['description'] = extractedText;
   //   });
@@ -151,6 +138,7 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RetiredEntitiesProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -169,7 +157,7 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 Padding(
@@ -189,7 +177,8 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
                               // ValidationProperties
 
                               onsaved: (value) =>
-                                  formData['description'] = value,
+                                  // provider.formData['description'] = value,
+                                  provider.updateCurrentEntity(description: value),
                               margin: getMargin(top: 6))
                         ])),
                 SizedBox(height: 16),
@@ -225,8 +214,8 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      var selectedplayer_name = value!;
-                      formData['player_name'] = value;
+                      // var selectedplayer_name = value!;
+                      provider.updateCurrentEntity(playerName: value);;
                     });
                   },
                   // ValidationProperties
@@ -235,7 +224,8 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
                     if (selectedplayer_name.isEmpty) {
                       selectedplayer_name = "no value";
                     }
-                    formData['player_name'] = selectedplayer_name;
+                    // provider.formData['player_name'] = selectedplayer_name;
+                    provider.updateCurrentEntity(playerName: selectedplayer_name);;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -254,14 +244,16 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
                               hintText: "Enter Can Batter bat again",
                               readOnly: true,
                               controller: TextEditingController(
-                                  text: selectedcan_batter_bat_again),
+                                  text: provider.selectedCanBatterBatAgain),
                               onTap: () =>
-                                  _showcan_batter_bat_againSelectionDialog(
-                                      context),
+                                  // _showcan_batter_bat_againSelectionDialog(
+                                  //     context),
+                                  provider.showCanBatterBatAgainDialog(context),
 
 // ValidationProperties
                               onsaved: (value) {
-                                formData['can_batter_bat_again'] = value;
+                                // provider.formData['can_batter_bat_again'] = value;
+                                provider.updateCurrentEntity(canBatterBatAgain: value);;
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -272,17 +264,15 @@ class _retiredCreateEntityScreenState extends State<retiredCreateEntityScreen> {
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
 
-                      formData['active'] = isactive;
+                      // provider.formData['active'] = isactive;
+                      provider.updateCurrentEntity(active: isactive);;
 
-                      final token = await TokenManager.getToken();
                       try {
-                        print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
-
+                        print(provider.currentEntity);
+                        await provider.createEntity();
                         Navigator.pop(context);
                       } catch (e) {
                         // ignore: use_build_context_synchronously

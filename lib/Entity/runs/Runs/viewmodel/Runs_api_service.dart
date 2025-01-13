@@ -91,7 +91,7 @@ class runsApiService {
   // Fetch all entities
   Future<List<Map<String, dynamic>>> getEntities(String token) async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Runs/Runs');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesRuns);
       // Assuming the response is a List of entities
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
@@ -105,7 +105,7 @@ class runsApiService {
       String token, int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Runs/Runs/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationRuns}?page=$page&size=$size');
       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -118,7 +118,7 @@ class runsApiService {
       String token, Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Runs/Runs', entity);
+          ApiConstants.createEntityRuns, entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -131,7 +131,7 @@ class runsApiService {
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Runs/Runs/$entityId', entity);
+          '${ApiConstants.updateEntityRuns}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -141,7 +141,7 @@ class runsApiService {
   Future<void> deleteEntity(String token, int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Runs/Runs/$entityId');
+          '${ApiConstants.deleteEntityRuns}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
@@ -151,7 +151,7 @@ class runsApiService {
   Future<List<Map<String, dynamic>>> getselectField(String token) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/PlayerList_ListFilter1/PlayerList_ListFilter1');
+          ApiConstants.getSelectFieldRuns);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {

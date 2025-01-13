@@ -75,6 +75,8 @@
 //   }
 // }
 
+import 'package:cricyard/Entity/obstructing_the_field/Obstructing_The_Field/model/Obstructing_The_Field_model.dart';
+
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart'; // Import NetworkApiService
 
@@ -83,10 +85,11 @@ class ObstructingTheFieldApiService {
   final NetworkApiService networkApiService = NetworkApiService();
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<ObstructingTheField>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Obstructing_The_Field/Obstructing_The_Field');
-      final entities = (response as List).cast<Map<String, dynamic>>();
+      final response = await networkApiService
+          .getGetApiResponse(ApiConstants.getEntitiesObstructingTheField);
+      final entities = (response as List).cast<ObstructingTheField>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
@@ -94,12 +97,12 @@ class ObstructingTheFieldApiService {
   }
 
   // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<ObstructingTheField>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Obstructing_The_Field/Obstructing_The_Field/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '${ApiConstants.getAllWithPaginationObstructingTheField}?page=$page&size=$size');
+      final entities =
+          (response['content'] as List).cast<ObstructingTheField>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -107,11 +110,10 @@ class ObstructingTheFieldApiService {
   }
 
   // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Obstructing_The_Field/Obstructing_The_Field', entity);
+          ApiConstants.createEntityObstructingTheField, entity);
       return response;
     } catch (e) {
       throw Exception('Failed to create entity: $e');
@@ -119,21 +121,20 @@ class ObstructingTheFieldApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Obstructing_The_Field/Obstructing_The_Field/$entityId', entity);
+          '${ApiConstants.updateEntityObstructingTheField}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
   // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Obstructing_The_Field/Obstructing_The_Field/$entityId');
+          '${ApiConstants.deleteEntityObstructingTheField}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

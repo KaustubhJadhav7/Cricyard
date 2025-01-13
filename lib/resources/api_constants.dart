@@ -94,6 +94,67 @@ class ApiConstants {
   static const String allMatchesByTourId = '$baseUrl/Match/Match/tournament';
   static const String liveMatches = '$baseUrl/Match/Match/status?status=Started';
   static const String liveMatchesByTourId = '$baseUrl/Match/Match/status/tour?status=Started';
+  // MatchSetting
+  static const String getEntitiesMatchSetting = '$baseUrl/Match_Setting/Match_Setting';
+  static const String getAllWithPaginationMatchSetting = '$baseUrl/Match_Setting/Match_Setting/getall/page';
+  static const String createEntityMatchSetting = '$baseUrl/Match_Setting/Match_Setting';
+  static const String updateEntityMatchSetting = '$baseUrl/Match_Setting/Match_Setting';
+  static const String deleteEntityMatchSetting = '$baseUrl/Match_Setting/Match_Setting';
+  // Matches
+  static const String getEntitiesMatches = '$baseUrl/Matches/Matches';
+  static const String getAllWithPaginationMatches = '$baseUrl/Matches/Matches/getall/page';
+  static const String createEntityMatches = '$baseUrl/Matches/Matches';
+  static const String updateEntityMatches = '$baseUrl/Matches/Matches';
+  static const String deleteEntityMatches = '$baseUrl/Matches/Matches';
+  // StartMatch
+  static const String getEntitiesStartMatch = '$baseUrl/Start_Match/Start_Match';
+  static const String getAllWithPaginationStartMatch = '$baseUrl/Start_Match/Start_Match/getall/page';
+  static const String createEntityStartMatch = '$baseUrl/Start_Match/Start_Match';
+  static const String updateEntityStartMatch = '$baseUrl/Start_Match/Start_Match';
+  static const String deleteEntityStartMatch = '$baseUrl/Start_Match/Start_Match';
+  // ObstructingTheField
+  static const String getEntitiesObstructingTheField = '$baseUrl/Obstructing_The_Field/Obstructing_The_Field';
+  static const String getAllWithPaginationObstructingTheField = '$baseUrl/Obstructing_The_Field/Obstructing_The_Field/getall/page';
+  static const String createEntityObstructingTheField = '$baseUrl/Obstructing_The_Field/Obstructing_The_Field';
+  static const String updateEntityObstructingTheField = '$baseUrl/Obstructing_The_Field/Obstructing_The_Field';
+  static const String deleteEntityObstructingTheField = '$baseUrl/Obstructing_The_Field/Obstructing_The_Field';
+// PlayerDetail
+  static const String getEntitiesPlayerDetail = '$baseUrl/Player_Detail/Player_Detail';
+  static const String getAllWithPaginationPlayerDetail = '$baseUrl/Player_Detail/Player_Detail/getall/page';
+  static const String createEntityPlayerDetail = '$baseUrl/Player_Detail/Player_Detail';
+  static const String updateEntityPlayerDetail = '$baseUrl/Player_Detail/Player_Detail';
+  static const String deleteEntityPlayerDetail = '$baseUrl/Player_Detail/Player_Detail';
+// Retired
+  static const String getEntitiesRetired = '$baseUrl/Retired/Retired';
+  static const String getAllWithPaginationRetired = '$baseUrl/Retired/Retired/getall/page';
+  static const String createEntityRetired = '$baseUrl/Retired/Retired';
+  static const String updateEntityRetired = '$baseUrl/Retired/Retired';
+  static const String deleteEntityRetired = '$baseUrl/Retired/Retired';
+// RetiredOut
+  static const String getEntitiesRetiredOut = '$baseUrl/Retired_out/Retired_out';
+  static const String getAllWithPaginationRetiredOut = '$baseUrl/Retired_out/Retired_out/getall/page';
+  static const String createEntityRetiredOut = '$baseUrl/Retired_out/Retired_out';
+  static const String updateEntityRetiredOut = '$baseUrl/Retired_out/Retired_out';
+  static const String deleteEntityRetiredOut = '$baseUrl/Retired_out/Retired_out';
+// Runs
+  static const String getEntitiesRuns = '$baseUrl/Runs/Runs';
+  static const String getAllWithPaginationRuns = '$baseUrl/Runs/Runs/getall/page';
+  static const String createEntityRuns = '$baseUrl/Runs/Runs';
+  static const String updateEntityRuns = '$baseUrl/Runs/Runs';
+  static const String deleteEntityRuns = '$baseUrl/Runs/Runs';
+// Player List for Select Fields
+  static const String getSelectFieldRuns = '$baseUrl/PlayerList_ListFilter1/PlayerList_ListFilter1';
+// SelectTeam
+  static const String getEntitiesSelectTeam = '$baseUrl/Select_Team/Select_Team';
+  static const String getAllWithPaginationSelectTeam = '$baseUrl/Select_Team/Select_Team/getall/page';
+  static const String createEntitySelectTeam = '$baseUrl/Select_Team/Select_Team';
+  static const String updateEntitySelectTeam = '$baseUrl/Select_Team/Select_Team';
+  static const String deleteEntitySelectTeam = '$baseUrl/Select_Team/Select_Team';
+// Team Names
+  static const String getTeamNameSelectTeam = '$baseUrl/TeamList_ListFilter1/TeamList_ListFilter1';
+
+
+
 
 
     // for api contants =>  static const getEntitiesAbsenthurt = '$baseUrl/Absent_hurt/Absent_hurt';

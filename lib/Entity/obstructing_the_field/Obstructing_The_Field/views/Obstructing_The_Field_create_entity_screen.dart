@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/obstructing_the_field/Obstructing_The_Field/viewmodel/Obstructing_The_Field_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,7 +10,7 @@ import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
-import '../viewmodel/Obstructing_The_Field_api_service.dart';
+import '../repository/Obstructing_The_Field_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -22,9 +24,9 @@ class obstructing_the_fieldCreateEntityScreen extends StatefulWidget {
 
 class _obstructing_the_fieldCreateEntityScreenState
     extends State<obstructing_the_fieldCreateEntityScreen> {
-  final ObstructingTheFieldApiService apiService =
-      ObstructingTheFieldApiService();
-  final Map<String, dynamic> formData = {};
+  // final ObstructingTheFieldApiService apiService =
+  //     ObstructingTheFieldApiService();
+  // final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -35,7 +37,6 @@ class _obstructing_the_fieldCreateEntityScreenState
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -75,28 +76,20 @@ class _obstructing_the_fieldCreateEntityScreenState
   //     // Handle OCR errors here
   //   }
   // }
-
   // final textRecognizer = TextRecognizer();
-
   // void processImage(XFile? image) async {
   //   if (image == null) return; // User canceled image picking
-
   //   final file = File(image.path);
-
   //   final inputImage = InputImage.fromFile(file);
   //   final recognizedText = await textRecognizer.processImage(inputImage);
-
   //   StringBuffer extractedTextBuffer = StringBuffer();
   //   for (TextBlock block in recognizedText.blocks) {
   //     for (TextLine line in block.lines) {
   //       extractedTextBuffer.write(line.text + ' ');
   //     }
   //   }
-
   //   textRecognizer.close();
-
   //   String extractedText = extractedTextBuffer.toString().trim();
-
   //   // Now you can process the extracted text as needed
   //   // For example, you can update the corresponding TextFormField with the extracted text
   //   setState(() {
@@ -106,6 +99,7 @@ class _obstructing_the_fieldCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ObstructingTheFieldProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -144,7 +138,7 @@ class _obstructing_the_fieldCreateEntityScreenState
                               // ValidationProperties
 
                               onsaved: (value) =>
-                                  formData['runs_scored'] = value,
+                                  provider.formData['runs_scored'] = value,
                               margin: getMargin(top: 6))
                         ])),
                 SizedBox(height: 16),
@@ -157,11 +151,10 @@ class _obstructing_the_fieldCreateEntityScreenState
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      final token = await TokenManager.getToken();
                       try {
-                        print(formData);
+                        print(provider.formData);
                         Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                            await provider.createEntity(provider.formData);
 
                         Navigator.pop(context);
                       } catch (e) {

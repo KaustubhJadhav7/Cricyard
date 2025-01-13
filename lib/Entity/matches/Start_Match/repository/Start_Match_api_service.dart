@@ -81,7 +81,7 @@ class StartMatchApiService {
 
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await networkService.getGetApiResponse('$baseUrl/Start_Match/Start_Match');
+      final response = await networkService.getGetApiResponse(ApiConstants.getEntitiesStartMatch);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -92,7 +92,7 @@ class StartMatchApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkService.getGetApiResponse(
-          '$baseUrl/Start_Match/Start_Match/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationStartMatch}?page=$page&size=$size');
       final entities =
           (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
@@ -104,7 +104,7 @@ class StartMatchApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkService.getPostApiResponse(
-        '$baseUrl/Start_Match/Start_Match',
+        ApiConstants.createEntityStartMatch,
         entity,
       );
       return response;
@@ -116,7 +116,7 @@ class StartMatchApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkService.getPutApiResponse(
-        '$baseUrl/Start_Match/Start_Match/$entityId',
+        '${ApiConstants.updateEntityStartMatch}/$entityId',
         entity,
       );
     } catch (e) {
@@ -126,7 +126,7 @@ class StartMatchApiService {
 
   Future<void> deleteEntity(int entityId) async {
     try {
-      await networkService.getDeleteApiResponse('$baseUrl/Start_Match/Start_Match/$entityId');
+      await networkService.getDeleteApiResponse('${ApiConstants.deleteEntityStartMatch}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

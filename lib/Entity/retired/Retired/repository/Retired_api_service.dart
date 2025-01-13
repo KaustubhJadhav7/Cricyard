@@ -68,6 +68,8 @@
 //     }
 //   }
 // }
+import 'package:cricyard/Entity/retired/Retired/model/Retired_model.dart';
+
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart'; // Import NetworkApiService
 
@@ -76,11 +78,11 @@ class RetiredApiService {
   final NetworkApiService networkApiService = NetworkApiService();
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<RetiredEntity>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Retired/Retired');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesRetired);
       // Assuming the response is a List of entities
-      final entities = (response as List).cast<Map<String, dynamic>>();
+      final entities = (response as List).cast<RetiredEntity>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
@@ -88,12 +90,11 @@ class RetiredApiService {
   }
 
   // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<RetiredEntity>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Retired/Retired/getall/page?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '${ApiConstants.getAllWithPaginationRetired}?page=$page&size=$size');
+      final entities = (response['content'] as List).cast<RetiredEntity>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -101,11 +102,10 @@ class RetiredApiService {
   }
 
   // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<RetiredEntity> createEntity(RetiredEntity entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Retired/Retired', entity);
+          ApiConstants.createEntityRetired, entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -114,21 +114,20 @@ class RetiredApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, RetiredEntity entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Retired/Retired/$entityId', entity);
+          '${ApiConstants.updateEntityRetired}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
   // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Retired/Retired/$entityId');
+          '${ApiConstants.deleteEntityRetired}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

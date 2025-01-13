@@ -79,7 +79,7 @@ class MatchSettingApiService {
 
   Future<List<Map<String, dynamic>>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Match_Setting/Match_Setting');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesMatchSetting);
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
@@ -89,7 +89,7 @@ class MatchSettingApiService {
   Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/Match_Setting/Match_Setting/getall/page?page=$page&size=$size',
+        '${ApiConstants.getAllWithPaginationMatchSetting}?page=$page&size=$size',
       );
       return (response['content'] as List).cast<Map<String, dynamic>>();
     } catch (e) {
@@ -100,7 +100,7 @@ class MatchSettingApiService {
   Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/Match_Setting/Match_Setting',
+        ApiConstants.createEntityMatchSetting,
         entity,
       );
       return response;
@@ -112,7 +112,7 @@ class MatchSettingApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-        '$baseUrl/Match_Setting/Match_Setting/$entityId',
+        '${ApiConstants.updateEntityMatchSetting}/$entityId',
         entity,
       );
     } catch (e) {
@@ -123,7 +123,7 @@ class MatchSettingApiService {
   Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-        '$baseUrl/Match_Setting/Match_Setting/$entityId',
+        '${ApiConstants.deleteEntityMatchSetting}/$entityId',
       );
     } catch (e) {
       throw Exception('Failed to delete entity: $e');

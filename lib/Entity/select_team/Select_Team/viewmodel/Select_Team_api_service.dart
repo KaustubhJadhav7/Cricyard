@@ -92,7 +92,7 @@ class SelectTeamApiService {
   // Fetch all entities
   Future<List<Map<String, dynamic>>> getEntities(String token) async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Select_Team/Select_Team');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesSelectTeam);
       // Assuming the response is a List of entities
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
@@ -106,7 +106,7 @@ class SelectTeamApiService {
       String token, int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Select_Team/Select_Team/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationSelectTeam}?page=$page&size=$size');
       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
@@ -119,7 +119,7 @@ class SelectTeamApiService {
       String token, Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Select_Team/Select_Team', entity);
+          ApiConstants.createEntitySelectTeam, entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -132,7 +132,7 @@ class SelectTeamApiService {
       String token, int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '$baseUrl/Select_Team/Select_Team/$entityId', entity);
+          '${ApiConstants.updateEntitySelectTeam}/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -142,7 +142,7 @@ class SelectTeamApiService {
   Future<void> deleteEntity(String token, int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Select_Team/Select_Team/$entityId');
+          '${ApiConstants.deleteEntitySelectTeam}/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
@@ -152,7 +152,7 @@ class SelectTeamApiService {
   Future<List<Map<String, dynamic>>> getTeamName(String token) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/TeamList_ListFilter1/TeamList_ListFilter1');
+          ApiConstants.getTeamNameSelectTeam);
       final entities = (response as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
