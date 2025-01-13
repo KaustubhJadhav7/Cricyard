@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:cricyard/Entity/runs/Score_board/Score_board_api_service.dart';
+import 'package:cricyard/Entity/runs/Score_board/repository/Score_board_api_service.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/score_board/widget/tour_overs_container.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

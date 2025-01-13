@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/retired_out/Retired_out/model/Retired_out_model.dart';
+import 'package:cricyard/Entity/retired_out/Retired_out/viewmodel/Retired_out_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodel/Retired_out_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Retired_out_api_service.dart';
 import 'Retired_out_create_entity_screen.dart';
 import 'Retired_out_update_entity_screen.dart';
 import '/providers/token_manager.dart';
@@ -25,10 +28,10 @@ class retired_out_entity_list_screen extends StatefulWidget {
 
 class _retired_out_entity_list_screenState
     extends State<retired_out_entity_list_screen> {
-  final RetiredOutApiService apiService = RetiredOutApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  // final RetiredOutApiService apiService = RetiredOutApiService();
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> serachEntities = [];
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
@@ -41,173 +44,176 @@ class _retired_out_entity_list_screenState
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<RetiredOutProvider>(context, listen: false);
     _speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
+    provider.fetchEntities();
+    // provider.scrollController.addListener(provider.scrollListener);
+    provider.fetchWithoutPaging();
+  });
   }
 
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Retired_out entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Retired_out: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Retired_out entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Retired_out: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
 
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
 
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Retired_out data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Retired_out data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
+  // void _scrollListener() {
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.maxScrollExtent) {
+  //     fetchEntities();
+  //   }
+  // }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['active']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['player_name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
-    });
-  }
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['active']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['player_name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -221,6 +227,7 @@ class _retired_out_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RetiredOutProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -252,8 +259,8 @@ class _retired_out_entity_list_screenState
       body: RefreshIndicator(
         onRefresh: () async {
           currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          provider.entities.clear();
+          await provider.fetchEntities();
         },
         child: Column(
           children: [
@@ -262,7 +269,7 @@ class _retired_out_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  provider.searchEntities(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -276,7 +283,7 @@ class _retired_out_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      provider.startListening();
                     },
                   ),
                 ),
@@ -284,10 +291,10 @@ class _retired_out_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: provider.filteredEntities.length + (isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < provider.filteredEntities.length) {
+                    final entity = provider.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
                     // Display the loading indicator at the bottom when new data is loading
@@ -313,7 +320,7 @@ class _retired_out_entity_list_screenState
               builder: (context) => retired_outCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            provider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -321,12 +328,12 @@ class _retired_out_entity_list_screenState
     ));
   }
 
-  Widget _buildListItem(Map<String, dynamic> entity) {
+  Widget _buildListItem(RetiredOutEntity entity) {
     return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
   }
 
   // Function to build card view for a list item
-  Widget _buildCardView(Map<String, dynamic> entity) {
+  Widget _buildCardView(RetiredOutEntity entity) {
     return Card(
         elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -337,9 +344,9 @@ class _retired_out_entity_list_screenState
 
   // Function to build normal view for a list item
 
-  Widget _buildNormalView(Map<String, dynamic> entity) {
-    final values = entity.values.elementAt(21) ?? 'Authsec';
-
+  Widget _buildNormalView(RetiredOutEntity entity) {
+    // final values = entity.values.elementAt(21) ?? 'Authsec';
+    final provider = Provider.of<RetiredOutProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -375,7 +382,7 @@ class _retired_out_entity_list_screenState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          entity['id'].toString(),
+                          entity.id.toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: AppStyle.txtGreenSemiBold16,
@@ -437,7 +444,7 @@ class _retired_out_entity_list_screenState
                                 retired_outUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          provider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -458,8 +465,8 @@ class _retired_out_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    provider.deleteEntity(entity)
+                                        .then((value) => {provider.fetchEntities()});
                                   },
                                 ),
                               ],
@@ -486,7 +493,7 @@ class _retired_out_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['description'] ?? 'No Description Available',
+                    entity.description ?? 'No Description Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -508,7 +515,7 @@ class _retired_out_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['active'].toString() ?? 'No Active Available',
+                    entity.active.toString() ?? 'No Active Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -530,7 +537,7 @@ class _retired_out_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['player_name'] ?? 'No Player Name Available',
+                    entity.playerName ?? 'No Player Name Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,

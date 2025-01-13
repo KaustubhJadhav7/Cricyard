@@ -1,4 +1,4 @@
-import 'package:cricyard/Entity/runs/Score_board/Score_board_api_service.dart';
+import 'package:cricyard/Entity/runs/Score_board/repository/Score_board_api_service.dart';
 import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/scoreboard_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

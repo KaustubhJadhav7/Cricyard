@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
-import 'Score_board_api_service.dart';
+import '../repository/Score_board_api_service.dart';
 import '/providers/token_manager.dart';
 
 class ScoreBoardCreateEntityScreen extends StatefulWidget {

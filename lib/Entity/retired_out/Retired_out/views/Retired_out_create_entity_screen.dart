@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/retired_out/Retired_out/model/Retired_out_model.dart';
+import 'package:cricyard/Entity/retired_out/Retired_out/viewmodel/Retired_out_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -10,7 +13,7 @@ import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import '../../../../views/widgets/custom_dropdown_field.dart';
 
-import '../viewmodel/Retired_out_api_service.dart';
+import '../repository/Retired_out_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -24,7 +27,6 @@ class retired_outCreateEntityScreen extends StatefulWidget {
 
 class _retired_outCreateEntityScreenState
     extends State<retired_outCreateEntityScreen> {
-  final RetiredOutApiService apiService = RetiredOutApiService();
   final Map<String, dynamic> formData = {};
   final _formKey = GlobalKey<FormState>();
 
@@ -115,6 +117,7 @@ class _retired_outCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RetiredOutProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -213,12 +216,10 @@ class _retired_outCreateEntityScreenState
                       _formKey.currentState!.save();
 
                       formData['active'] = isactive;
-
-                      final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                          final entity = RetiredOutEntity.fromMap(formData);
+                            await provider.createEntity(entity);
 
                         Navigator.pop(context);
                       } catch (e) {

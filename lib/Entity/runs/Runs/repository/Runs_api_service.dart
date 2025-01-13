@@ -81,6 +81,8 @@
 //   }
 // }
 
+import 'package:cricyard/Entity/runs/Runs/model/Runs_model.dart';
+
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart'; // Import NetworkApiService
 
@@ -89,11 +91,11 @@ class runsApiService {
   final NetworkApiService networkApiService = NetworkApiService();
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<RunsEntity>> getEntities() async {
     try {
       final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesRuns);
       // Assuming the response is a List of entities
-      final entities = (response as List).cast<Map<String, dynamic>>();
+      final entities = (response as List).cast<RunsEntity>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
@@ -101,12 +103,11 @@ class runsApiService {
   }
 
   // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<RunsEntity>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
           '${ApiConstants.getAllWithPaginationRuns}?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+      final entities = (response['content'] as List).cast<RunsEntity>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
@@ -114,8 +115,7 @@ class runsApiService {
   }
 
   // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<RunsEntity> createEntity(RunsEntity entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
           ApiConstants.createEntityRuns, entity);
@@ -127,8 +127,7 @@ class runsApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<dynamic> updateEntity(int entityId, RunsEntity entity) async {
     try {
       await networkApiService.getPutApiResponse(
           '${ApiConstants.updateEntityRuns}/$entityId', entity);
@@ -138,7 +137,7 @@ class runsApiService {
   }
 
   // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
           '${ApiConstants.deleteEntityRuns}/$entityId');
@@ -148,7 +147,7 @@ class runsApiService {
   }
 
   // Fetch select fields (e.g., player list)
-  Future<List<Map<String, dynamic>>> getselectField(String token) async {
+  Future<List<Map<String, dynamic>>> getselectField() async {
     try {
       final response = await networkApiService.getGetApiResponse(
           ApiConstants.getSelectFieldRuns);

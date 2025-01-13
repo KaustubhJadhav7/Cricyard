@@ -2,7 +2,7 @@ import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/matchScore.dar
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../Entity/runs/Score_board/Score_board_api_service.dart';
+import '../../../../../Entity/runs/Score_board/repository/Score_board_api_service.dart';
 
 class SecondInningPlayerEntryScreen2 extends StatefulWidget {
   final Map<String, dynamic> lastRecord;

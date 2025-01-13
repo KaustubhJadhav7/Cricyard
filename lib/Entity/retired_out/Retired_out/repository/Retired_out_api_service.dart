@@ -77,7 +77,7 @@ class RetiredOutApiService {
   final NetworkApiService networkApiService = NetworkApiService();
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<Map<String, dynamic>>> getEntities() async {
     try {
       final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesRetiredOut);
       // Assuming the response is a List of entities
@@ -90,7 +90,7 @@ class RetiredOutApiService {
 
   // Fetch all entities with pagination
   Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+      int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
           '${ApiConstants.getAllWithPaginationRetiredOut}?page=$page&size=$size');
@@ -102,8 +102,7 @@ class RetiredOutApiService {
   }
 
   // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<Map<String, dynamic>> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
           ApiConstants.createEntityRetiredOut, entity);
@@ -115,8 +114,7 @@ class RetiredOutApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
           '${ApiConstants.updateEntityRetiredOut}/$entityId', entity);
@@ -126,7 +124,7 @@ class RetiredOutApiService {
   }
 
   // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
           '${ApiConstants.deleteEntityRetiredOut}/$entityId');

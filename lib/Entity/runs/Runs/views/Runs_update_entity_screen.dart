@@ -1,4 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/runs/Runs/model/Runs_model.dart';
+import 'package:cricyard/Entity/runs/Runs/viewmodel/Runs_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,13 +12,13 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Runs_api_service.dart';
+import '../repository/Runs_api_service.dart';
 import '/providers/token_manager.dart';
 
 import 'package:flutter/services.dart';
 
 class runsUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final RunsEntity entity;
 
   runsUpdateEntityScreen({required this.entity});
 
@@ -23,44 +27,50 @@ class runsUpdateEntityScreen extends StatefulWidget {
 }
 
 class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
-  final runsApiService apiService = runsApiService();
   final _formKey = GlobalKey<FormState>();
 
   bool isactive = false;
 
-  List<Map<String, dynamic>> select_fieldItems = [];
+  // List<Map<String, dynamic>> select_fieldItems = [];
   var selectedselect_fieldValue;
-  Future<void> fetchselect_fieldItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getselectField(token!);
-      print('select_field data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          select_fieldItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedselect_fieldValue = widget.entity['select_field'] ?? null;
-        });
-      } else {
-        print('select_field data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load select_field items: $e');
-    }
-  }
+  // Future<void> fetchselect_fieldItems() async {
+  //   final token = await TokenManager.getToken();
+  //   try {
+  //     final selectTdata = await apiService.getselectField();
+  //     print('select_field data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         select_fieldItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedselect_fieldValue = widget.entity['select_field'] ?? null;
+  //       });
+  //     } else {
+  //       print('select_field data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load select_field items: $e');
+  //   }
+  // }
 
   @override
   void initState() {
-    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider =
+          Provider.of<RunsEntitiesProvider>(context, listen: false);
 
-    isactive = widget.entity['active'] ?? false; // Set initial value
+      super.initState();
 
-    fetchselect_fieldItems(); // Fetch dropdown items when the screen initializes
+      isactive = widget.entity.active ?? false; // Set initial value
+
+      provider.fetchSelectFieldItems(
+          selectedselect_fieldValue); // Fetch dropdown items when the screen initializes
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RunsEntitiesProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -95,13 +105,13 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Description",
-                              initialValue: widget.entity['description'],
+                              initialValue: widget.entity.description,
                               maxLines: 4,
 
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['description'] = value;
+                                widget.entity.description = value ?? "";
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -134,7 +144,7 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                               focusNode: FocusNode(),
                               hintText: "Enter Number of Runs",
                               initialValue:
-                                  widget.entity['number_of_runs'].toString(),
+                                  widget.entity.numberOfRuns.toString(),
                               keyboardType: TextInputType.number,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
@@ -144,7 +154,10 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['number_of_runs'] = value;
+                                if (value != null && value.isNotEmpty) {
+                                  widget.entity.numberOfRuns = int.parse(
+                                      value); // Parse the string to int
+                                }
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -157,7 +170,7 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...select_fieldItems.map<DropdownMenuItem<String>>(
+                    ...selectedselect_fieldValue.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['player_name'].toString(),
@@ -178,7 +191,7 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    widget.entity['select_field'] = value;
+                    widget.entity.selectField = value;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -190,14 +203,12 @@ class _runsUpdateEntityScreenState extends State<runsUpdateEntityScreen> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      widget.entity['active'] = isactive;
+                      widget.entity.active = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
+                        await provider.updateEntity(
+                            widget.entity
+                                .id, // Assuming 'id' is the key in your entity map
                             widget.entity);
 
                         Navigator.pop(context);

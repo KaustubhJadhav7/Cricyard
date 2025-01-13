@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../Entity/runs/Score_board/Score_board_api_service.dart';
+import '../../../../../Entity/runs/Score_board/repository/Score_board_api_service.dart';
 
 class ShowRetireAndMoreFrag {
   final score_boardApiService scoreservice = score_boardApiService();

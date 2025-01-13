@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../Entity/runs/Score_board/Score_board_api_service.dart';
+import '../../../../../Entity/runs/Score_board/repository/Score_board_api_service.dart';
 
 class ScoreBoardManager {
   score_boardApiService scoreservice = score_boardApiService();

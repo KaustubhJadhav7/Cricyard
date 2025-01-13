@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/runs/Runs/model/Runs_model.dart';
+import 'package:cricyard/Entity/runs/Runs/viewmodel/Runs_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +12,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/Runs_api_service.dart';
+import '../repository/Runs_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -22,7 +25,13 @@ class runsCreateEntityScreen extends StatefulWidget {
 
 class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
   final runsApiService apiService = runsApiService();
-  final Map<String, dynamic> formData = {};
+  final RunsEntity formData = RunsEntity(
+    id: 0, // Or any default value
+    description: '',
+    active: false,
+    numberOfRuns: 0,
+    selectField: '',
+  );
   final _formKey = GlobalKey<FormState>();
 
   bool isactive = false;
@@ -32,7 +41,7 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
   Future<void> _loadselect_fieldItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getselectField(token!);
+      final selectTdata = await apiService.getselectField();
       print(' select_field   data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -128,6 +137,7 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RunsEntitiesProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -165,8 +175,7 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
                               hintText: "Enter Description",
                               // ValidationProperties
 
-                              onsaved: (value) =>
-                                  formData['description'] = value,
+                              onsaved: (value) => formData.description = value,
                               margin: getMargin(top: 6))
                         ])),
 
@@ -203,8 +212,12 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
 // ValidationProperties
 
                               hintText: "Enter Number of Runs",
-                              onsaved: (value) =>
-                                  formData['number_of_runs'] = value,
+                              onsaved: (value) {
+                                if (value != null && value.isNotEmpty) {
+                                  formData.numberOfRuns = int.parse(
+                                      value); // Parse the string to int
+                                }
+                              },
                               margin: getMargin(top: 6))
                         ])),
 
@@ -239,7 +252,7 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
                     if (selectedselect_fieldValue.isEmpty) {
                       selectedselect_fieldValue = "no value";
                     }
-                    formData['select_field'] = selectedselect_fieldValue;
+                    formData.selectField = selectedselect_fieldValue;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -253,13 +266,11 @@ class _runsCreateEntityScreenState extends State<runsCreateEntityScreen> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      formData['active'] = isactive;
+                      formData.active = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
                         print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
+                        await provider.createEntity(formData);
 
                         Navigator.pop(context);
                       } catch (e) {

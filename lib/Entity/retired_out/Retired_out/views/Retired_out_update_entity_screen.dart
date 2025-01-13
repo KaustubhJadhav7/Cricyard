@@ -1,4 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/retired_out/Retired_out/model/Retired_out_model.dart';
+import 'package:cricyard/Entity/retired_out/Retired_out/viewmodel/Retired_out_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,11 +12,11 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Retired_out_api_service.dart';
+import '../repository/Retired_out_api_service.dart';
 import '/providers/token_manager.dart';
 
 class retired_outUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final RetiredOutEntity entity;
 
   retired_outUpdateEntityScreen({required this.entity});
 
@@ -23,7 +27,6 @@ class retired_outUpdateEntityScreen extends StatefulWidget {
 
 class _retired_outUpdateEntityScreenState
     extends State<retired_outUpdateEntityScreen> {
-  final RetiredOutApiService apiService = RetiredOutApiService();
   final _formKey = GlobalKey<FormState>();
 
   bool isactive = false;
@@ -38,14 +41,15 @@ class _retired_outUpdateEntityScreenState
   void initState() {
     super.initState();
 
-    isactive = widget.entity['active'] ?? false; // Set initial value
+    isactive = widget.entity.active ?? false; // Set initial value
 
     selectedplayer_name =
-        widget.entity['player_name']; // Initialize with the default value
+        widget.entity.playerName; // Initialize with the default value
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RetiredOutProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -80,13 +84,13 @@ class _retired_outUpdateEntityScreenState
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Description",
-                              initialValue: widget.entity['description'],
+                              initialValue: widget.entity.description,
                               maxLines: 4,
 
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['description'] = value;
+                                widget.entity.description = value ?? "";
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -96,9 +100,7 @@ class _retired_outUpdateEntityScreenState
                     Switch(
                       value: isactive,
                       onChanged: (newValue) {
-                        setState(() {
-                          isactive = newValue;
-                        });
+                        widget.entity.active = newValue;
                       },
                     ),
                     const SizedBox(width: 8),
@@ -108,7 +110,7 @@ class _retired_outUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration:
                       const InputDecoration(labelText: 'Selectplayer_name'),
-                  value: widget.entity['player_name'],
+                  value: widget.entity.playerName,
                   items: player_nameList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
@@ -118,7 +120,7 @@ class _retired_outUpdateEntityScreenState
                   onChanged: (value) {
                     setState(() {
                       selectedplayer_name = value!;
-                      widget.entity['player_name'] = value;
+                      widget.entity.playerName = value;
                     });
                   },
                 ),
@@ -131,19 +133,16 @@ class _retired_outUpdateEntityScreenState
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      widget.entity['active'] = isactive;
+                      widget.entity.active = isactive;
 
-                      final token = await TokenManager.getToken();
                       try {
-                        await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
+                        await provider.updateEntity(
+                            widget.entity
+                                .id, // Assuming 'id' is the key in your entity map
                             widget.entity);
 
                         Navigator.pop(context);
                       } catch (e) {
-                        // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

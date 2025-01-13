@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
-import '../../../Utils/image_constant.dart';
-import '../../../Utils/size_utils.dart';
-import '../../../views/widgets/app_bar/appbar_image.dart';
-import '../../../views/widgets/app_bar/appbar_title.dart';
-import '../../../views/widgets/app_bar/custom_app_bar.dart';
-import '../../../views/widgets/custom_button.dart';
+import '../../../../Utils/image_constant.dart';
+import '../../../../Utils/size_utils.dart';
+import '../../../../views/widgets/app_bar/appbar_image.dart';
+import '../../../../views/widgets/app_bar/appbar_title.dart';
+import '../../../../views/widgets/app_bar/custom_app_bar.dart';
+import '../../../../views/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import '/Entity/runs/Score_board/Score_board_api_service.dart';
+import '../repository/Score_board_api_service.dart';
 import '/providers/token_manager.dart';
 
 class score_boardUpdateEntityScreen extends StatefulWidget {
