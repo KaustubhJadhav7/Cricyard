@@ -29,7 +29,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchtournamentItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.gettournament(token!);
+      final selectTdata = await apiService.gettournament();
       print('tournament data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -51,7 +51,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchbatting_teamItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getbatting_team(token!);
+      final selectTdata = await apiService.getbatting_team();
       print('batting_team data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -73,7 +73,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchstrikerItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getstriker(token!);
+      final selectTdata = await apiService.getstriker();
       print('striker data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -95,7 +95,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchballerItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getballer(token!);
+      final selectTdata = await apiService.getballer();
       print('baller data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -149,7 +149,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchchasing_teamItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getchasing_team(token!);
+      final selectTdata = await apiService.getchasing_team();
       print('chasing_team data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -171,7 +171,7 @@ class _score_boardUpdateEntityScreenState
   Future<void> fetchnon_strikerItems() async {
     final token = await TokenManager.getToken();
     try {
-      final selectTdata = await apiService.getnon_striker(token!);
+      final selectTdata = await apiService.getnon_striker();
       print('non_striker data is : $selectTdata');
       // Handle null or empty dropdownData
       if (selectTdata != null && selectTdata.isNotEmpty) {
@@ -761,10 +761,8 @@ class _score_boardUpdateEntityScreenState
 
                       widget.entity['over_throw'] = isover_throw;
 
-                      final token = await TokenManager.getToken();
                       try {
                         await apiService.updateEntity(
-                            token!,
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

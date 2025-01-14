@@ -549,7 +549,7 @@ class _ScoreBoardCreateEntityScreenState
       formData['match_overs'] = overController.text;
 
       try {
-        final res = await apiService.createEntity(token!, formData);
+        final res = await apiService.createEntity(formData);
         Navigator.pop(context);
         print("res--$res");
         print(formDataJson);
