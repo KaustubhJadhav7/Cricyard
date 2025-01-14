@@ -1,4 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../views/widgets/app_bar/appbar_image.dart';
@@ -21,184 +24,177 @@ class score_boardUpdateEntityScreen extends StatefulWidget {
 
 class _score_boardUpdateEntityScreenState
     extends State<score_boardUpdateEntityScreen> {
-  final score_boardApiService apiService = score_boardApiService();
+  // List<Map<String, dynamic>> tournamentItems = [];
+  // var selectedtournamentValue;
+  // Future<void> fetchtournamentItems() async {
+  //   try {
+  //     final selectTdata = await apiService.gettournament();
+  //     print('tournament data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         tournamentItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedtournamentValue = widget.entity['tournament'] ?? null;
+  //       });
+  //     } else {
+  //       print('tournament data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load tournament items: $e');
+  //   }
+  // }
+
+  // List<Map<String, dynamic>> batting_teamItems = [];
+  // var selectedbatting_teamValue;
+  // Future<void> fetchbatting_teamItems() async {
+  //   try {
+  //     final selectTdata = await apiService.getbatting_team();
+  //     print('batting_team data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         batting_teamItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedbatting_teamValue = widget.entity['batting_team'] ?? null;
+  //       });
+  //     } else {
+  //       print('batting_team data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load batting_team items: $e');
+  //   }
+  // }
+
+  // List<Map<String, dynamic>> strikerItems = [];
+  // var selectedstrikerValue;
+  // Future<void> fetchstrikerItems() async {
+  //   try {
+  //     final selectTdata = await apiService.getstriker();
+  //     print('striker data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         strikerItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedstrikerValue = widget.entity['striker'] ?? null;
+  //       });
+  //     } else {
+  //       print('striker data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load striker items: $e');
+  //   }
+  // }
+
+  // List<Map<String, dynamic>> ballerItems = [];
+  // var selectedballerValue;
+  // Future<void> fetchballerItems() async {
+  //   try {
+  //     final selectTdata = await apiService.getballer();
+  //     print('baller data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         ballerItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedballerValue = widget.entity['baller'] ?? null;
+  //       });
+  //     } else {
+  //       print('baller data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load baller items: $e');
+  //   }
+  // }
+
+  // var selectedruns_scored_by_running; // Initialize with the default value \n);
+  // List<String> runs_scored_by_runningList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // var selectedextra_runs; // Initialize with the default value \n);
+  // List<String> extra_runsList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // var selectedmatch_date; // Initialize with the default value \n);
+  // List<String> match_dateList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // var selectedmatch_number; // Initialize with the default value \n);
+  // List<String> match_numberList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // List<Map<String, dynamic>> chasing_teamItems = [];
+  // var selectedchasing_teamValue;
+  // Future<void> fetchchasing_teamItems() async {
+  //   try {
+  //     final selectTdata = await apiService.getchasing_team();
+  //     print('chasing_team data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         chasing_teamItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedchasing_teamValue = widget.entity['chasing_team'] ?? null;
+  //       });
+  //     } else {
+  //       print('chasing_team data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load chasing_team items: $e');
+  //   }
+  // }
+
+  // List<Map<String, dynamic>> non_strikerItems = [];
+  // var selectednon_strikerValue;
+  // Future<void> fetchnon_strikerItems() async {
+  //   try {
+  //     final selectTdata = await apiService.getnon_striker();
+  //     print('non_striker data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         non_strikerItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectednon_strikerValue = widget.entity['non_striker'] ?? null;
+  //       });
+  //     } else {
+  //       print('non_striker data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load non_striker items: $e');
+  //   }
+  // }
+
+  // var selectedovers; // Initialize with the default value \n);
+  // List<String> oversList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // var selectedball; // Initialize with the default value \n);
+  // List<String> ballList = [
+  //   'bar_code',
+  //   'qr_code',
+  // ];
+
+  // final score_boardApiService apiService = score_boardApiService();
   final _formKey = GlobalKey<FormState>();
-
-  List<Map<String, dynamic>> tournamentItems = [];
-  var selectedtournamentValue;
-  Future<void> fetchtournamentItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.gettournament();
-      print('tournament data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          tournamentItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedtournamentValue = widget.entity['tournament'] ?? null;
-        });
-      } else {
-        print('tournament data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load tournament items: $e');
-    }
-  }
-
-  List<Map<String, dynamic>> batting_teamItems = [];
-  var selectedbatting_teamValue;
-  Future<void> fetchbatting_teamItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getbatting_team();
-      print('batting_team data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          batting_teamItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedbatting_teamValue = widget.entity['batting_team'] ?? null;
-        });
-      } else {
-        print('batting_team data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load batting_team items: $e');
-    }
-  }
-
-  List<Map<String, dynamic>> strikerItems = [];
-  var selectedstrikerValue;
-  Future<void> fetchstrikerItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getstriker();
-      print('striker data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          strikerItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedstrikerValue = widget.entity['striker'] ?? null;
-        });
-      } else {
-        print('striker data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load striker items: $e');
-    }
-  }
-
-  List<Map<String, dynamic>> ballerItems = [];
-  var selectedballerValue;
-  Future<void> fetchballerItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getballer();
-      print('baller data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          ballerItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedballerValue = widget.entity['baller'] ?? null;
-        });
-      } else {
-        print('baller data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load baller items: $e');
-    }
-  }
-
   bool isvalid_ball_delivery = false;
 
   bool isno_ball = false;
 
-  var selectedruns_scored_by_running; // Initialize with the default value \n);
-  List<String> runs_scored_by_runningList = [
-    'bar_code',
-    'qr_code',
-  ];
-
   bool isdeclared_2 = false;
 
   bool isdeclared_4 = false;
-
-  var selectedextra_runs; // Initialize with the default value \n);
-  List<String> extra_runsList = [
-    'bar_code',
-    'qr_code',
-  ];
-
-  var selectedmatch_date; // Initialize with the default value \n);
-  List<String> match_dateList = [
-    'bar_code',
-    'qr_code',
-  ];
-
-  var selectedmatch_number; // Initialize with the default value \n);
-  List<String> match_numberList = [
-    'bar_code',
-    'qr_code',
-  ];
-
-  List<Map<String, dynamic>> chasing_teamItems = [];
-  var selectedchasing_teamValue;
-  Future<void> fetchchasing_teamItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getchasing_team();
-      print('chasing_team data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          chasing_teamItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedchasing_teamValue = widget.entity['chasing_team'] ?? null;
-        });
-      } else {
-        print('chasing_team data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load chasing_team items: $e');
-    }
-  }
-
-  List<Map<String, dynamic>> non_strikerItems = [];
-  var selectednon_strikerValue;
-  Future<void> fetchnon_strikerItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getnon_striker();
-      print('non_striker data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          non_strikerItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectednon_strikerValue = widget.entity['non_striker'] ?? null;
-        });
-      } else {
-        print('non_striker data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load non_striker items: $e');
-    }
-  }
-
-  var selectedovers; // Initialize with the default value \n);
-  List<String> oversList = [
-    'bar_code',
-    'qr_code',
-  ];
-
-  var selectedball; // Initialize with the default value \n);
-  List<String> ballList = [
-    'bar_code',
-    'qr_code',
-  ];
 
   bool isfree_hit = false;
 
@@ -214,59 +210,42 @@ class _score_boardUpdateEntityScreenState
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
     super.initState();
-    fetchtournamentItems(); // Fetch dropdown items when the screen initializes
-
-    fetchbatting_teamItems(); // Fetch dropdown items when the screen initializes
-
-    fetchstrikerItems(); // Fetch dropdown items when the screen initializes
-
-    fetchballerItems(); // Fetch dropdown items when the screen initializes
-
+    provider.fetchTournamentItems(); // Fetch dropdown items when the screen initializes
+    provider.fetchBattingTeamItems(); // Fetch dropdown items when the screen initializes
+    provider.fetchStrikerItems(); // Fetch dropdown items when the screen initializes
+    provider.fetchBallerItems(); // Fetch dropdown items when the screen initializes
     isvalid_ball_delivery =
         widget.entity['valid_ball_delivery'] ?? false; // Set initial value
-
     isno_ball = widget.entity['no_ball'] ?? false; // Set initial value
-
-    selectedruns_scored_by_running = widget
+    provider.selectedRunsScoredByRunning = widget
         .entity['runs_scored_by_running']; // Initialize with the default value
-
     isdeclared_2 = widget.entity['declared_2'] ?? false; // Set initial value
-
     isdeclared_4 = widget.entity['declared_4'] ?? false; // Set initial value
-
-    selectedextra_runs =
+    provider.selectedExtraRuns =
         widget.entity['extra_runs']; // Initialize with the default value
-
-    selectedmatch_date =
+    provider.selectedMatchDate =
         widget.entity['match_date']; // Initialize with the default value
-
-    selectedmatch_number =
+    provider.selectedMatchNumber =
         widget.entity['match_number']; // Initialize with the default value
-
-    fetchchasing_teamItems(); // Fetch dropdown items when the screen initializes
-
-    fetchnon_strikerItems(); // Fetch dropdown items when the screen initializes
-
-    selectedovers = widget.entity['overs']; // Initialize with the default value
-
-    selectedball = widget.entity['ball']; // Initialize with the default value
-
+    provider.fetchChasingTeamItems(); // Fetch dropdown items when the screen initializes
+    provider.fetchNonStrikerItems(); // Fetch dropdown items when the screen initializes
+    provider.selectedOvers = widget.entity['overs']; // Initialize with the default value
+    provider.selectedBall = widget.entity['ball']; // Initialize with the default value
     isfree_hit = widget.entity['free_hit'] ?? false; // Set initial value
-
     iswide_ball = widget.entity['wide_ball'] ?? false; // Set initial value
-
     isdead_ball = widget.entity['dead_ball'] ?? false; // Set initial value
-
     isdeclared_6 = widget.entity['declared_6'] ?? false; // Set initial value
-
     isleg_by = widget.entity['leg_by'] ?? false; // Set initial value
-
     isover_throw = widget.entity['over_throw'] ?? false; // Set initial value
+  });
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -290,13 +269,13 @@ class _score_boardUpdateEntityScreenState
               children: [
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Tournament'),
-                  value: selectedtournamentValue,
+                  value: provider.selectedTournamentValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...tournamentItems.map<DropdownMenuItem<String>>(
+                    ...provider.tournamentItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['tournament_name'].toString(),
@@ -307,7 +286,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedtournamentValue = value;
+                      provider.selectedTournamentValue = value;
                     });
                   },
                   validator: (value) {
@@ -323,13 +302,13 @@ class _score_boardUpdateEntityScreenState
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Batting Team'),
-                  value: selectedbatting_teamValue,
+                  value: provider.selectedBattingTeamValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...batting_teamItems.map<DropdownMenuItem<String>>(
+                    ...provider.battingTeamItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['team_name'].toString(),
@@ -340,7 +319,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedbatting_teamValue = value;
+                      provider.selectedBattingTeamValue = value;
                     });
                   },
                   validator: (value) {
@@ -356,13 +335,13 @@ class _score_boardUpdateEntityScreenState
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Striker'),
-                  value: selectedstrikerValue,
+                  value: provider.selectedStrikerValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...strikerItems.map<DropdownMenuItem<String>>(
+                    ...provider.strikerItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['player_name'].toString(),
@@ -373,7 +352,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedstrikerValue = value;
+                      provider.selectedStrikerValue = value;
                     });
                   },
                   validator: (value) {
@@ -389,13 +368,13 @@ class _score_boardUpdateEntityScreenState
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Baller'),
-                  value: selectedballerValue,
+                  value: provider.selectedBallerValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...ballerItems.map<DropdownMenuItem<String>>(
+                    ...provider.ballerItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['player_name'].toString(),
@@ -406,7 +385,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedballerValue = value;
+                      provider.selectedBallerValue = value;
                     });
                   },
                   validator: (value) {
@@ -452,7 +431,7 @@ class _score_boardUpdateEntityScreenState
                   decoration: const InputDecoration(
                       labelText: 'Selectruns_scored_by_running'),
                   value: widget.entity['runs_scored_by_running'],
-                  items: runs_scored_by_runningList
+                  items: provider.runsScoredByRunningList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -460,7 +439,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedruns_scored_by_running = value!;
+                      provider.selectedRunsScoredByRunning = value!;
                       widget.entity['runs_scored_by_running'] = value;
                     });
                   },
@@ -498,7 +477,7 @@ class _score_boardUpdateEntityScreenState
                   decoration:
                       const InputDecoration(labelText: 'Selectextra_runs'),
                   value: widget.entity['extra_runs'],
-                  items: extra_runsList
+                  items: provider.extraRunsList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -506,7 +485,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedextra_runs = value!;
+                      provider.selectedExtraRuns = value!;
                       widget.entity['extra_runs'] = value;
                     });
                   },
@@ -516,7 +495,7 @@ class _score_boardUpdateEntityScreenState
                   decoration:
                       const InputDecoration(labelText: 'Selectmatch_date'),
                   value: widget.entity['match_date'],
-                  items: match_dateList
+                  items: provider.matchDateList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -524,7 +503,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedmatch_date = value!;
+                      provider.selectedMatchDate = value!;
                       widget.entity['match_date'] = value;
                     });
                   },
@@ -534,7 +513,7 @@ class _score_boardUpdateEntityScreenState
                   decoration:
                       const InputDecoration(labelText: 'Selectmatch_number'),
                   value: widget.entity['match_number'],
-                  items: match_numberList
+                  items: provider.matchNumberList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -542,7 +521,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedmatch_number = value!;
+                      provider.selectedMatchNumber = value!;
                       widget.entity['match_number'] = value;
                     });
                   },
@@ -550,13 +529,13 @@ class _score_boardUpdateEntityScreenState
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Chasing Team'),
-                  value: selectedchasing_teamValue,
+                  value: provider.selectedChasingTeamValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...chasing_teamItems.map<DropdownMenuItem<String>>(
+                    ...provider.chasingTeamItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['team_name'].toString(),
@@ -567,7 +546,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedchasing_teamValue = value;
+                      provider.selectedChasingTeamValue = value;
                     });
                   },
                   validator: (value) {
@@ -583,13 +562,13 @@ class _score_boardUpdateEntityScreenState
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Non Striker'),
-                  value: selectednon_strikerValue,
+                  value: provider.selectedNonStrikerValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...non_strikerItems.map<DropdownMenuItem<String>>(
+                    ...provider.nonStrikerItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['player_name'].toString(),
@@ -600,7 +579,7 @@ class _score_boardUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectednon_strikerValue = value;
+                      provider.selectedNonStrikerValue = value;
                     });
                   },
                   validator: (value) {
@@ -617,7 +596,7 @@ class _score_boardUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Selectovers'),
                   value: widget.entity['overs'],
-                  items: oversList
+                  items: provider.oversList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -625,7 +604,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedovers = value!;
+                      provider.selectedOvers = value!;
                       widget.entity['overs'] = value;
                     });
                   },
@@ -634,7 +613,7 @@ class _score_boardUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Selectball'),
                   value: widget.entity['ball'],
-                  items: ballList
+                  items: provider.ballList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
                             child: Text(name),
@@ -642,7 +621,7 @@ class _score_boardUpdateEntityScreenState
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedball = value!;
+                      provider.selectedBall = value!;
                       widget.entity['ball'] = value;
                     });
                   },
@@ -762,7 +741,7 @@ class _score_boardUpdateEntityScreenState
                       widget.entity['over_throw'] = isover_throw;
 
                       try {
-                        await apiService.updateEntity(
+                        await provider.updateEntity(
                             widget.entity[
                                 'id'], // Assuming 'id' is the key in your entity map
                             widget.entity);

@@ -7,6 +7,8 @@ import 'package:cricyard/Entity/matches/Matches/viewmodels/Matches_viewmodel.dar
 import 'package:cricyard/Entity/obstructing_the_field/Obstructing_The_Field/viewmodel/Obstructing_The_Field_viewmodel.dart';
 import 'package:cricyard/Entity/retired/Retired/viewmodels/Retired_viewmodel.dart';
 import 'package:cricyard/Entity/retired_out/Retired_out/viewmodel/Retired_out_viewmodel.dart';
+import 'package:cricyard/Entity/runs/Runs/viewmodel/Runs_viewmodel.dart';
+import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -115,6 +117,12 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => RetiredOutProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => RunsEntitiesProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => ScoreBoardProvider(),
       ),
     ],
     child: MyApp(),

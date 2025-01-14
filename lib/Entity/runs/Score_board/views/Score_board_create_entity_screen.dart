@@ -1,7 +1,9 @@
+import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
+import 'package:provider/provider.dart';
 import '../repository/Score_board_api_service.dart';
 import '/providers/token_manager.dart';
 
@@ -59,103 +61,108 @@ class _ScoreBoardCreateEntityScreenState
   bool isLoading = false;
   bool isTeamLoading = false;
 
+  // Future<void> _loadTeams() async {
+  //   setState(() {
+  //     isTeamLoading = true;
+  //     selectedOversValue = widget.overs.toString();
+  //   });
+  //   try {
+  //     final data = await apiService.getAllTeam(widget.matchId);
+  //     if (data.isNotEmpty) {
+  //       setState(() {
+  //         teamItems = data;
+  //         isTeamLoading = false;
+  //       });
+  //     } else {
+  //       print('Team data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load Team items: $e');
+  //   } finally {
+  //     setState(() {
+  //       isTeamLoading = false;
+  //     });
+  //   }
+  // }
+
+  // Future<void> getAllBattingMember(int teamId) async {
+  //   try {
+  //     final data = await teamApi.getAllMembers(teamId);
+  //     teamMembersBatting.clear();
+  //     setState(() {
+  //       teamMembersBatting = data;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching Batting Members: $e");
+  //   }
+  // }
+
+  // Future<void> getAllBallingMember(int teamId) async {
+  //   try {
+  //     final data = await teamApi.getAllMembers(teamId);
+  //     teamMembersBalling.clear();
+  //     setState(() {
+  //       teamMembersBalling = data;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching Balling Members: $e");
+  //   }
+  // }
+
+  // void updateTeamsBasedOnToss() {
+  //   final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
+  //   if (selectedTossWinner.isNotEmpty && selectedOptedOption.isNotEmpty) {
+  //     var tossWinnerTeam = teamItems
+  //         .firstWhere((team) => team['team_name'] == selectedTossWinner);
+
+  //     setState(() {
+  //       if (selectedOptedOption == 'Bat') {
+  //         selectedbatting_teamValue = tossWinnerTeam['id'].toString();
+  //         selectedChasingTeamValue = teamItems
+  //             .firstWhere((team) =>
+  //                 team['id'].toString() != selectedbatting_teamValue)['id']
+  //             .toString();
+  //         selectedstrikerValue = '';
+  //         selectednon_strikerValue = '';
+  //         selectedballerValue = '';
+  //         teamMembersBatting.clear();
+  //         teamMembersBalling.clear();
+  //         provider.getAllBattingMembers(int.parse(selectedbatting_teamValue));
+  //         provider.getAllBallingMembers(int.parse(selectedChasingTeamValue));
+  //       } else {
+  //         selectedChasingTeamValue = tossWinnerTeam['id'].toString();
+  //         selectedbatting_teamValue = teamItems
+  //             .firstWhere((team) =>
+  //                 team['id'].toString() != selectedChasingTeamValue)['id']
+  //             .toString();
+  //         selectedstrikerValue = '';
+  //         selectednon_strikerValue = '';
+  //         selectedballerValue = '';
+  //         teamMembersBatting.clear();
+  //         teamMembersBalling.clear();
+  //         provider.getAllBattingMembers(int.parse(selectedbatting_teamValue));
+  //         provider.getAllBattingMembers(int.parse(selectedChasingTeamValue));
+  //       }
+  //     });
+
+  //     // getAllBattingMember(int.parse(selectedbatting_teamValue));
+  //     // getAllBallingMember(int.parse(selectedChasingTeamValue));
+  //   }
+  // }
+
   @override
   void initState() {
-    super.initState();
-    print("Overs--${widget.overs}");
-    _loadTeams();
-  }
-
-  Future<void> _loadTeams() async {
-    setState(() {
-      isTeamLoading = true;
-      selectedOversValue = widget.overs.toString();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
+      super.initState();
+      print("Overs--${widget.overs}");
+      provider.loadTeams(widget.matchId);
     });
-    try {
-      final data = await apiService.getAllTeam(widget.matchId);
-      if (data.isNotEmpty) {
-        setState(() {
-          teamItems = data;
-          isTeamLoading = false;
-        });
-      } else {
-        print('Team data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load Team items: $e');
-    } finally {
-      setState(() {
-        isTeamLoading = false;
-      });
-    }
-  }
-
-  Future<void> getAllBattingMember(int teamId) async {
-    try {
-      final data = await teamApi.getAllMembers(teamId);
-      teamMembersBatting.clear();
-      setState(() {
-        teamMembersBatting = data;
-      });
-    } catch (e) {
-      print("Error fetching Batting Members: $e");
-    }
-  }
-
-  Future<void> getAllBallingMember(int teamId) async {
-    try {
-      final data = await teamApi.getAllMembers(teamId);
-      teamMembersBalling.clear();
-      setState(() {
-        teamMembersBalling = data;
-      });
-    } catch (e) {
-      print("Error fetching Balling Members: $e");
-    }
-  }
-
-  void updateTeamsBasedOnToss() {
-    if (selectedTossWinner.isNotEmpty && selectedOptedOption.isNotEmpty) {
-      var tossWinnerTeam = teamItems
-          .firstWhere((team) => team['team_name'] == selectedTossWinner);
-
-      setState(() {
-        if (selectedOptedOption == 'Bat') {
-          selectedbatting_teamValue = tossWinnerTeam['id'].toString();
-          selectedChasingTeamValue = teamItems
-              .firstWhere((team) =>
-                  team['id'].toString() != selectedbatting_teamValue)['id']
-              .toString();
-          selectedstrikerValue = '';
-          selectednon_strikerValue = '';
-          selectedballerValue = '';
-          teamMembersBatting.clear();
-          teamMembersBalling.clear();
-          getAllBattingMember(int.parse(selectedbatting_teamValue));
-          getAllBallingMember(int.parse(selectedChasingTeamValue));
-        } else {
-          selectedChasingTeamValue = tossWinnerTeam['id'].toString();
-          selectedbatting_teamValue = teamItems
-              .firstWhere((team) =>
-                  team['id'].toString() != selectedChasingTeamValue)['id']
-              .toString();
-          selectedstrikerValue = '';
-          selectednon_strikerValue = '';
-          selectedballerValue = '';
-          teamMembersBatting.clear();
-          teamMembersBalling.clear();
-          getAllBattingMember(int.parse(selectedbatting_teamValue));
-          getAllBallingMember(int.parse(selectedChasingTeamValue));
-        }
-      });
-
-      // getAllBattingMember(int.parse(selectedbatting_teamValue));
-      // getAllBallingMember(int.parse(selectedChasingTeamValue));
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text("Start scoring",
@@ -207,7 +214,10 @@ class _ScoreBoardCreateEntityScreenState
                           setState(() {
                             selectedTossWinner = value!;
                           });
-                          updateTeamsBasedOnToss();
+                          provider.updateTeamsBasedOnToss(
+                            selectedTossWinner: selectedTossWinner,
+                            selectedOptedOption: selectedOptedOption,
+                          );
                         },
                       )),
                 const SizedBox(height: 20),
@@ -412,7 +422,6 @@ class _ScoreBoardCreateEntityScreenState
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const Divider(thickness: 1.0),
                 const SizedBox(height: 20),
                 Text('Ball Analysis:',
@@ -438,7 +447,7 @@ class _ScoreBoardCreateEntityScreenState
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
                             onPressed: () {
-                              _submitForm();
+                              submitForm();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
@@ -474,6 +483,7 @@ class _ScoreBoardCreateEntityScreenState
   }
 
   Widget _buildOptedRadio(String title) {
+    final provider = Provider.of<ScoreBoardProvider>(context, listen: false);
     return RadioListTile<String>(
       title: Text(title),
       value: title,
@@ -482,7 +492,8 @@ class _ScoreBoardCreateEntityScreenState
         setState(() {
           selectedOptedOption = value!;
         });
-        updateTeamsBasedOnToss();
+        provider.updateTeamsBasedOnToss(selectedTossWinner: selectedTossWinner,
+    selectedOptedOption: selectedOptedOption,);
       },
     );
   }
@@ -536,18 +547,16 @@ class _ScoreBoardCreateEntityScreenState
     );
   }
 
-  Future<void> _submitForm() async {
+  Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
       _formKey.currentState!.save();
-      final token = await TokenManager.getToken();
       final formDataJson = formData;
       formData['tournament'] = widget.tourId;
       formData['match_id'] = widget.matchId;
       formData['match_overs'] = overController.text;
-
       try {
         final res = await apiService.createEntity(formData);
         Navigator.pop(context);
@@ -563,5 +572,4 @@ class _ScoreBoardCreateEntityScreenState
       print('Form validation failed');
     }
   }
-
 }
