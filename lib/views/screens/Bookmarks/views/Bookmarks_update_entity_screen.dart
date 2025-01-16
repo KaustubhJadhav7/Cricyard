@@ -1,12 +1,12 @@
 import 'package:cricyard/data/network/network_api_service.dart';
+import 'package:cricyard/views/screens/Bookmarks/model/Bookmarks_model.dart';
+import 'package:cricyard/views/screens/Bookmarks/viewmodels/Bookmarks_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-import '/providers/token_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import '../repository/Bookmarks_api_service.dart';
 
 class UpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final BookmarkEntity entity;
 
   UpdateEntityScreen({required this.entity});
 
@@ -15,7 +15,6 @@ class UpdateEntityScreen extends StatefulWidget {
 }
 
 class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
-  final ApiService apiService = ApiService(NetworkApiService());
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -25,6 +24,7 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<BookmarksProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(title: const Text('Update Bookmarks')),
       body: SingleChildScrollView(
@@ -35,7 +35,7 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
             child: Column(
               children: [
                 TextFormField(
-                  initialValue: widget.entity['bookmark_firstletter'],
+                  initialValue: widget.entity.id.toString(),
                   decoration:
                       const InputDecoration(labelText: 'bookmark_firstletter'),
                   validator: (value) {
@@ -45,12 +45,12 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    widget.entity['bookmark_firstletter'] = value;
+                    widget.entity.title = value;
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  initialValue: widget.entity['bookmark_link'],
+                  initialValue: widget.entity.url,
                   decoration: const InputDecoration(labelText: 'bookmark_link'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -59,12 +59,12 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    widget.entity['bookmark_link'] = value;
+                    widget.entity.url = value;
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  initialValue: widget.entity['fileupload_field'],
+                  initialValue: widget.entity.description,
                   decoration:
                       const InputDecoration(labelText: 'fileupload_field'),
                   validator: (value) {
@@ -74,7 +74,7 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    widget.entity['fileupload_field'] = value;
+                    widget.entity.description = value;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -84,33 +84,11 @@ class _UpdateEntityScreenState extends State<UpdateEntityScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-
-                        final token = await TokenManager.getToken();
-                        try {
-                          await apiService.updateEntity(
-                              widget.entity[
-                                  'id'], // Assuming 'id' is the key in your entity map
-                              widget.entity);
-                          Navigator.pop(context);
-                        } catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: Text('Failed to update entity: $e'),
-                                actions: [
-                                  TextButton(
-                                    child: const Text('OK'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                          await provider.updateEntity(
+                            context,
+                            widget.entity,
                           );
-                        }
+                          Navigator.pop(context);
                       }
                     },
                     child: Container(

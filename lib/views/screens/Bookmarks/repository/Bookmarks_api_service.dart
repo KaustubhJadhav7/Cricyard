@@ -106,6 +106,7 @@
 // }
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cricyard/views/screens/Bookmarks/model/Bookmarks_model.dart';
 import 'package:dio/dio.dart';
 import 'package:cricyard/providers/token_manager.dart'; // Assuming TokenManager is used for token
 import 'package:http_parser/http_parser.dart'; // For mime type lookup
@@ -114,22 +115,21 @@ import 'package:cricyard/data/network/network_api_service.dart'; // Importing Ne
 import '../../LogoutService/Logoutservice.dart';
 
 class ApiService {
-  final NetworkApiService _networkService;
+  final NetworkApiService _networkService = NetworkApiService();
 
-  ApiService(this._networkService); // Injecting the NetworkApiService
 
   // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities() async {
+  Future<List<BookmarkEntity>> getEntities() async {
     try {
       final response = await _networkService.getGetApiResponse('/Bookmarks/Bookmarks');
-      return List<Map<String, dynamic>>.from(response);
+      return List<BookmarkEntity>.from(response);
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
     }
   }
 
   // Create a new entity with file upload
-  Future<void> createEntity(Map<String, dynamic> fData, dynamic selectedFile) async {
+  Future<void> createEntity(BookmarkEntity fData, dynamic selectedFile) async {
     try {
       String apiUrl = '/Bookmarks/Bookmarks'; // Assuming the path
 
@@ -157,7 +157,7 @@ class ApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, BookmarkEntity entity) async {
     try {
       String apiUrl = '/Bookmarks/Bookmarks/$entityId';
 

@@ -1,6 +1,8 @@
 import 'package:cricyard/data/network/network_api_service.dart';
+import 'package:cricyard/views/screens/Bookmarks/viewmodels/Bookmarks_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '/providers/token_manager.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
@@ -22,77 +24,76 @@ class bookmarks_entity_list_screen extends StatefulWidget {
 
 class _bookmarks_entity_list_screenState
     extends State<bookmarks_entity_list_screen> {
-  final ApiService apiService = ApiService(NetworkApiService());
+  final ApiService apiService = ApiService();
   List<Map<String, dynamic>> entities = [];
   bool showCardView = true; // Add this variable to control the view mode
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<BookmarksProvider>(context, listen: false);
     super.initState();
-    fetchEntities();
+    provider.fetchEntities();
+  });
   }
 
-  Future<void> fetchEntities() async {
-    try {
-      final token = await TokenManager.getToken();
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     final fetchedEntities = await apiService.getEntities();
+  //     setState(() {
+  //       entities = fetchedEntities;
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch entities: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities();
-        setState(() {
-          entities = fetchedEntities;
-        });
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch entities: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<BookmarksProvider>(context, listen: false);
     return Scaffold(
         appBar: CustomAppBar(
             height: getVerticalSize(49),
