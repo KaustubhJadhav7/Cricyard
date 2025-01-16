@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../../ReuseableWidgets/BottomAppBarWidget.dart';
 import '../../../sign_up_screen/SignUpService.dart';
-import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
+import 'package:cricyard/Entity/team/Teams/repository/Teams_api_service.dart';
 
 class InvitePlayerView extends StatefulWidget {
   InvitePlayerView(this.teamId, {super.key});

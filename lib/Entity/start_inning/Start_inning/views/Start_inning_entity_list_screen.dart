@@ -1,11 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/start_inning/Start_inning/model/Start_inning_model.dart';
+import 'package:cricyard/Entity/start_inning/Start_inning/viewmodels/Start_inning_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodels/Start_inning_api_service.dart';
+import 'package:provider/provider.dart';
+import '../repository/Start_inning_api_service.dart';
 import 'Start_inning_create_entity_screen.dart';
 import 'Start_inning_update_entity_screen.dart';
-import '/providers/token_manager.dart';
-import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../../theme/app_style.dart';
 import '../../../../utils/size_utils.dart';
@@ -26,192 +26,194 @@ class start_inning_entity_list_screen extends StatefulWidget {
 class _start_inning_entity_list_screenState
     extends State<start_inning_entity_list_screen> {
   final start_inningApiService apiService = start_inningApiService();
-  List<Map<String, dynamic>> entities = [];
-  List<Map<String, dynamic>> filteredEntities = [];
-  List<Map<String, dynamic>> serachEntities = [];
+  // List<Map<String, dynamic>> entities = [];
+  // List<Map<String, dynamic>> filteredEntities = [];
+  // List<Map<String, dynamic>> serachEntities = [];
 
-  bool showCardView = true; // Add this variable to control the view mode
+  bool showCardView = true; 
   TextEditingController searchController = TextEditingController();
   late stt.SpeechToText _speech;
 
-  bool isLoading = false; // Add this variable to track loading state
+  bool isLoading = false; 
   int currentPage = 0;
-  int pageSize = 10; // Adjust this based on your backend API
+  int pageSize = 10; 
 
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    _speech = stt.SpeechToText();
-    super.initState();
-    fetchEntities();
-    _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-  }
-
-  Future<void> fetchwithoutpaging() async {
-    try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getEntities(token!);
-        print('data is $fetchedEntities');
-        setState(() {
-          serachEntities = fetchedEntities; // Update only filteredEntities
-        });
-        print('Start_inning entity is .. $serachEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Start_inning: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
-
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch Start_inning data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      fetchEntities();
-    }
-  }
-
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['select_match']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['select_team']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['select_player']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['datetime_field']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<StartInningProvider>(context, listen: false);
+      _speech = stt.SpeechToText();
+      super.initState();
+      provider.fetchEntities();
+      _scrollController.addListener(_scrollListener);
+      provider.fetchWithoutPaging();
     });
   }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // Future<void> fetchwithoutpaging() async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities = await apiService.getEntities();
+  //       print('data is $fetchedEntities');
+  //       setState(() {
+  //         serachEntities = fetchedEntities; // Update only filteredEntities
+  //       });
+  //       print('Start_inning entity is .. $serachEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Start_inning: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch Start_inning data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  void _scrollListener() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<StartInningProvider>(context, listen: false);
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      provider.fetchEntities();
     }
+  });
   }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     await apiService.deleteEntity(entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['select_match']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['select_team']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['select_player']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['datetime_field']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
+
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
+
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -225,6 +227,7 @@ class _start_inning_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<StartInningProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -256,8 +259,8 @@ class _start_inning_entity_list_screenState
       body: RefreshIndicator(
         onRefresh: () async {
           currentPage = 1;
-          entities.clear();
-          await fetchEntities();
+          provider.entities.clear();
+          await provider.fetchEntities();
         },
         child: Column(
           children: [
@@ -266,7 +269,7 @@ class _start_inning_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  provider.searchEntitiesByKeyword(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -280,7 +283,7 @@ class _start_inning_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      provider.startListening();
                     },
                   ),
                 ),
@@ -288,13 +291,12 @@ class _start_inning_entity_list_screenState
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredEntities.length + (isLoading ? 1 : 0),
+                itemCount: provider.filteredEntities.length + (isLoading ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index < filteredEntities.length) {
-                    final entity = filteredEntities[index];
+                  if (index < provider.filteredEntities.length) {
+                    final entity = provider.filteredEntities[index];
                     return _buildListItem(entity);
                   } else {
-                    // Display the loading indicator at the bottom when new data is loading
                     return const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Center(
@@ -314,10 +316,10 @@ class _start_inning_entity_list_screenState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => start_inningCreateEntityScreen(),
+              builder: (context) => StartInningCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            provider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -325,12 +327,12 @@ class _start_inning_entity_list_screenState
     ));
   }
 
-  Widget _buildListItem(Map<String, dynamic> entity) {
+  Widget _buildListItem(StartInningModel entity) {
     return showCardView ? _buildCardView(entity) : _buildNormalView(entity);
   }
 
   // Function to build card view for a list item
-  Widget _buildCardView(Map<String, dynamic> entity) {
+  Widget _buildCardView(StartInningModel entity) {
     return Card(
         elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -341,9 +343,9 @@ class _start_inning_entity_list_screenState
 
   // Function to build normal view for a list item
 
-  Widget _buildNormalView(Map<String, dynamic> entity) {
-    final values = entity.values.elementAt(21) ?? 'Authsec';
-
+  Widget _buildNormalView(StartInningModel entity) {
+    // final values = entity.values.elementAt(21) ?? 'Authsec';
+    final provider = Provider.of<StartInningProvider>(context, listen: false);
     return SizedBox(
       width: double.maxFinite,
       child: Container(
@@ -379,7 +381,7 @@ class _start_inning_entity_list_screenState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          entity['id'].toString(),
+                          entity.id.toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: AppStyle.txtGreenSemiBold16,
@@ -441,7 +443,7 @@ class _start_inning_entity_list_screenState
                                 start_inningUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          provider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -462,8 +464,8 @@ class _start_inning_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    provider.deleteEntity(entity)
+                                        .then((value) => {provider.fetchEntities()});
                                   },
                                 ),
                               ],
@@ -490,7 +492,7 @@ class _start_inning_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['select_match'] ?? 'No Select Match Available',
+                    entity.selectMatch ?? 'No Select Match Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -512,7 +514,7 @@ class _start_inning_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['select_team'] ?? 'No select Team Available',
+                    entity.selectTeam ?? 'No select Team Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -534,7 +536,7 @@ class _start_inning_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['select_player'] ?? 'No select Player Available',
+                    entity.selectPlayer ?? 'No select Player Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,
@@ -556,7 +558,7 @@ class _start_inning_entity_list_screenState
                     style: AppStyle.txtGilroyMedium16,
                   ),
                   Text(
-                    entity['datetime_field'] ?? 'No Datetime Field Available',
+                    entity.datetimeField ?? 'No Datetime Field Available',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: AppStyle.txtGilroyMedium16Bluegray900,

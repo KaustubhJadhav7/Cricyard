@@ -2,7 +2,7 @@ import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamView/EnrollIn
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../Entity/team/views/Teams_create_entity_screen.dart';
+import '../../../../Entity/team/Teams/views/Teams_create_entity_screen.dart';
 import '../../../../core/app_export.dart';
 import '../../../../theme/custom_button_style.dart';
 import '../../../widgets/custom_elevated_button.dart';

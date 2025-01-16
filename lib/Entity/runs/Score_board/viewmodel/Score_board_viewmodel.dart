@@ -1,5 +1,5 @@
 import 'package:cricyard/Entity/runs/Score_board/model/Score_board_model.dart';
-import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
+import 'package:cricyard/Entity/team/Teams/repository/Teams_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -17,7 +17,10 @@ class ScoreBoardProvider extends ChangeNotifier {
   List<Map<String, dynamic>> filteredEntities = [];
   List<Map<String, dynamic>> searchEntities = [];
 
-  
+  void updateModelEntity(ScoreBoardEntity newEntity) {
+    _entity = newEntity;
+    notifyListeners();
+  }
   
   bool showCardView = true;
   bool isLoading = false;

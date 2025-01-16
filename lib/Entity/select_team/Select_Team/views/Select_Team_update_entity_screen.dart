@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,8 +10,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../viewmodel/Select_Team_api_service.dart';
-import '/providers/token_manager.dart';
+import '../repository/Select_Team_api_service.dart';
 
 class select_teamUpdateEntityScreen extends StatefulWidget {
   final Map<String, dynamic> entity;
@@ -26,37 +27,41 @@ class _select_teamUpdateEntityScreenState
   final SelectTeamApiService apiService = SelectTeamApiService();
   final _formKey = GlobalKey<FormState>();
 
-  List<Map<String, dynamic>> team_nameItems = [];
-  var selectedteam_nameValue;
-  Future<void> fetchteam_nameItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getTeamName(token!);
-      print('team_name data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          team_nameItems = selectTdata;
-          // Set the initial value of selectedselect_tValue based on the entity's value
-          selectedteam_nameValue = widget.entity['team_name'] ?? null;
-        });
-      } else {
-        print('team_name data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load team_name items: $e');
-    }
-  }
+  // List<Map<String, dynamic>> team_nameItems = [];
+  // var selectedteam_nameValue;
+  // Future<void> fetchteam_nameItems() async {
+  //   final token = await TokenManager.getToken();
+  //   try {
+  //     final selectTdata = await apiService.getTeamName();
+  //     print('team_name data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         team_nameItems = selectTdata;
+  //         // Set the initial value of selectedselect_tValue based on the entity's value
+  //         selectedteam_nameValue = widget.entity['team_name'] ?? null;
+  //       });
+  //     } else {
+  //       print('team_name data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load team_name items: $e');
+  //   }
+  // }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<SelectTeamProvider>(context, listen: false);
     super.initState();
 
-    fetchteam_nameItems(); // Fetch dropdown items when the screen initializes
+    provider.loadTeamNameItems();
+  });
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SelectTeamProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -104,13 +109,13 @@ class _select_teamUpdateEntityScreenState
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Team Name'),
-                  value: selectedteam_nameValue,
+                  value: provider.selectedTeamNameValue,
                   items: [
                     const DropdownMenuItem<String>(
                       value: null,
                       child: Text('No Value'),
                     ),
-                    ...team_nameItems.map<DropdownMenuItem<String>>(
+                    ...provider.teamNameItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['team_name'].toString(),
@@ -121,7 +126,7 @@ class _select_teamUpdateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedteam_nameValue = value;
+                      provider.selectedTeamNameValue = value;
                     });
                   },
                   validator: (value) {
@@ -142,36 +147,11 @@ class _select_teamUpdateEntityScreenState
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-
-                      final token = await TokenManager.getToken();
-                      try {
-                        await apiService.updateEntity(
-                            token!,
+                        await provider.updateEntity(
                             widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
-                            widget.entity);
-
+                                'id'], 
+                            widget.entity, context);
                         Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: Text('Failed to update Select_Team: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
                     }
                   },
                 ),

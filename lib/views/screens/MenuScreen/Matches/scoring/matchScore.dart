@@ -14,7 +14,7 @@ import '../../../../../Entity/matches/Match/views/Match_update_entity_screen.dar
 import '../../../../../Entity/matches/Start_Match/repository/Start_Match_api_service.dart';
 import '../../../../../Entity/runs/Score_board/repository/Score_board_api_service.dart';
 import '../../../../../Entity/runs/Score_board/views/Score_board_create_entity_screen.dart';
-import '../../../../../Entity/team/viewmodels/Teams_api_service.dart';
+import '../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
 import '../../../../../core/utils/image_constant.dart';
 import '../../../practice_match/view/matchwon_view.dart';
 import '../../NewStreamFolder/TestStreaming/publishVideoAudioWidgetTest.dart';

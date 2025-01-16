@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/select_team/Select_Team/model/Select_Team_model.dart';
+import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -9,7 +12,7 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodel/Select_Team_api_service.dart';
+import '../repository/Select_Team_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -24,40 +27,48 @@ class select_teamCreateEntityScreen extends StatefulWidget {
 class _select_teamCreateEntityScreenState
     extends State<select_teamCreateEntityScreen> {
   final SelectTeamApiService apiService = SelectTeamApiService();
-  final Map<String, dynamic> formData = {};
+  SelectTeamEntity formData = SelectTeamEntity(
+  id: 0, // Use a placeholder value for id
+  teamName: '', // Default value for teamName
+  active: true, // Default value for active
+  memberCount: 0, // Default value for memberCount
+  description: '', // Default value for description
+);
   final _formKey = GlobalKey<FormState>();
 
-  List<Map<String, dynamic>> team_nameItems = [];
-  var selectedteam_nameValue = ''; // Use nullable type  Future<void> _load
-  Future<void> _loadteam_nameItems() async {
-    final token = await TokenManager.getToken();
-    try {
-      final selectTdata = await apiService.getTeamName(token!);
-      print(' team_name   data is : $selectTdata');
-      // Handle null or empty dropdownData
-      if (selectTdata != null && selectTdata.isNotEmpty) {
-        setState(() {
-          team_nameItems = selectTdata;
-        });
-      } else {
-        print(' team_name   data is null or empty');
-      }
-    } catch (e) {
-      print('Failed to load  team_name   items: $e');
-    }
-  }
+  // List<Map<String, dynamic>> team_nameItems = [];
+  // var selectedteam_nameValue = ''; // Use nullable type  Future<void> _load
+  // Future<void> _loadteam_nameItems() async {
+  //   final token = await TokenManager.getToken();
+  //   try {
+  //     final selectTdata = await apiService.getTeamName();
+  //     print(' team_name   data is : $selectTdata');
+  //     // Handle null or empty dropdownData
+  //     if (selectTdata != null && selectTdata.isNotEmpty) {
+  //       setState(() {
+  //         team_nameItems = selectTdata;
+  //       });
+  //     } else {
+  //       print(' team_name   data is null or empty');
+  //     }
+  //   } catch (e) {
+  //     print('Failed to load  team_name   items: $e');
+  //   }
+  // }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<SelectTeamProvider>(context, listen: false);
     super.initState();
 
-    _loadteam_nameItems();
+    provider.loadTeamNameItems();
+  });
   }
 
   // Future<void> performOCR() async {
   //   try {
   //     final ImagePicker _picker = ImagePicker();
-
   //     // Show options for gallery or camera using a dialog
   //     await showDialog(
   //       context: context,
@@ -128,6 +139,7 @@ class _select_teamCreateEntityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SelectTeamProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -165,16 +177,19 @@ class _select_teamCreateEntityScreenState
                               hintText: "Enter Team Name",
                               // ValidationProperties
 
-                              onsaved: (value) => formData['team_name'] = value,
+                              onsaved: (value) { if (value != null && value.isNotEmpty) {
+      setState(() {
+        formData = formData.copyWith(teamName: value);
+      });
+    }},
                               margin: getMargin(top: 6))
                         ])),
 
                 SizedBox(height: 16),
 
-// DropdownButtonFormField with default value and null check
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Team Name'),
-                  value: selectedteam_nameValue,
+                  value: provider.selectedTeamNameValue,
                   items: [
                     // Add an item with an empty value to represent no selection
                     const DropdownMenuItem<String>(
@@ -182,7 +197,7 @@ class _select_teamCreateEntityScreenState
                       child: Text('Select option'),
                     ),
                     // Map your dropdownItems as before
-                    ...team_nameItems.map<DropdownMenuItem<String>>(
+                    ...provider.teamNameItems.map<DropdownMenuItem<String>>(
                       (item) {
                         return DropdownMenuItem<String>(
                           value: item['team_name'].toString(),
@@ -193,14 +208,12 @@ class _select_teamCreateEntityScreenState
                   ],
                   onChanged: (value) {
                     setState(() {
-                      selectedteam_nameValue = value!;
+                      provider.selectedTeamNameValue = value!;
                     });
                   },
                   onSaved: (value) {
-                    if (selectedteam_nameValue.isEmpty) {
-                      selectedteam_nameValue = "no value";
-                    }
-                    formData['team_name'] = selectedteam_nameValue;
+                      provider.selectedTeamNameValue = "no value";
+                    formData = formData.copyWith(teamName: value);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -213,34 +226,7 @@ class _select_teamCreateEntityScreenState
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-
-                      final token = await TokenManager.getToken();
-                      try {
-                        print(formData);
-                        Map<String, dynamic> createdEntity =
-                            await apiService.createEntity(token!, formData);
-
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: Text('Failed to create Select_Team: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                      provider.createEntity(formData, context);
                     }
                   },
                 ),

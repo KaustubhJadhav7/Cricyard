@@ -2,7 +2,7 @@ import 'package:cricyard/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../Entity/team/viewmodels/Teams_api_service.dart';
+import '../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
 
 class InviteTeamScreen extends StatefulWidget {
   InviteTeamScreen(this.tourId, {super.key});

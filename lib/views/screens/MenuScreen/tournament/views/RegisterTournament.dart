@@ -2,7 +2,7 @@
 import 'package:cricyard/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import '../../../../../Entity/add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
-import '../../../../../Entity/team/viewmodels/Teams_api_service.dart';
+import '../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
 import '../../../../../Utils/image_constant.dart';
 import '../../../../../Utils/size_utils.dart';
 import '../../../../../theme/theme_helper.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../../Entity/team/viewmodels/Teams_api_service.dart';
+import '../../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
 import '../../views/schedule_match_tur_id.dart';
 import 'groupService.dart';
 

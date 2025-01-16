@@ -2,7 +2,7 @@ import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
+import 'package:cricyard/Entity/team/Teams/repository/Teams_api_service.dart';
 import 'package:provider/provider.dart';
 import '../repository/Score_board_api_service.dart';
 import '/providers/token_manager.dart';

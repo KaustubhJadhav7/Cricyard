@@ -1,4 +1,4 @@
-import 'package:cricyard/Entity/team/viewmodels/Teams_api_service.dart';
+import 'package:cricyard/Entity/team/Teams/repository/Teams_api_service.dart';
 import 'package:cricyard/core/app_export.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/groups/group_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/matches/matches_screen.dart';

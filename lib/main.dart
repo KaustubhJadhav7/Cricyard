@@ -1,14 +1,18 @@
+import 'package:cricyard/Entity/followers/Followers/viewmodel/Followers_viewmodel.dart';
 import 'package:cricyard/Entity/highlights/Highlights/viewmodel/Highlights_viewmodel.dart';
 import 'package:cricyard/Entity/live_cricket_match/Live_Cricket/viewmodel/Live_Cricket_viewmodel.dart';
 import 'package:cricyard/Entity/live_score_update/Live_Score_Update/viewmodel/Live_Score_viewmodel.dart';
 import 'package:cricyard/Entity/matches/Match/viewmodel/Match_viewmodel.dart';
 import 'package:cricyard/Entity/matches/Match_Setting/viewmodel/Match_Setting_viewmodel.dart';
 import 'package:cricyard/Entity/matches/Matches/viewmodels/Matches_viewmodel.dart';
+import 'package:cricyard/Entity/matches/Start_Match/viewmodel/Start_Match_viewmodel.dart';
 import 'package:cricyard/Entity/obstructing_the_field/Obstructing_The_Field/viewmodel/Obstructing_The_Field_viewmodel.dart';
+import 'package:cricyard/Entity/player/Player_Detail/viewmodel/Player_Detail_viewmodel.dart';
 import 'package:cricyard/Entity/retired/Retired/viewmodels/Retired_viewmodel.dart';
 import 'package:cricyard/Entity/retired_out/Retired_out/viewmodel/Retired_out_viewmodel.dart';
 import 'package:cricyard/Entity/runs/Runs/viewmodel/Runs_viewmodel.dart';
 import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel.dart';
+import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +90,9 @@ void main() async {
         create: (_) => FeedbackProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => FollowersProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => FindFriendsProvider(),
       ),
       ChangeNotifierProvider(
@@ -110,7 +117,13 @@ void main() async {
         create: (_) => MatchesProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => StartMatchProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => ObstructingTheFieldProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => PlayerDetailProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => RetiredEntitiesProvider(),
@@ -123,6 +136,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => ScoreBoardProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => SelectTeamProvider(),
       ),
     ],
     child: MyApp(),

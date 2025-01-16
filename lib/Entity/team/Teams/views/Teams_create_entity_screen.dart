@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../Utils/image_constant.dart';
-import '../../../Utils/size_utils.dart';
-import '../../../views/widgets/app_bar/appbar_image.dart';
-import '../../../views/widgets/app_bar/appbar_title.dart';
-import '../../../views/widgets/app_bar/custom_app_bar.dart';
-import '../../../views/widgets/custom_button.dart';
-import '../../../views/widgets/custom_text_form_field.dart';
+import '../../../../Utils/image_constant.dart';
+import '../../../../Utils/size_utils.dart';
+import '../../../../views/widgets/app_bar/appbar_image.dart';
+import '../../../../views/widgets/app_bar/appbar_title.dart';
+import '../../../../views/widgets/app_bar/custom_app_bar.dart';
+import '../../../../views/widgets/custom_button.dart';
+import '../../../../views/widgets/custom_text_form_field.dart';
 
-import '../viewmodels/Teams_api_service.dart';
+import '../repository/Teams_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 

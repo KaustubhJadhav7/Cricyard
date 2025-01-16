@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../repository/Match_api_service.dart'; 
 import '../../../add_tournament/My_Tournament/repository/My_Tournament_api_service.dart';
-import '../../../team/viewmodels/Teams_api_service.dart';
+import '../../../team/Teams/repository/Teams_api_service.dart';
 
 class MatchProvider with ChangeNotifier {
   final MatchApiService apiService = MatchApiService();

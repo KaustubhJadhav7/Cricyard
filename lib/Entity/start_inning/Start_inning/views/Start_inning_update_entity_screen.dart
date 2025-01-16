@@ -1,4 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/start_inning/Start_inning/model/Start_inning_model.dart';
+import 'package:cricyard/Entity/start_inning/Start_inning/viewmodels/Start_inning_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../views/widgets/app_bar/appbar_image.dart';
@@ -7,11 +11,10 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodels/Start_inning_api_service.dart';
-import '/providers/token_manager.dart';
+import '../repository/Start_inning_api_service.dart';
 
 class start_inningUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final StartInningModel entity;
 
   start_inningUpdateEntityScreen({required this.entity});
 
@@ -77,17 +80,18 @@ class _start_inningUpdateEntityScreenState
   void initState() {
     super.initState();
     selectedselect_match =
-        widget.entity['select_match']; // Initialize with the default value
+        widget.entity.selectMatch; // Initialize with the default value
 
     selectedselect_team =
-        widget.entity['select_team']; // Initialize with the default value
+        widget.entity.selectTeam; // Initialize with the default value
 
     selectedselect_player =
-        widget.entity['select_player']; // Initialize with the default value
+        widget.entity.selectPlayer; // Initialize with the default value
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<StartInningProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -112,7 +116,7 @@ class _start_inningUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration:
                       const InputDecoration(labelText: 'Selectselect_match'),
-                  value: widget.entity['select_match'],
+                  value: widget.entity.selectMatch,
                   items: select_matchList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
@@ -122,7 +126,7 @@ class _start_inningUpdateEntityScreenState
                   onChanged: (value) {
                     setState(() {
                       selectedselect_match = value!;
-                      widget.entity['select_match'] = value;
+                      widget.entity.selectMatch = value;
                     });
                   },
                 ),
@@ -130,7 +134,7 @@ class _start_inningUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration:
                       const InputDecoration(labelText: 'Selectselect_team'),
-                  value: widget.entity['select_team'],
+                  value: widget.entity.selectTeam,
                   items: select_teamList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
@@ -140,7 +144,7 @@ class _start_inningUpdateEntityScreenState
                   onChanged: (value) {
                     setState(() {
                       selectedselect_team = value!;
-                      widget.entity['select_team'] = value;
+                      widget.entity.selectTeam = value;
                     });
                   },
                 ),
@@ -148,7 +152,7 @@ class _start_inningUpdateEntityScreenState
                 DropdownButtonFormField<String>(
                   decoration:
                       const InputDecoration(labelText: 'Selectselect_player'),
-                  value: widget.entity['select_player'],
+                  value: widget.entity.selectPlayer,
                   items: select_playerList
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
@@ -158,14 +162,14 @@ class _start_inningUpdateEntityScreenState
                   onChanged: (value) {
                     setState(() {
                       selectedselect_player = value!;
-                      widget.entity['select_player'] = value;
+                      widget.entity.selectPlayer = value;
                     });
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   initialValue: DateFormat('yyyy-MM-dd HH:mm')
-                      .format(DateTime.parse(widget.entity['datetime_field'])),
+                      .format(DateTime.parse(widget.entity.datetimeField)),
                   decoration: const InputDecoration(
                     labelText: 'datetime_field',
                     suffixIcon: Icon(Icons.calendar_today),
@@ -173,7 +177,7 @@ class _start_inningUpdateEntityScreenState
                   // readOnly: true, // Set to true to prevent user input
                   onTap: () => _selectDateTime(context),
                   onSaved: (value) {
-                    widget.entity['datetime_field'] =
+                    widget.entity.datetimeField =
                         DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
                   },
                 ),
@@ -185,37 +189,15 @@ class _start_inningUpdateEntityScreenState
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-
-                      final token = await TokenManager.getToken();
-                      try {
-                        await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
-                            widget.entity);
+                      
+                        // await apiService.updateEntity(
+                        //     widget.entity[
+                        //         'id'], // Assuming 'id' is the key in your entity map
+                        //     widget.entity);
+                        await provider.updateEntity(widget.entity, context);
 
                         Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content:
-                                  Text('Failed to update Start_inning: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                      
                     }
                   },
                 ),

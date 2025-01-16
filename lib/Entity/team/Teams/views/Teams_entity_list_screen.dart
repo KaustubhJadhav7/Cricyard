@@ -1,18 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../viewmodels/Teams_api_service.dart';
+import '../repository/Teams_api_service.dart';
 import 'Teams_create_entity_screen.dart';
 import 'Teams_update_entity_screen.dart';
 import '/providers/token_manager.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import '../../../theme/app_style.dart';
-import '../../../utils/size_utils.dart';
-import '../../../Utils/image_constant.dart';
-import '../../../views/widgets/app_bar/appbar_image.dart';
-import '../../../views/widgets/app_bar/appbar_title.dart';
-import '../../../views/widgets/app_bar/custom_app_bar.dart';
-import '../../../theme/app_decoration.dart';
+import '../../../../theme/app_style.dart';
+import '../../../../utils/size_utils.dart';
+import '../../../../Utils/image_constant.dart';
+import '../../../../views/widgets/app_bar/appbar_image.dart';
+import '../../../../views/widgets/app_bar/appbar_title.dart';
+import '../../../../views/widgets/app_bar/custom_app_bar.dart';
+import '../../../../theme/app_decoration.dart';
 
 class teams_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';

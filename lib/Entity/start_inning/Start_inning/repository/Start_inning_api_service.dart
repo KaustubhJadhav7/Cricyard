@@ -1,14 +1,14 @@
 // import 'package:dio/dio.dart';
 // import '/resources/api_constants.dart';
 
-// class select_teamApiService {
+// class start_inningApiService {
 //   final String baseUrl = ApiConstants.baseUrl;
 //   final Dio dio = Dio();
 
 //   Future<List<Map<String, dynamic>>> getEntities(String token) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       final response = await dio.get('$baseUrl/Select_Team/Select_Team');
+//       final response = await dio.get('$baseUrl/Start_inning/Start_inning');
 //       final entities = (response.data as List).cast<Map<String, dynamic>>();
 //       return entities;
 //     } catch (e) {
@@ -21,7 +21,7 @@
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
 //       final response = await dio.get(
-//           '$baseUrl/Select_Team/Select_Team/getall/page?page=$page&size=$Size');
+//           '$baseUrl/Start_inning/Start_inning/getall/page?page=$page&size=$Size');
 //       final entities =
 //           (response.data['content'] as List).cast<Map<String, dynamic>>();
 //       return entities;
@@ -36,7 +36,7 @@
 //       print("in post api$entity");
 //       dio.options.headers['Authorization'] = 'Bearer $token';
 //       final response =
-//           await dio.post('$baseUrl/Select_Team/Select_Team', data: entity);
+//           await dio.post('$baseUrl/Start_inning/Start_inning', data: entity);
 
 //       print(entity);
 
@@ -53,7 +53,8 @@
 //       String token, int entityId, Map<String, dynamic> entity) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       await dio.put('$baseUrl/Select_Team/Select_Team/$entityId', data: entity);
+//       await dio.put('$baseUrl/Start_inning/Start_inning/$entityId',
+//           data: entity);
 //       print(entity);
 //     } catch (e) {
 //       throw Exception('Failed to update entity: $e');
@@ -63,63 +64,47 @@
 //   Future<void> deleteEntity(String token, int entityId) async {
 //     try {
 //       dio.options.headers['Authorization'] = 'Bearer $token';
-//       await dio.delete('$baseUrl/Select_Team/Select_Team/$entityId');
+//       await dio.delete('$baseUrl/Start_inning/Start_inning/$entityId');
 //     } catch (e) {
 //       throw Exception('Failed to delete entity: $e');
 //     }
 //   }
-
-//   Future<List<Map<String, dynamic>>> getteam_name(String token) async {
-//     try {
-//       dio.options.headers['Authorization'] = 'Bearer $token';
-//       final response =
-//           await dio.get('$baseUrl/TeamList_ListFilter1/TeamList_ListFilter1');
-//       final entities = (response.data as List).cast<Map<String, dynamic>>();
-//       return entities;
-//     } catch (e) {
-//       throw Exception('Failed to get all entities: $e');
-//     }
-//   }
 // }
+import 'package:cricyard/Entity/start_inning/Start_inning/model/Start_inning_model.dart';
 
 import '/resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart'; // Import NetworkApiService
 
-class SelectTeamApiService {
+class start_inningApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService networkApiService = NetworkApiService();
 
-  // Fetch all entities
-  Future<List<Map<String, dynamic>>> getEntities(String token) async {
+  Future<List<StartInningModel>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesSelectTeam);
+      final response = await networkApiService.getGetApiResponse('$baseUrl/Start_inning/Start_inning');
       // Assuming the response is a List of entities
-      final entities = (response as List).cast<Map<String, dynamic>>();
+      final entities = (response as List).cast<StartInningModel>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
     }
   }
 
-  // Fetch all entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<StartInningModel>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '${ApiConstants.getAllWithPaginationSelectTeam}?page=$page&size=$size');
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+          '$baseUrl/Start_inning/Start_inning/getall/page?page=$page&size=$size');
+      final entities = (response['content'] as List).cast<StartInningModel>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
     }
   }
 
-  // Create a new entity
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<StartInningModel> createEntity(StartInningModel entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          ApiConstants.createEntitySelectTeam, entity);
+          '$baseUrl/Start_inning/Start_inning', entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -127,36 +112,21 @@ class SelectTeamApiService {
     }
   }
 
-  // Update an existing entity
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, StartInningModel entity) async {
     try {
       await networkApiService.getPutApiResponse(
-          '${ApiConstants.updateEntitySelectTeam}/$entityId', entity);
+          '$baseUrl/Start_inning/Start_inning/$entityId', entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
-  // Delete an entity
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
       await networkApiService.getDeleteApiResponse(
-          '${ApiConstants.deleteEntitySelectTeam}/$entityId');
+          '$baseUrl/Start_inning/Start_inning/$entityId');
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
-    }
-  }
-
-  // Fetch team names
-  Future<List<Map<String, dynamic>>> getTeamName(String token) async {
-    try {
-      final response = await networkApiService.getGetApiResponse(
-          ApiConstants.getTeamNameSelectTeam);
-      final entities = (response as List).cast<Map<String, dynamic>>();
-      return entities;
-    } catch (e) {
-      throw Exception('Failed to get team names: $e');
     }
   }
 }
