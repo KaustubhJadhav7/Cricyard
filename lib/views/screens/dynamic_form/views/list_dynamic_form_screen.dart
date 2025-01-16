@@ -12,7 +12,7 @@ import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
 import 'UpdatedynamicForm.dart';
 import 'create_dynamicform.dart';
-import '../viewmodel/dynamic_form_service.dart';
+import '../repository/dynamic_form_service.dart';
 
 class DynamicForm extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@ import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../providers/token_manager.dart';
-import '../viewmodel/dynamic_form_service.dart';
+import '../repository/dynamic_form_service.dart';
 
 class EditForm extends StatefulWidget {
   final Map<String, dynamic> formData;

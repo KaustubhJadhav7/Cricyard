@@ -9,7 +9,7 @@ import '../../../../theme/app_style.dart';
 import '../../../widgets/app_bar/appbar_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
-import '../model/Bookmarks_api_service.dart';
+import '../repository/Bookmarks_api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class bookmarks_entity_list_screen extends StatefulWidget {

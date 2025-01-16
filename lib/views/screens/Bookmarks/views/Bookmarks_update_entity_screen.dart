@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
-import '../model/Bookmarks_api_service.dart';
+import '../repository/Bookmarks_api_service.dart';
 
 class UpdateEntityScreen extends StatefulWidget {
   final Map<String, dynamic> entity;

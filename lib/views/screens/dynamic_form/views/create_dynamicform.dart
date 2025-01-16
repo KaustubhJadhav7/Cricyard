@@ -12,7 +12,7 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_dropdown_field.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import '../../Login Screen/view/CustomButton.dart';
-import '../viewmodel/dynamic_form_service.dart';
+import '../repository/dynamic_form_service.dart';
 
 class CreateForm extends StatefulWidget {
   @override

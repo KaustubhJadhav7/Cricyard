@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '/providers/token_manager.dart';
 import 'package:flutter/services.dart';
 
-import '../model/Bookmarks_api_service.dart';
+import '../repository/Bookmarks_api_service.dart';
 
 class CreateEntityScreen extends StatefulWidget {
   const CreateEntityScreen({super.key});
