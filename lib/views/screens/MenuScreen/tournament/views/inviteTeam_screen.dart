@@ -1,3 +1,4 @@
+import 'package:cricyard/Entity/team/Teams/model/Teams_model.dart';
 import 'package:cricyard/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,7 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
   final teamsApiService teamapiService = teamsApiService();
   String? token;
 
-  List<Map<String, dynamic>> teams = []; // Store tournament data here
+  List<TeamsModel> teams = []; // Store tournament data here
   bool isteamLoading = false;
 
   bool _isInviting = false;
@@ -32,10 +33,10 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
       setState(() {
         isteamLoading = true;
       });
-      final List<Map<String, dynamic>> myteam =
+      final List<dynamic> myteam =
           await teamapiService.getEntities();
       setState(() {
-        teams = myteam.map((team) {
+        List<dynamic>teams = myteam.map((team) {
           return {
             ...team,
             'invited':
@@ -61,10 +62,7 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
   Future<void> _sendInvite(int tournamentId, int teamId) async {
     final response = await teamapiService.inviteTeam(widget.tourId, teamId);
     print("Raw response: $response");
-    // Convert the response to a string and trim any whitespace
-    // final trimmedResponse = response.toString().trim();
-    // print("Trimmed Response is: '$trimmedResponse'");
-
+    
     if (response == 'Invitation Already Sent') {
       // Handle successful invite
       _showCustomSnackBar(context, 'Invitation Already Sent');
@@ -72,11 +70,8 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
         // Update the invitation status of the team
         print("setstates for teams started ");
         teams = teams.map((team) {
-          if (team['id'] == teamId) {
-            return {
-              ...team,
-              'invited': true, // Mark the team as invited
-            };
+          if (team.id == teamId) {
+            team.copyWith(invited: true);
           }
           return team;
         }).toList();
@@ -112,11 +107,8 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
         // Update the invitation status of the team
         print("setstates for teams started ");
         teams = teams.map((team) {
-          if (team['id'] == teamId) {
-            return {
-              ...team,
-              'invited': true, // Mark the team as invited
-            };
+          if (team.id == teamId) {
+            team.copyWith(invited: true);
           }
           return team;
         }).toList();
@@ -344,7 +336,7 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                data['team_name'] ??
+                data.teamName ??
                     'Unknown Team', // Provide default value for player_name
                 style: const TextStyle(
                   fontSize: 16,
@@ -369,7 +361,7 @@ class _InviteTeamScreenState extends State<InviteTeamScreen> {
                   setState(() {
                     _isReInvitingList[index] = true;
                   });
-                  _sendInvite(widget.tourId,data['id']).then((value) {
+                  _sendInvite(widget.tourId,data.id).then((value) {
                     setState(() {
                       _isReInvitingList[index] =
                       false;

@@ -4,6 +4,8 @@
 // import '../repository/Absent_hurt_api_service.dart';
 // import 'Absent_hurt_create_entity_screen.dart';
 // import 'Absent_hurt_update_entity_screen.dart';
+import 'package:cricyard/Entity/absent_hurt/Absent_hurt/model/Absent_hurt_model.dart';
+
 import '/providers/token_manager.dart';
 // import 'package:flutter/services.dart';
 // import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -749,24 +751,24 @@ class _AbsentHurtEntityListScreenState extends State<AbsentHurtEntityListScreen>
     );
   }
 
-  Widget _buildListItem(AbsentHurtProvider provider, Map<String, dynamic> entity) {
+  Widget _buildListItem(AbsentHurtProvider provider, AbsentHurtEntity entity) {
     return provider.showCardView
         ? _buildCardView(entity)
         : _buildNormalView(entity);
   }
 
-  Widget _buildCardView(Map<String, dynamic> entity) {
+  Widget _buildCardView(AbsentHurtEntity entity) {
     return Card(
         elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: _buildNormalView(entity));
   }
 
-  Widget _buildNormalView(Map<String, dynamic> entity) {
+  Widget _buildNormalView(AbsentHurtEntity entity) {
     final provider = Provider.of<AbsentHurtProvider>(context);
     return ListTile(
-      title: Text(entity['description'] ?? 'No Description Available'),
-      subtitle: Text(entity['player_name'] ?? 'No Player Name Available'),
+      title: Text(entity.description ?? 'No Description Available'),
+      subtitle: Text(entity.playerName ?? 'No Player Name Available'),
       trailing: PopupMenuButton<String>(
         onSelected: (value) async {
           if (value == 'delete') {

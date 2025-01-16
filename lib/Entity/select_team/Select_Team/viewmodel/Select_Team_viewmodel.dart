@@ -5,7 +5,7 @@ import '../repository/Select_Team_api_service.dart'; // Adjust import to match y
 
 class SelectTeamProvider extends ChangeNotifier {
   final SelectTeamApiService apiService = SelectTeamApiService();
-
+  final formKey = GlobalKey<FormState>();
   List<SelectTeamEntity> entities = [];
   List<SelectTeamEntity> filteredEntities = [];
   List<SelectTeamEntity> searchEntities = [];
@@ -22,7 +22,13 @@ class SelectTeamProvider extends ChangeNotifier {
     fetchEntities();
     fetchWithoutPaging();
   }
-
+  SelectTeamEntity formData = SelectTeamEntity(
+  id: 0, // Use a placeholder value for id
+  teamName: '', // Default value for teamName
+  active: true, // Default value for active
+  memberCount: 0, // Default value for memberCount
+  description: '', // Default value for description
+);
   Future<void> fetchWithoutPaging() async {
     try {
       final fetchedEntities = await apiService.getEntities();
@@ -52,10 +58,10 @@ class SelectTeamProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  Future<void> deleteEntity(SelectTeamEntity entity) async {
     try {
       // final token = await TokenManager.getToken();
-      await apiService.deleteEntity(entity['id']);
+      await apiService.deleteEntity(entity.id);
       entities.remove(entity);
       notifyListeners();
     } catch (e) {
@@ -153,7 +159,7 @@ class SelectTeamProvider extends ChangeNotifier {
   }
 
   Future<void> updateEntity(
-      int id, Map<String, dynamic> updatedEntity, BuildContext context) async {
+      int id, SelectTeamEntity updatedEntity, BuildContext context) async {
     try {
         await apiService.updateEntity(id, updatedEntity);
         notifyListeners();

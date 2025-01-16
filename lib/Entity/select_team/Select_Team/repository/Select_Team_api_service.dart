@@ -128,7 +128,7 @@ class SelectTeamApiService {
   }
 
   // Update an existing entity
-  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, SelectTeamEntity entity) async {
     try {
       await networkApiService.getPutApiResponse(
           '${ApiConstants.updateEntitySelectTeam}/$entityId', entity);

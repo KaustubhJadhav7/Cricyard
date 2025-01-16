@@ -346,6 +346,7 @@
 //     }
 //   }
 // }
+import 'package:cricyard/Entity/team/Teams/model/Teams_model.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart'; // For MediaType
 import 'package:cricyard/providers/token_manager.dart';
@@ -358,35 +359,34 @@ class teamsApiService {
   final String baseUrl = ApiConstants.baseUrl;
   final NetworkApiService networkApiService = NetworkApiService();
 
-  Future<List<Map<String, dynamic>>> getEntities() async {
+  Future<List<TeamsModel>> getEntities() async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/Teams/Teams',
+        ApiConstants.getEntitiesTeams,
       );
-      return (response as List).cast<Map<String, dynamic>>();
+      return (response as List).cast<TeamsModel>();
     } catch (e) {
       throw Exception('Failed to get all Teams: $e');
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(
+  Future<List<TeamsModel>> getAllWithPagination(
       String token, int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/Teams/Teams/getall/page?page=$page&size=$size',
+        '${ApiConstants.getAllWithPaginationTeams}?page=$page&size=$size',
         // token: token,
       );
-      return (response['content'] as List).cast<Map<String, dynamic>>();
+      return (response['content'] as List).cast<TeamsModel>();
     } catch (e) {
       throw Exception('Failed to get Teams with pagination: $e');
     }
   }
 
-  Future<Map<String, dynamic>> createEntity(
-      String token, Map<String, dynamic> entity) async {
+  Future<TeamsModel> createEntity(TeamsModel entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/Teams/Teams',
+        ApiConstants.createEntityTeams,
         entity,
         // token: token,
       );
@@ -396,10 +396,10 @@ class teamsApiService {
     }
   }
 
-  Future<void> uploadLogoImage(String token, String ref, String refTableName,
+  Future<void> uploadLogoImage(String ref, String refTableName,
       String selectedFilePath, Uint8List imageBytes) async {
     try {
-      String apiUrl = "$baseUrl/FileUpload/Uploadeddocs/$ref/$refTableName";
+      String apiUrl = ApiConstants.uploadLogoImage.replaceFirst('{ref}', ref).replaceFirst('{refTableName}', refTableName);
 
       final mimeType = lookupMimeType(selectedFilePath);
       FormData formData = FormData.fromMap({
@@ -433,25 +433,29 @@ class teamsApiService {
     }
   }
 
-  Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, TeamsModel entity) async {
+    // try {
+    //   await networkApiService.getPutApiResponse(
+    //     '$baseUrl/Teams/Teams/$entityId',
+    //     entity,
+    //   );
+    // } 
     try {
-      await networkApiService.getPutApiResponse(
-        '$baseUrl/Teams/Teams/$entityId',
-        entity,
-        // token: token,
-      );
-    } catch (e) {
+      final url = ApiConstants.updateEntityTeams.replaceFirst('{entityId}', entityId.toString());
+      await networkApiService.getPutApiResponse(url, entity);
+    }
+    catch (e) {
       throw Exception('Failed to update entity: $e');
     }
   }
 
-  Future<void> deleteEntity(String token, int entityId) async {
+  Future<void> deleteEntity(int entityId) async {
     try {
-      await networkApiService.getDeleteApiResponse(
-        '$baseUrl/Teams/Teams/$entityId',
-        // token: token,
-      );
+      // await networkApiService.getDeleteApiResponse(
+      //   '$baseUrl/Teams/Teams/$entityId'
+      // );
+      final url = ApiConstants.deleteEntityTeams.replaceFirst('{entityId}', entityId.toString());
+      await networkApiService.getDeleteApiResponse(url);
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }
@@ -460,7 +464,7 @@ class teamsApiService {
   Future<List<Map<String, dynamic>>> getMyTeam() async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/Teams/Teams/myTeam',
+        ApiConstants.getMyTeam,
       );
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
@@ -471,7 +475,7 @@ class teamsApiService {
   Future<List<Map<String, dynamic>>> getEnrolledTeam() async {
     try {
       final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/team/Register_team/enrolled/getAll',
+        ApiConstants.getEnrolledTeam,
       );
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
@@ -481,9 +485,11 @@ class teamsApiService {
 
   Future<List<Map<String, dynamic>>> getMyTeamByTourId(int tourId) async {
     try {
-      final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/tournament/Register_tournament/teams/$tourId',
-      );
+      // final response = await networkApiService.getGetApiResponse(
+      //   '$baseUrl/tournament/Register_tournament/teams/$tourId',
+      // );
+       final url = ApiConstants.getMyTeamByTourId.replaceFirst('{tourId}', tourId.toString());
+      final response = await networkApiService.getGetApiResponse(url);
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
       throw Exception('Failed to get Teams by tournament ID: $e');
@@ -492,9 +498,11 @@ class teamsApiService {
 
   Future<List<Map<String, dynamic>>> getAllMembers(int teamId) async {
     try {
-      final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/team/Register_team/member/$teamId',
-      );
+      // final response = await networkApiService.getGetApiResponse(
+      //   '$baseUrl/team/Register_team/member/$teamId',
+      // );
+      final url = ApiConstants.getAllMembers.replaceFirst('{teamId}', teamId.toString());
+      final response = await networkApiService.getGetApiResponse(url);
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
       throw Exception('Failed to get all Members: $e');
@@ -504,7 +512,7 @@ class teamsApiService {
   Future<Map<String, dynamic>> enrollInTeam(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/team/Register_team',
+        ApiConstants.enrollInTeam,
         entity,
       );
       return response;
@@ -515,10 +523,12 @@ class teamsApiService {
 
   Future<dynamic> invitePlayer(String mobNo, int teamId) async {
     try {
-      final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/Teams/Teams/invite?Mob_number=$mobNo&TeamId=$teamId',
-        {},
-      );
+      // final response = await networkApiService.getPostApiResponse(
+      //   '$baseUrl/Teams/Teams/invite?Mob_number=$mobNo&TeamId=$teamId',
+      //   {},
+      // );
+      final url = ApiConstants.invitePlayer.replaceFirst('{mobNo}', mobNo).replaceFirst('{teamId}', teamId.toString());
+      final response = await networkApiService.getPostApiResponse(url, {});
       return response;
     } catch (e) {
       throw Exception('Failed to invite Player: $e');
@@ -527,10 +537,12 @@ class teamsApiService {
 
   Future<dynamic> inviteTeam(String tournamentId, int teamId) async {
     try {
-      final response = await networkApiService.getPostApiResponse(
-        '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId=$tournamentId&TeamId=$teamId',
-        {},
-      );
+      // final response = await networkApiService.getPostApiResponse(
+      //   '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId=$tournamentId&TeamId=$teamId',
+      //   {},
+      // );
+      final url = ApiConstants.inviteTeam.replaceFirst('{tournamentId}', tournamentId).replaceFirst('{teamId}', teamId.toString());
+      final response = await networkApiService.getPostApiResponse(url, {});
       return response;
     } catch (e) {
       throw Exception('Failed to invite Team: $e');
@@ -539,10 +551,12 @@ class teamsApiService {
 
   Future<void> updateTag({required String playerTag, required int id}) async {
     try {
-      await networkApiService.getPutApiResponse(
-        '$baseUrl/team/Register_team/updatetag?data=$playerTag&id=$id',
-        {},
-      );
+      // await networkApiService.getPutApiResponse(
+      //   '$baseUrl/team/Register_team/updatetag?data=$playerTag&id=$id',
+      //   {},
+      // );
+      final url = ApiConstants.updateTag.replaceFirst('{playerTag}', playerTag).replaceFirst('{id}', id.toString());
+      await networkApiService.getPutApiResponse(url, {});
     } catch (e) {
       throw Exception('Failed to update player tag: $e');
     }
@@ -551,9 +565,11 @@ class teamsApiService {
   Future<List<Map<String, dynamic>>?> getAllInvitedPlayers(
       {required String teamId}) async {
     try {
-      final response = await networkApiService.getGetApiResponse(
-        '$baseUrl/Invitation_member/Invitation_member/myplayer/$teamId',
-      );
+      // final response = await networkApiService.getGetApiResponse(
+      //   '$baseUrl/Invitation_member/Invitation_member/myplayer/$teamId',
+      // );
+       final url = ApiConstants.getAllInvitedPlayers.replaceFirst('{teamId}', teamId);
+      final response = await networkApiService.getGetApiResponse(url);
       return (response as List).cast<Map<String, dynamic>>();
     } catch (e) {
       throw Exception('Failed to fetch invited players: $e');

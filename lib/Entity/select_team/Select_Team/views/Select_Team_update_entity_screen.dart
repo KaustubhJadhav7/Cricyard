@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/select_team/Select_Team/model/Select_Team_model.dart';
 import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 import '../repository/Select_Team_api_service.dart';
 
 class select_teamUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final SelectTeamEntity entity;
 
   select_teamUpdateEntityScreen({required this.entity});
 
@@ -96,13 +97,13 @@ class _select_teamUpdateEntityScreenState
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Team Name",
-                              initialValue: widget.entity['team_name'],
+                              initialValue: widget.entity.teamName,
                               maxLines: 4,
 
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['team_name'] = value;
+                                widget.entity.teamName = value;
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -136,7 +137,7 @@ class _select_teamUpdateEntityScreenState
                     return null;
                   },
                   onSaved: (value) {
-                    widget.entity['team_name'] = value;
+                    widget.entity.teamName = value;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -148,8 +149,7 @@ class _select_teamUpdateEntityScreenState
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                         await provider.updateEntity(
-                            widget.entity[
-                                'id'], 
+                            widget.entity.id, 
                             widget.entity, context);
                         Navigator.pop(context);
                     }

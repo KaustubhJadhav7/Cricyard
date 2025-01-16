@@ -81,7 +81,7 @@ class start_inningApiService {
 
   Future<List<StartInningModel>> getEntities() async {
     try {
-      final response = await networkApiService.getGetApiResponse('$baseUrl/Start_inning/Start_inning');
+      final response = await networkApiService.getGetApiResponse(ApiConstants.getEntitiesStartInning);
       // Assuming the response is a List of entities
       final entities = (response as List).cast<StartInningModel>();
       return entities;
@@ -93,7 +93,7 @@ class start_inningApiService {
   Future<List<StartInningModel>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
-          '$baseUrl/Start_inning/Start_inning/getall/page?page=$page&size=$size');
+          '${ApiConstants.getAllWithPaginationStartInning}?page=$page&size=$size');
       final entities = (response['content'] as List).cast<StartInningModel>();
       return entities;
     } catch (e) {
@@ -104,7 +104,7 @@ class start_inningApiService {
   Future<StartInningModel> createEntity(StartInningModel entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
-          '$baseUrl/Start_inning/Start_inning', entity);
+          ApiConstants.createEntityStartInning, entity);
       // Assuming the response is a Map<String, dynamic>
       return response;
     } catch (e) {
@@ -114,8 +114,13 @@ class start_inningApiService {
 
   Future<void> updateEntity(int entityId, StartInningModel entity) async {
     try {
-      await networkApiService.getPutApiResponse(
-          '$baseUrl/Start_inning/Start_inning/$entityId', entity);
+      // await networkApiService.getPutApiResponse(
+      //     '$baseUrl/Start_inning/Start_inning/$entityId', entity);
+      final url = ApiConstants.updateEntityStartInning.replaceFirst(
+        '{entityId}',
+        entityId.toString(),
+      );
+      await networkApiService.getPutApiResponse(url, entity);
     } catch (e) {
       throw Exception('Failed to update entity: $e');
     }
@@ -123,8 +128,13 @@ class start_inningApiService {
 
   Future<void> deleteEntity(int entityId) async {
     try {
-      await networkApiService.getDeleteApiResponse(
-          '$baseUrl/Start_inning/Start_inning/$entityId');
+      // await networkApiService.getDeleteApiResponse(
+      //     '$baseUrl/Start_inning/Start_inning/$entityId');
+      final url = ApiConstants.deleteEntityStartInning.replaceFirst(
+        '{entityId}',
+        entityId.toString(),
+      );
+      await networkApiService.getDeleteApiResponse(url);
     } catch (e) {
       throw Exception('Failed to delete entity: $e');
     }

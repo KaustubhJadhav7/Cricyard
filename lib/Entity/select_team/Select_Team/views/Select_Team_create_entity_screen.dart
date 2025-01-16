@@ -27,14 +27,8 @@ class select_teamCreateEntityScreen extends StatefulWidget {
 class _select_teamCreateEntityScreenState
     extends State<select_teamCreateEntityScreen> {
   final SelectTeamApiService apiService = SelectTeamApiService();
-  SelectTeamEntity formData = SelectTeamEntity(
-  id: 0, // Use a placeholder value for id
-  teamName: '', // Default value for teamName
-  active: true, // Default value for active
-  memberCount: 0, // Default value for memberCount
-  description: '', // Default value for description
-);
-  final _formKey = GlobalKey<FormState>();
+  
+  
 
   // List<Map<String, dynamic>> team_nameItems = [];
   // var selectedteam_nameValue = ''; // Use nullable type  Future<void> _load
@@ -158,7 +152,7 @@ class _select_teamCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: provider.formKey,
             child: Column(
               children: [
                 Padding(
@@ -179,7 +173,7 @@ class _select_teamCreateEntityScreenState
 
                               onsaved: (value) { if (value != null && value.isNotEmpty) {
       setState(() {
-        formData = formData.copyWith(teamName: value);
+        provider.formData = provider.formData.copyWith(teamName: value);
       });
     }},
                               margin: getMargin(top: 6))
@@ -213,7 +207,7 @@ class _select_teamCreateEntityScreenState
                   },
                   onSaved: (value) {
                       provider.selectedTeamNameValue = "no value";
-                    formData = formData.copyWith(teamName: value);
+                    provider.formData = provider.formData.copyWith(teamName: value);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -224,9 +218,9 @@ class _select_teamCreateEntityScreenState
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      provider.createEntity(formData, context);
+                    if (provider.formKey.currentState!.validate()) {
+                      provider.formKey.currentState!.save();
+                      provider.createEntity(provider.formData, context);
                     }
                   },
                 ),

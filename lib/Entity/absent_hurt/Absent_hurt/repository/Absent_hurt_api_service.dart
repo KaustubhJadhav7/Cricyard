@@ -70,6 +70,8 @@
 //     }
 //   }
 // }
+import 'package:cricyard/Entity/absent_hurt/Absent_hurt/model/Absent_hurt_model.dart';
+
 import '../../../../resources/api_constants.dart';
 import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:cricyard/data/network/base_network_service.dart';
@@ -82,20 +84,20 @@ class AbsentHurtApiService {
   // Constructor to inject NetworkApiService
   // AbsentHurtApiService(this._networkApiService);
 
-  Future<List<Map<String, dynamic>>> getEntities() async {
+  Future<List<AbsentHurtEntity>> getEntities() async {
     try {
       // final response = await _networkApiService.getGetApiResponse(
       //     '$baseUrl/Absent_hurt/Absent_hurt');
       final response = await _networkApiService.getGetApiResponse(ApiConstants.getEntitiesAbsenthurt);
 
       // Assuming the response is a List of maps
-      return (response as List).cast<Map<String, dynamic>>();
+      return (response as List).cast<AbsentHurtEntity>();
     } catch (e) {
       throw Exception('Failed to get all entities: $e');
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
+  Future<List<AbsentHurtEntity>> getAllWithPagination(int page, int size) async {
     try {
       // final response = await _networkApiService.getGetApiResponse(
       //     '$baseUrl/Absent_hurt/Absent_hurt/getall/page?page=$page&size=$size');
@@ -103,7 +105,7 @@ class AbsentHurtApiService {
           '${ApiConstants.getAllWithPaginationAbsenthurt}?page=$page&size=$size');
 
       // Assuming the response has 'content' key with the data
-      return (response['content'] as List).cast<Map<String, dynamic>>();
+      return (response['content'] as List).cast<AbsentHurtEntity>();
     } catch (e) {
       throw Exception('Failed to get all with pagination: $e');
     }
@@ -121,7 +123,7 @@ class AbsentHurtApiService {
   }
 
   Future<void> updateEntity(
-      String token, int entityId, Map<String, dynamic> entity) async {
+      String token, int entityId, AbsentHurtEntity entity) async {
     try {
       await _networkApiService.getPutApiResponse(
   ApiConstants.updateEntityAbsenthurt.replaceFirst('{entityId}', entityId.toString()), entity);

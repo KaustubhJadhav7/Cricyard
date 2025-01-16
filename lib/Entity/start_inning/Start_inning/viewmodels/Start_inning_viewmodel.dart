@@ -12,6 +12,52 @@ class StartInningProvider extends ChangeNotifier {
   bool showCardView = true;
   TextEditingController searchController = TextEditingController();
   late stt.SpeechToText _speech;
+  final StartInningModel formData = StartInningModel(
+    id: 0,
+    selectMatch: '',
+    selectTeam: '',
+    selectPlayer: '',
+    datetimeField: '',
+  );
+
+  final formKey = GlobalKey<FormState>();
+
+  String? selectedSelectMatch;
+  List<String> selectMatchList = ['bar_code', 'qr_code'];
+
+  String? selectedSelectTeam;
+  List<String> selectTeamList = ['bar_code', 'qr_code'];
+
+  String? selectedSelectPlayer;
+  List<String> selectPlayerList = ['bar_code', 'qr_code'];
+
+  DateTime selectedDateTime = DateTime.now();
+
+  Future<void> selectDateTime(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+      );
+      if (pickedTime != null) {
+        selectedDateTime = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        notifyListeners();
+      }
+    }
+  }
 
   bool isLoading = false;
   int currentPage = 0;

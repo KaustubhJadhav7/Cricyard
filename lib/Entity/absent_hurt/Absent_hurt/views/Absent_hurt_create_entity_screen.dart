@@ -363,32 +363,10 @@ class AbsentHurtCreateEntityScreen extends StatelessWidget {
                   onTap: () async {
                     final formData = absentHurtProvider.formData;
                     formData['active'] = absentHurtProvider.isActive;
-
-                    final apiService = AbsentHurtApiService();
-
-                    try {
                       print(formData);
-                      await apiService.createEntity(formData);
+                      await absentHurtProvider.createEntity(context, formData);
                       Navigator.pop(context);
-                    } catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Error'),
-                            content: Text('Failed to create Absent Hurt: $e'),
-                            actions: [
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
+                    
                   },
                 ),
               ],

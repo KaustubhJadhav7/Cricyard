@@ -152,7 +152,28 @@ class ApiConstants {
   static const String deleteEntitySelectTeam = '$baseUrl/Select_Team/Select_Team';
 // Team Names
   static const String getTeamNameSelectTeam = '$baseUrl/TeamList_ListFilter1/TeamList_ListFilter1';
-
+  // Teams
+  static const getEntitiesTeams = '$baseUrl/Teams/Teams';
+  static const getAllWithPaginationTeams = '$baseUrl/Teams/Teams/getall/page';
+  static const createEntityTeams = '$baseUrl/Teams/Teams';
+  static const uploadTeamLogoImage = '$baseUrl/FileUpload/Uploadeddocs';
+  static const updateEntityTeams = '$baseUrl/Teams/Teams/{entityId}';
+  static const deleteEntityTeams = '$baseUrl/Teams/Teams/{entityId}';
+  static const getMyTeam = '$baseUrl/Teams/Teams/myTeam';
+  static const getEnrolledTeam = '$baseUrl/team/Register_team/enrolled/getAll';
+  static const getMyTeamByTourId = '$baseUrl/tournament/Register_tournament/teams/{tourId}';
+  static const getAllMembers = '$baseUrl/team/Register_team/member/{teamId}';
+  static const enrollInTeam = '$baseUrl/team/Register_team';
+  static const invitePlayer = '$baseUrl/Teams/Teams/invite?Mob_number={mobNo}&TeamId={teamId}';
+  static const inviteTeam = '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId={tournamentId}&TeamId={teamId}';
+  static const updateTag = '$baseUrl/team/Register_team/updatetag?data={playerTag}&id={id}';
+  static const getAllInvitedPlayers = '$baseUrl/Invitation_member/Invitation_member/myplayer/{teamId}';
+// Start Inning
+  static const getEntitiesStartInning = '$baseUrl/Start_inning/Start_inning';
+  static const getAllWithPaginationStartInning = '$baseUrl/Start_inning/Start_inning/getall/page';
+  static const createEntityStartInning = '$baseUrl/Start_inning/Start_inning';
+  static const updateEntityStartInning = '$baseUrl/Start_inning/Start_inning/{entityId}';
+  static const deleteEntityStartInning = '$baseUrl/Start_inning/Start_inning/{entityId}';
 
 
 

@@ -173,6 +173,7 @@
 //     );
 //   }
 // }
+import 'package:cricyard/Entity/absent_hurt/Absent_hurt/model/Absent_hurt_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../Utils/image_constant.dart';
@@ -190,7 +191,7 @@ import 'package:cricyard/Entity/absent_hurt/Absent_hurt/viewmodel/absent_hurt_vi
 
 
 class AbsentHurtUpdateEntityScreen extends StatelessWidget {
-  final Map<String, dynamic> entity;
+  final AbsentHurtEntity entity;
 
   const AbsentHurtUpdateEntityScreen({required this.entity, Key? key})
       : super(key: key);
@@ -305,7 +306,7 @@ class AbsentHurtUpdateEntityScreen extends StatelessWidget {
                     try {
                       await apiService.updateEntity(
                         token!,
-                        provider.entity['id'],
+                        provider.entity.id,
                         provider.entity,
                       );
                       Navigator.pop(context);

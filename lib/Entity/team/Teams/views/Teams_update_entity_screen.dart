@@ -1,4 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:cricyard/Entity/team/Teams/model/Teams_model.dart';
+import 'package:cricyard/Entity/team/Teams/viewmodels/Teams_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../Utils/image_constant.dart';
 import '../../../../Utils/size_utils.dart';
 import '../../../../theme/app_style.dart';
@@ -8,11 +12,9 @@ import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../views/widgets/custom_button.dart';
 import '../../../../views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import '../repository/Teams_api_service.dart';
-import '/providers/token_manager.dart';
 
 class teamsUpdateEntityScreen extends StatefulWidget {
-  final Map<String, dynamic> entity;
+  final TeamsModel entity;
 
   teamsUpdateEntityScreen({required this.entity});
 
@@ -22,20 +24,18 @@ class teamsUpdateEntityScreen extends StatefulWidget {
 }
 
 class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
-  final teamsApiService apiService = teamsApiService();
   final _formKey = GlobalKey<FormState>();
 
-  bool isactive = false;
+  bool isActive = false;
 
   @override
   void initState() {
     super.initState();
-
-    isactive = widget.entity['active'] ?? false; // Set initial value
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TeamsProvider>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
           height: getVerticalSize(49),
@@ -70,11 +70,11 @@ class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
                         CustomTextFormField(
                             focusNode: FocusNode(),
                             hintText: "Please Enter Team Name",
-                            initialValue: widget.entity['team_name'],
+                            initialValue: widget.entity.teamName,
 
                             // ValidationProperties
                             onsaved: (value) =>
-                                widget.entity['team_name'] = value,
+                                widget.entity.teamName = value,
                             margin: getMargin(top: 7))
                       ]),
                 ),
@@ -91,13 +91,13 @@ class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
                           CustomTextFormField(
                               focusNode: FocusNode(),
                               hintText: "Enter Description",
-                              initialValue: widget.entity['description'],
+                              initialValue: widget.entity.description,
                               maxLines: 5,
 
                               // ValidationProperties
 
                               onsaved: (value) {
-                                widget.entity['description'] = value;
+                                widget.entity.description = value;
                               },
                               margin: getMargin(top: 6))
                         ])),
@@ -115,11 +115,11 @@ class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
                         CustomTextFormField(
                             focusNode: FocusNode(),
                             hintText: "Please Enter Members",
-                            initialValue: widget.entity['members'],
+                            initialValue: widget.entity.members.toString(),
 
                             // ValidationProperties
                             onsaved: (value) =>
-                                widget.entity['members'] = value,
+                                widget.entity.members = int.tryParse(value ?? '') ?? 0,
                             margin: getMargin(top: 7))
                       ]),
                 ),
@@ -136,21 +136,21 @@ class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
                         CustomTextFormField(
                             focusNode: FocusNode(),
                             hintText: "Please Enter Matches",
-                            initialValue: widget.entity['matches'],
+                            initialValue: widget.entity.matches.toString(),
 
                             // ValidationProperties
                             onsaved: (value) =>
-                                widget.entity['matches'] = value,
+                                widget.entity.matches = int.tryParse(value ?? '') ?? 0,
                             margin: getMargin(top: 7))
                       ]),
                 ),
                 Row(
                   children: [
                     Switch(
-                      value: isactive,
+                      value: isActive,
                       onChanged: (newValue) {
                         setState(() {
-                          isactive = newValue;
+                          isActive = newValue;
                         });
                       },
                     ),
@@ -166,37 +166,12 @@ class _teamsUpdateEntityScreenState extends State<teamsUpdateEntityScreen> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      widget.entity['active'] = isactive;
+                      widget.entity.active = isActive;
 
-                      final token = await TokenManager.getToken();
-                      try {
-                        await apiService.updateEntity(
-                            token!,
-                            widget.entity[
-                                'id'], // Assuming 'id' is the key in your entity map
-                            widget.entity);
+                      await provider.updateEntity(
+                          widget.entity, isActive, context);
 
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: Text('Failed to update Teams: $e'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                      Navigator.pop(context);
                     }
                   },
                 ),

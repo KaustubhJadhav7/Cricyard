@@ -22,52 +22,52 @@ class StartInningCreateEntityScreen extends StatefulWidget {
 
 class _StartInningCreateEntityScreenState
     extends State<StartInningCreateEntityScreen> {
-  final StartInningModel formData = StartInningModel(
-    id: 0,
-    selectMatch: '',
-    selectTeam: '',
-    selectPlayer: '',
-    datetimeField: '',
-  );
-  final _formKey = GlobalKey<FormState>();
+  // final StartInningModel formData = StartInningModel(
+  //   id: 0,
+  //   selectMatch: '',
+  //   selectTeam: '',
+  //   selectPlayer: '',
+  //   datetimeField: '',
+  // );
+  // final _formKey = GlobalKey<FormState>();
 
-  var selectedSelectMatch;
-  List<String> selectMatchList = ['bar_code', 'qr_code'];
+  // var selectedSelectMatch;
+  // List<String> selectMatchList = ['bar_code', 'qr_code'];
 
-  var selectedSelectTeam;
-  List<String> selectTeamList = ['bar_code', 'qr_code'];
+  // var selectedSelectTeam;
+  // List<String> selectTeamList = ['bar_code', 'qr_code'];
 
-  var selectedSelectPlayer;
-  List<String> selectPlayerList = ['bar_code', 'qr_code'];
+  // var selectedSelectPlayer;
+  // List<String> selectPlayerList = ['bar_code', 'qr_code'];
 
-  DateTime selectedDateTime = DateTime.now();
+  // DateTime selectedDateTime = DateTime.now();
 
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+  // Future<void> _selectDateTime(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDateTime,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
 
-    if (picked != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-      );
-      if (pickedTime != null) {
-        setState(() {
-          selectedDateTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
-    }
-  }
+  //   if (picked != null) {
+  //     final TimeOfDay? pickedTime = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+  //     );
+  //     if (pickedTime != null) {
+  //       setState(() {
+  //         selectedDateTime = DateTime(
+  //           picked.year,
+  //           picked.month,
+  //           picked.day,
+  //           pickedTime.hour,
+  //           pickedTime.minute,
+  //         );
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
@@ -98,12 +98,12 @@ class _StartInningCreateEntityScreenState
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: provider.formKey,
             child: Column(
               children: [
                 CustomDropdownFormField(
-                  value: selectedSelectMatch,
-                  items: selectMatchList
+                  value: provider.selectedSelectMatch,
+                  items: provider.selectMatchList
                       .map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item,
@@ -115,18 +115,18 @@ class _StartInningCreateEntityScreenState
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedSelectMatch = value!;
-                      formData.selectMatch = value;
+                      provider.selectedSelectMatch = value!;
+                      provider.formData.selectMatch = value;
                     });
                   },
                   onSaved: (value) {
-                    formData.selectMatch = selectedSelectMatch!;
+                    provider.formData.selectMatch = provider.selectedSelectMatch!;
                   },
                 ),
                 const SizedBox(height: 16),
                 CustomDropdownFormField(
-                  value: selectedSelectTeam,
-                  items: selectTeamList
+                  value: provider.selectedSelectTeam,
+                  items: provider.selectTeamList
                       .map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item,
@@ -138,18 +138,18 @@ class _StartInningCreateEntityScreenState
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedSelectTeam = value!;
-                      formData.selectTeam = value;
+                      provider.selectedSelectTeam = value!;
+                      provider.formData.selectTeam = value;
                     });
                   },
                   onSaved: (value) {
-                    formData.selectTeam = selectedSelectTeam!;
+                    provider.formData.selectTeam = provider.selectedSelectTeam!;
                   },
                 ),
                 const SizedBox(height: 16),
                 CustomDropdownFormField(
-                  value: selectedSelectPlayer,
-                  items: selectPlayerList
+                  value: provider.selectedSelectPlayer,
+                  items: provider.selectPlayerList
                       .map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item,
@@ -161,27 +161,27 @@ class _StartInningCreateEntityScreenState
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedSelectPlayer = value!;
-                      formData.selectPlayer = value;
+                      provider.selectedSelectPlayer = value!;
+                      provider.formData.selectPlayer = value;
                     });
                   },
                   onSaved: (value) {
-                    formData.selectPlayer = selectedSelectPlayer!;
+                    provider.formData.selectPlayer = provider.selectedSelectPlayer!;
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   initialValue: DateFormat('yyyy-MM-dd HH:mm')
-                      .format(selectedDateTime),
+                      .format(provider.selectedDateTime),
                   decoration: const InputDecoration(
                     labelText: 'Datetime Field',
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
                   readOnly: true,
-                  onTap: () => _selectDateTime(context),
+                  onTap: () => provider.selectDateTime(context),
                   onSaved: (value) {
-                    formData.datetimeField =
-                        DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+                    provider.formData.datetimeField = DateFormat('yyyy-MM-dd HH:mm')
+                        .format(provider.selectedDateTime);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -190,9 +190,9 @@ class _StartInningCreateEntityScreenState
                   text: "Submit",
                   margin: getMargin(top: 24, bottom: 5),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      await provider.createEntity(formData, context);
+                    if (provider.formKey.currentState!.validate()) {
+                      provider.formKey.currentState!.save();
+                      await provider.createEntity(provider.formData, context);
                       Navigator.pop(context);
                     }
                   },

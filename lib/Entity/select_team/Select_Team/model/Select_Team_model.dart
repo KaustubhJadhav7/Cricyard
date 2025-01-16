@@ -1,9 +1,9 @@
 class SelectTeamEntity {
-  final int id;
-  final String teamName;
-  final bool active;
-  final int memberCount;
-  final String? description;
+   int id;
+   String? teamName;
+   bool active;
+   int memberCount;
+   String? description;
 
   SelectTeamEntity({
     required this.id,
