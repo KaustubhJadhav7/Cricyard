@@ -33,7 +33,9 @@ class _MatchesScreenState extends State<MatchesScreen> {
     });
     try {
       final fetchedEntities = await apiService.myMatches(tId);
-      print('FETCH MATCHES BY ID- $tId is $fetchedEntities');
+      for (int i = 0; i < fetchedEntities.length; i++) {
+        print('FETCH MATCHES BY ID- $tId is  ${fetchedEntities[i]}');
+      }
       setState(() {
         matchDataById = List<Map<String, dynamic>>.from(fetchedEntities);
         isLoading = false;
@@ -362,12 +364,18 @@ class _MatchesScreenState extends State<MatchesScreen> {
                                 style: CustomTextStyles.titleMediumPoppins,
                               ),
                             ),
-                            SizedBox( width: 10,),
+                            SizedBox(
+                              width: 10,
+                            ),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 entity['matchStatus'],
-                                style: GoogleFonts.getFont('Poppins',fontSize: 12,color:entity['matchStatus'] == 'Started' ? Colors.black: Colors.red ),
+                                style: GoogleFonts.getFont('Poppins',
+                                    fontSize: 12,
+                                    color: entity['matchStatus'] == 'Started'
+                                        ? Colors.black
+                                        : Colors.red),
                               ),
                             ),
                           ],

@@ -14,13 +14,12 @@ class MyTournamnetScreen extends StatefulWidget {
   const MyTournamnetScreen({Key? key}) : super(key: key);
 
   @override
-  _MyTournamnetScreenState createState() => _MyTournamnetScreenState();
+  _MyTournamentScreenState createState() => _MyTournamentScreenState();
 }
 
-class _MyTournamnetScreenState extends State<MyTournamnetScreen>
+class _MyTournamentScreenState extends State<MyTournamnetScreen>
     with TickerProviderStateMixin {
   final MyTournamentApiService _apiService = MyTournamentApiService();
-  String? _token;
 
   List<Map<String, dynamic>> _tournaments = []; // Store tournament data here
   List<Map<String, dynamic>> _tournamentsbyuser =
@@ -47,11 +46,9 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
       setState(() {
         isTournamentLoading = true;
       });
-      _token = await TokenManager.getToken();
-      print("token is:$_token");
-      // Replace 'token' with the actual token.
       final List<Map<String, dynamic>> tournaments =
-          await _apiService.getMyTournament(_token!);
+          await _apiService.getMyTournament();
+      // print("tournaments from my_tournament_screen: $tournaments");
       setState(() {
         _tournaments = tournaments; // Store the fetched data
       });
@@ -78,24 +75,18 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
       setState(() {
         isTournamentLoading = true;
       });
-      _token = await TokenManager.getToken();
-      print("token is: $_token");
 
-      if (_token != null) {
-        final List<Map<String, dynamic>> tournamentsbyuser =
-            await _apiService.getAllByUserId(_token!);
-        setState(() {
-          _tournamentsbyuser = tournamentsbyuser; // Store the fetched data
-        });
-        // Handle the retrieved data here
-        print("Response of getTournamentbyuser: $tournamentsbyuser");
+      final List<Map<String, dynamic>> tournamentsbyuser =
+          await _apiService.getAllByUserId();
+      setState(() {
+        _tournamentsbyuser = tournamentsbyuser; // Store the fetched data
+      });
+      // Handle the retrieved data here
+      print("Response of getTournamentbyuser: $tournamentsbyuser");
 
-        // Print data from the tournaments array
-        for (int i = 0; i < tournamentsbyuser.length; i++) {
-          print("Tournamentbyuser $i: ${tournamentsbyuser[i]}");
-        }
-      } else {
-        print("Token is null");
+      // Print data from the tournaments array
+      for (int i = 0; i < tournamentsbyuser.length; i++) {
+        print("Tournamentbyuser $i: ${tournamentsbyuser[i]}");
       }
     } catch (e) {
       // Handle errors
@@ -112,31 +103,30 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomIconButton(
-            height: 32.adaptSize,
-            width: 32.adaptSize,
-            padding_f: EdgeInsets.all(6.h),
-            decoration: IconButtonStyleHelper.outlineIndigo,
-            onTap: () {
-              onTapBtnArrowleftone(context);
-            },
-            child: CustomImageView(
-              svgPath: ImageConstant.imgArrowLeft,
+          backgroundColor: Colors.grey[200],
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomIconButton(
+              height: 32.adaptSize,
+              width: 32.adaptSize,
+              padding_f: EdgeInsets.all(6.h),
+              decoration: IconButtonStyleHelper.outlineIndigo,
+              onTap: () {
+                onTapBtnArrowleftone(context);
+              },
+              child: CustomImageView(
+                svgPath: ImageConstant.imgArrowLeft,
+              ),
             ),
           ),
-        ),
-        title: Text(
-          "My Tournament",
-          style: GoogleFonts.getFont('Poppins',
-              fontWeight: FontWeight.w500, color: Colors.black),
-        ),
-        bottom: PreferredSize(
-            preferredSize:const Size.fromHeight(60) ,
-            child: _buildTabview(context))
-      ),
+          title: Text(
+            "My Tournament",
+            style: GoogleFonts.getFont('Poppins',
+                fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: _buildTabview(context))),
       body: isTournamentLoading
           ? const Center(child: CircularProgressIndicator())
           : TabBarView(controller: _tabController, children: [
@@ -146,12 +136,14 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
       bottomNavigationBar: BottomAppBarWidget(),
     );
   }
+
   Widget _buildTabview(BuildContext context) {
     return Container(
       height: 56.v,
       width: 424.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF0096c7), //const Color.fromARGB(255, 24, 140, 236),
+        color:
+            const Color(0xFF0096c7), //const Color.fromARGB(255, 24, 140, 236),
         // theme.colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(
           10.h,
@@ -164,8 +156,10 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
         labelColor: Colors.white,
         dividerColor: Colors.transparent,
         unselectedLabelColor: Colors.white,
-        unselectedLabelStyle: GoogleFonts.getFont('Poppins',color: Colors.white,fontWeight: FontWeight.w200,fontSize: 12),
-        labelStyle: GoogleFonts.getFont('Poppins',color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),
+        unselectedLabelStyle: GoogleFonts.getFont('Poppins',
+            color: Colors.white, fontWeight: FontWeight.w200, fontSize: 12),
+        labelStyle: GoogleFonts.getFont('Poppins',
+            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         tabs: const [
           Tab(
             child: Text(
@@ -181,12 +175,15 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
       ),
     );
   }
+
   Widget createdTour() {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           _buildScoreboardCardList(context),
           SizedBox(height: 9.v),
           Padding(
@@ -210,7 +207,9 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           _buildScoreboardCardList2(context),
           SizedBox(height: 9.v),
           Padding(
@@ -294,6 +293,7 @@ class _MyTournamnetScreenState extends State<MyTournamnetScreen>
                   return ScoreboardcardlistItemWidget(
                     tournamentData: tournament,
                     onTap: () {
+                      print('This is tournament data-> $tournament');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

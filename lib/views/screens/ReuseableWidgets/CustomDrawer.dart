@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
 import 'package:cricyard/core/app_export.dart';
 import 'package:cricyard/views/screens/Login%20Screen/view/decision.dart';
+import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
 // ignore_for_file: deprecated_member_use
 import 'package:cricyard/views/screens/MenuScreen/find_friends_screen/find_friends_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/leaderboard_screen/leaderboard_screen.dart';
@@ -203,14 +205,29 @@ class _CustomDrawerState extends State<CustomDrawer> {
               _myButton(
                 context,
                 "My Highlight",
-                () {},
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => highlights_entity_list_screen(),
+                    ),
+                  );
+                },
                 true,
               ),
               SizedBox(height: 23.v),
               _myButton(
                 context,
                 "Change Language",
-                () {},
+                () {
+                  // change_languageScreen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => change_languageScreen(),
+                    ),
+                  );
+                },
                 true,
               ),
               SizedBox(height: 18.v),

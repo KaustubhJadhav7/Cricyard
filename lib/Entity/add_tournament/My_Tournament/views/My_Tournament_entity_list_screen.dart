@@ -19,7 +19,6 @@ import 'package:provider/provider.dart';
 
 class my_tournament_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
-  
 
   @override
   _my_tournament_entity_list_screenState createState() =>
@@ -32,7 +31,6 @@ class _my_tournament_entity_list_screenState
   List<Map<String, dynamic>> entities = [];
   List<Map<String, dynamic>> filteredEntities = [];
   List<Map<String, dynamic>> serachEntities = [];
-  
 
   bool showCardView = true; // Add this variable to control the view mode
   TextEditingController searchController = TextEditingController();
@@ -45,12 +43,15 @@ class _my_tournament_entity_list_screenState
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+        final provider = Provider.of<MyTournamentProvider>(context, listen: false);
+
     _speech = stt.SpeechToText();
     super.initState();
-    fetchEntities();
+    provider.fetchEntities();
     _scrollController.addListener(_scrollListener);
-    fetchwithoutpaging();
-    
+    provider.fetchWithoutPaging();
+  });
   }
 
   Future<void> fetchwithoutpaging() async {
@@ -85,146 +86,150 @@ class _my_tournament_entity_list_screenState
     }
   }
 
-  Future<void> fetchEntities() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
+  // Future<void> fetchEntities() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
 
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities =
-            await apiService.getAllWithPagination(token, currentPage, pageSize);
-        print(' data is $fetchedEntities');
-        setState(() {
-          entities.addAll(fetchedEntities); // Add new data to the existing list
-          filteredEntities = entities.toList(); // Update only filteredEntities
-          currentPage++;
-        });
+  //     final token = await TokenManager.getToken();
+  //     if (token != null) {
+  //       final fetchedEntities =
+  //           await apiService.getAllWithPagination(token, currentPage, pageSize);
+  //       print(' data is $fetchedEntities');
+  //       setState(() {
+  //         entities.addAll(fetchedEntities); // Add new data to the existing list
+  //         filteredEntities = entities.toList(); // Update only filteredEntities
+  //         currentPage++;
+  //       });
 
-        print(' entity is .. $filteredEntities');
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to fetch My_Tournament data: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  //       print(' entity is .. $filteredEntities');
+  //     }
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to fetch My_Tournament data: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   void _scrollListener() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = Provider.of<MyTournamentProvider>(context, listen: false);
+    
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      fetchEntities();
+      provider.fetchEntities();
     }
+  });
   }
 
-  Future<void> deleteEntity(Map<String, dynamic> entity) async {
-    try {
-      final token = await TokenManager.getToken();
-      await apiService.deleteEntity(token!, entity['id']);
-      setState(() {
-        entities.remove(entity);
-      });
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to delete entity: $e'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> deleteEntity(Map<String, dynamic> entity) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     await apiService.deleteEntity(token!, entity['id']);
+  //     setState(() {
+  //       entities.remove(entity);
+  //     });
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text('Failed to delete entity: $e'),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
-  void _searchEntities(String keyword) {
-    setState(() {
-      filteredEntities = serachEntities
-          .where((entity) =>
-              entity['description']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['rules']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['venues']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['dates']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['sponsors']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()) ||
-              entity['tournament_name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()))
-          .toList();
-    });
-  }
+  // void _searchEntities(String keyword) {
+  //   setState(() {
+  //     filteredEntities = serachEntities
+  //         .where((entity) =>
+  //             entity['description']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['rules']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['venues']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['dates']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['sponsors']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()) ||
+  //             entity['tournament_name']
+  //                 .toString()
+  //                 .toLowerCase()
+  //                 .contains(keyword.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
-  void _startListening() async {
-    if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-        },
-        onError: (error) {
-          print('Speech recognition error: $error');
-        },
-      );
+  // void _startListening() async {
+  //   if (!_speech.isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (status) {
+  //         print('Speech recognition status: $status');
+  //       },
+  //       onError: (error) {
+  //         print('Speech recognition error: $error');
+  //       },
+  //     );
 
-      if (available) {
-        _speech.listen(
-          onResult: (result) {
-            if (result.finalResult) {
-              searchController.text = result.recognizedWords;
-              _searchEntities(result.recognizedWords);
-            }
-          },
-        );
-      }
-    }
-  }
+  //     if (available) {
+  //       _speech.listen(
+  //         onResult: (result) {
+  //           if (result.finalResult) {
+  //             searchController.text = result.recognizedWords;
+  //             _searchEntities(result.recognizedWords);
+  //           }
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
-  void _stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-  }
+  // void _stopListening() {
+  //   if (_speech.isListening) {
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -238,6 +243,7 @@ class _my_tournament_entity_list_screenState
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MyTournamentProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
@@ -270,7 +276,7 @@ class _my_tournament_entity_list_screenState
         onRefresh: () async {
           currentPage = 1;
           entities.clear();
-          await fetchEntities();
+          await provider.fetchEntities();
         },
         child: Column(
           children: [
@@ -279,7 +285,7 @@ class _my_tournament_entity_list_screenState
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchEntities(value);
+                  provider.searchEntitiesByKeyword(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',
@@ -293,7 +299,7 @@ class _my_tournament_entity_list_screenState
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic),
                     onPressed: () {
-                      _startListening();
+                      provider.startListening();
                     },
                   ),
                 ),
@@ -330,7 +336,7 @@ class _my_tournament_entity_list_screenState
               builder: (context) => MyTournamentCreateEntityScreen(),
             ),
           ).then((_) {
-            fetchEntities();
+            provider.fetchEntities();
           });
         },
         child: const Icon(Icons.add),
@@ -355,7 +361,8 @@ class _my_tournament_entity_list_screenState
   // Function to build normal view for a list item
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
-    final values = entity.values.elementAt(21) ?? 'Authsec';
+    // final values = entity.values.elementAt(21) ?? 'Authsec';
+        final provider = Provider.of<MyTournamentProvider>(context, listen: false);
 
     return SizedBox(
       width: double.maxFinite,
@@ -454,7 +461,7 @@ class _my_tournament_entity_list_screenState
                                 MyTournamentUpdateEntityScreen(entity: entity),
                           ),
                         ).then((_) {
-                          fetchEntities();
+                          provider.fetchEntities();
                         });
                       } else if (value == 'delete') {
                         showDialog(
@@ -475,8 +482,8 @@ class _my_tournament_entity_list_screenState
                                   child: const Text('Delete'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    deleteEntity(entity)
-                                        .then((value) => {fetchEntities()});
+                                    provider.deleteEntity(entity)
+                                        .then((value) => {provider.fetchEntities()});
                                   },
                                 ),
                               ],

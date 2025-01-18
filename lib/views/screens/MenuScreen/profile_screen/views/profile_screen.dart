@@ -41,7 +41,7 @@ class Profile_ScreenState extends State<Profile_Screen>
         setState(() {
           userData = json.decode(userdatastr);
         });
-        print(userData['token']);
+        // print(userData['token']);
       } catch (e) {
         print("error is ..................$e");
       }
@@ -55,7 +55,7 @@ class Profile_ScreenState extends State<Profile_Screen>
     const String baseUrl = ApiConstants.baseUrl;
     const String apiUrl = '$baseUrl/api/retrieve-image';
 
-    print('Image URL: $apiUrl');
+    // print('Image URL: $apiUrl');
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -68,7 +68,7 @@ class Profile_ScreenState extends State<Profile_Screen>
       }
       if (response.statusCode >= 200 && response.statusCode <= 209) {
         String responseData = response.body.replaceAll('"}', ''); // Remove trailing '"}'
-        print("Response: $responseData");
+        // print("Response: $responseData");
         // Find the index of the comma (",") after the prefix
         final commaIndex = responseData.indexOf(',');
         if (commaIndex != -1) {

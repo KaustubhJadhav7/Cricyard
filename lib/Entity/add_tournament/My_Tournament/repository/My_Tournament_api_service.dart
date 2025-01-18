@@ -389,7 +389,7 @@ class MyTournamentApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getMyTournament(String token) async {
+  Future<List<Map<String, dynamic>>> getMyTournament() async {
     try {
       // final response = await networkService.getGetApiResponse(
       //     '$baseUrl/My_Tournament/My_Tournament/creted/myTour');
@@ -403,7 +403,7 @@ class MyTournamentApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllByUserId(String token) async {
+  Future<List<Map<String, dynamic>>> getAllByUserId() async {
     try {
       // final response = await networkService.getGetApiResponse(
       //     '$baseUrl/tournament/Register_tournament/userid');

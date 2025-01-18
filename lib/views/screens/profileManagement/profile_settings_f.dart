@@ -106,7 +106,7 @@ class _ProfileSettingsScreenFState extends State<ProfileSettingsScreenF> {
     const String baseUrl = ApiConstants.baseUrl;
     const String apiUrl = '$baseUrl/api/retrieve-image';
 
-    print('Image URL: $apiUrl');
+    // print('Image URL: $apiUrl');
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -119,7 +119,7 @@ class _ProfileSettingsScreenFState extends State<ProfileSettingsScreenF> {
       }
       if (response.statusCode >= 200 && response.statusCode <= 209) {
         String responseData = response.body.replaceAll('"}', ''); // Remove trailing '"}'
-        print("Response: $responseData");
+        // print("Response: $responseData");
         // Find the index of the comma (",") after the prefix
         final commaIndex = responseData.indexOf(',');
         if (commaIndex != -1) {

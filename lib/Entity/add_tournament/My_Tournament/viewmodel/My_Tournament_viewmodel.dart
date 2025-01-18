@@ -8,7 +8,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 class MyTournamentProvider with ChangeNotifier {
   final List<Map<String, dynamic>> selectedLogoImages = [];
   DateTime selectedDate = DateTime.now();
-
+  bool isListening = false;
   Future<void> createTournamentEntity(Map<String, dynamic> formData) async {
     final token = await TokenManager.getToken();
 
@@ -239,6 +239,71 @@ class MyTournamentProvider with ChangeNotifier {
     } catch (e) {
       print('Failed to fetch entities without paging: $e');
       throw Exception('Failed to fetch entities without paging');
+    }
+  }
+
+  void searchEntitiesByKeyword(String keyword) {
+    filteredEntities = searchEntities
+        .where((entity) =>
+            entity['description']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) ||
+            entity['rules']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) ||
+            entity['venues']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) ||
+            entity['dates']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) ||
+            entity['sponsors']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) ||
+            entity['tournament_name']
+                .toString()
+                .toLowerCase()
+                .contains(keyword.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  void startListening() async {
+    if (!_speech.isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (status) {
+          print('Speech recognition status: $status');
+        },
+        onError: (error) {
+          print('Speech recognition error: $error');
+        },
+      );
+
+      if (available) {
+        isListening = true;
+        _speech.listen(
+          onResult: (result) {
+            if (result.finalResult) {
+              searchController.text = result.recognizedWords;
+              searchEntitiesByKeyword(result.recognizedWords);
+            }
+          },
+        );
+        notifyListeners();
+      }
+    }
+  }
+
+  void stopListening() {
+    if (_speech.isListening) {
+      _speech.stop();
+      isListening = false;
+      notifyListeners();
     }
   }
 

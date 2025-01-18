@@ -356,20 +356,48 @@ class _TeamsCreateEntityScreenState extends State<TeamsCreateEntityScreen> {
     final provider = Provider.of<TeamsProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        height: getVerticalSize(49),
-        leadingWidth: 40,
-        leading: AppbarImage(
-          height: getSize(24),
-          width: getSize(24),
-          svgPath: ImageConstant.imgArrowleftBlueGray900,
-          margin: getMargin(left: 16, top: 12, bottom: 13),
+      // appBar: CustomAppBar(
+      //   height: getVerticalSize(49),
+      //   leadingWidth: 40,
+      //   leading: AppbarImage(
+      //     height: getSize(24),
+      //     width: getSize(24),
+      //     svgPath: ImageConstant.imgArrowleftBlueGray900,
+      //     margin: getMargin(left: 16, top: 12, bottom: 13),
+      //     onTap: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      //   centerTitle: true,
+      //   title: AppbarTitle(text: "Create Team"),
+      // ),
+      appBar: AppBar(
+        elevation: 0,
+        forceMaterialTransparency: true,
+        backgroundColor: Colors.grey[200],
+        leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: const Color(0xFF219ebc),
+                  borderRadius: BorderRadius.circular(12)),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
-        centerTitle: true,
-        title: AppbarTitle(text: "Create Team"),
+        title: Text(
+          "Create Team",
+          style:
+              GoogleFonts.getFont('Poppins', fontSize: 20, color: Colors.black),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

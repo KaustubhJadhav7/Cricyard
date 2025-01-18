@@ -15,6 +15,7 @@ import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel
 import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
 import 'package:cricyard/Entity/start_inning/Start_inning/viewmodels/Start_inning_viewmodel.dart';
 import 'package:cricyard/Entity/team/Teams/viewmodels/Teams_viewmodel.dart';
+import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamViewModel/team_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -147,6 +148,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => TeamsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => TeamViewModel(),
       ),
     ],
     child: MyApp(),

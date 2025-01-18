@@ -171,7 +171,6 @@
 //   final String baseUrl = ApiConstants.baseUrl;
 //   final NetworkApiService networkApiService = NetworkApiService();
 
-
 //   // Fetch all entities
 //   Future<List<Map<String, dynamic>>> getEntities() async {
 //     try {
@@ -179,7 +178,7 @@
 //       print('token is $token');
 //       if (token != null) {
 //         final response = await networkApiService.getGetApiResponse(
-//             '$baseUrl/Match/Match', 
+//             '$baseUrl/Match/Match',
 //             // token
 //             );
 //         final entities = (response as List).cast<Map<String, dynamic>>();
@@ -197,7 +196,7 @@
 //       String token, int page, int size) async {
 //     try {
 //       final response = await networkApiService.getGetApiResponse(
-//           '$baseUrl/Match/Match/getall/page?page=$page&size=$size', 
+//           '$baseUrl/Match/Match/getall/page?page=$page&size=$size',
 //           // token
 //           );
 //       final entities = (response['content'] as List).cast<Map<String, dynamic>>();
@@ -213,7 +212,7 @@
 //       final token = await TokenManager.getToken();
 //       print("in post api $entity");
 //       final response = await networkApiService.getPostApiResponse(
-//           '$baseUrl/Match/Match', entity, 
+//           '$baseUrl/Match/Match', entity,
 //           // token
 //           );
 //       return response;
@@ -227,7 +226,7 @@
 //       String token, int entityId, Map<String, dynamic> entity) async {
 //     try {
 //       await networkApiService.getPutApiResponse(
-//           '$baseUrl/Match/Match/$entityId', entity, 
+//           '$baseUrl/Match/Match/$entityId', entity,
 //           // token
 //           );
 //     } catch (e) {
@@ -240,7 +239,7 @@
 //     try {
 //       final token = await TokenManager.getToken();
 //       await networkApiService.getPutApiResponse(
-//           '$baseUrl/Match/Match/cancel/$entityId', {}, 
+//           '$baseUrl/Match/Match/cancel/$entityId', {},
 //           // token
 //           );
 //     } catch (e) {
@@ -252,7 +251,7 @@
 //   Future<void> deleteEntity(String token, int entityId) async {
 //     try {
 //       await networkApiService.getDeleteApiResponse(
-//           '$baseUrl/Match/Match/$entityId', 
+//           '$baseUrl/Match/Match/$entityId',
 //           // token
 //           );
 //     } catch (e) {
@@ -266,7 +265,7 @@
 //       final token = await TokenManager.getToken();
 //       if (token != null) {
 //         final response = await networkApiService.getGetApiResponse(
-//             '$baseUrl/Match/Match/myMatches/$tourId', 
+//             '$baseUrl/Match/Match/myMatches/$tourId',
 //             // token
 //             );
 //         final entities = (response as List).cast<Map<String, dynamic>>();
@@ -285,7 +284,7 @@
 //       final token = await TokenManager.getToken();
 //       if (token != null) {
 //         final response = await networkApiService.getGetApiResponse(
-//             '$baseUrl/Match/Match/tournament/$tourId', 
+//             '$baseUrl/Match/Match/tournament/$tourId',
 //             // token
 //             );
 //         final entities = (response as List).cast<Map<String, dynamic>>();
@@ -304,7 +303,7 @@
 //       final token = await TokenManager.getToken();
 //       if (token != null) {
 //         final response = await networkApiService.getGetApiResponse(
-//             '$baseUrl/Match/Match/status?status=Started', 
+//             '$baseUrl/Match/Match/status?status=Started',
 //             // token
 //             );
 //         final entities = (response as List).cast<Map<String, dynamic>>();
@@ -363,12 +362,14 @@ class MatchApiService {
   }
 
   // Fetch all match entities with pagination
-  Future<List<Map<String, dynamic>>> getAllWithPagination(int page, int size) async {
+  Future<List<Map<String, dynamic>>> getAllWithPagination(
+      int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
         '${ApiConstants.getAllWithPaginationMatch}?page=$page&size=$size',
       );
-      final entities = (response['content'] as List).cast<Map<String, dynamic>>();
+      final entities =
+          (response['content'] as List).cast<Map<String, dynamic>>();
       return entities;
     } catch (e) {
       throw Exception('Failed to get all without pagination: $e');
@@ -381,7 +382,8 @@ class MatchApiService {
       final token = await TokenManager.getToken();
       print("in post api $entity");
       final response = await networkApiService.getPostApiResponse(
-        ApiConstants.createEntityMatch, entity,
+        ApiConstants.createEntityMatch,
+        entity,
       );
       return response;
     } catch (e) {
@@ -393,7 +395,8 @@ class MatchApiService {
   Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       await networkApiService.getPutApiResponse(
-        '${ApiConstants.updateEntityMatch}/$entityId', entity,
+        '${ApiConstants.updateEntityMatch}/$entityId',
+        entity,
       );
     } catch (e) {
       throw Exception('Failed to update entity: $e');
@@ -403,9 +406,9 @@ class MatchApiService {
   // Cancel a match
   Future<void> cancel(int entityId) async {
     try {
-      final token = await TokenManager.getToken();
       await networkApiService.getPutApiResponse(
-        '${ApiConstants.cancelMatch}/$entityId', {},
+        '${ApiConstants.cancelMatch}/$entityId',
+        {},
       );
     } catch (e) {
       throw Exception('Failed to cancel match: $e');
@@ -426,16 +429,11 @@ class MatchApiService {
   // Get my matches by tournament ID
   Future<List<Map<String, dynamic>>> myMatches(int tourId) async {
     try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final response = await networkApiService.getGetApiResponse(
-          '${ApiConstants.myMatches}/$tourId',
-        );
-        final entities = (response as List).cast<Map<String, dynamic>>();
-        return entities;
-      } else {
-        throw Exception('Token is null');
-      }
+      final response = await networkApiService.getGetApiResponse(
+        '${ApiConstants.myMatches}/$tourId',
+      );
+      final entities = (response as List).cast<Map<String, dynamic>>();
+      return entities;
     } catch (e) {
       throw Exception('Failed to get my matches: $e');
     }
@@ -444,16 +442,11 @@ class MatchApiService {
   // Get all matches by tournament ID
   Future<List<Map<String, dynamic>>> allmatches(int tourId) async {
     try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final response = await networkApiService.getGetApiResponse(
-          '${ApiConstants.allMatchesByTourId}/$tourId',
-        );
-        final entities = (response as List).cast<Map<String, dynamic>>();
-        return entities;
-      } else {
-        throw Exception('Token is null');
-      }
+      final response = await networkApiService.getGetApiResponse(
+        '${ApiConstants.allMatchesByTourId}/$tourId',
+      );
+      final entities = (response as List).cast<Map<String, dynamic>>();
+      return entities;
     } catch (e) {
       throw Exception('Failed to get all matches: $e');
     }
@@ -462,16 +455,11 @@ class MatchApiService {
   // Get live matches
   Future<List<Map<String, dynamic>>> liveMatches() async {
     try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final response = await networkApiService.getGetApiResponse(
-          ApiConstants.liveMatches,
-        );
-        final entities = (response as List).cast<Map<String, dynamic>>();
-        return entities;
-      } else {
-        throw Exception('Token is null');
-      }
+      final response = await networkApiService.getGetApiResponse(
+        ApiConstants.liveMatches,
+      );
+      final entities = (response as List).cast<Map<String, dynamic>>();
+      return entities;
     } catch (e) {
       throw Exception('Failed to get live matches: $e');
     }

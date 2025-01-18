@@ -39,7 +39,7 @@ class MatchesState extends State<Matches>
     try {
       // remove tournament id and pass dynamically
 
-      final fetchedEntities = await apiService.allmatches(1);
+      final fetchedEntities = await apiService.allmatches(2); //previously value was 1
       print('data is $fetchedEntities');
       setState(() {
         myMatchsEntities = fetchedEntities;

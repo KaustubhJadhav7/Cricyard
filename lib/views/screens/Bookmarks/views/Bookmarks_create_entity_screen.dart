@@ -1,10 +1,7 @@
-import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:cricyard/views/screens/Bookmarks/model/Bookmarks_model.dart';
 import 'package:cricyard/views/screens/Bookmarks/viewmodels/Bookmarks_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
 
 class CreateEntityScreen extends StatefulWidget {
   const CreateEntityScreen({super.key});
@@ -14,7 +11,6 @@ class CreateEntityScreen extends StatefulWidget {
 }
 
 class _CreateEntityScreenState extends State<CreateEntityScreen> {
-  // final Map<String, dynamic> formData = {};
   late BookmarkEntity formData;
   final _formKey = GlobalKey<FormState>();
   var selectedFileupload_Field;
@@ -62,7 +58,6 @@ class _CreateEntityScreenState extends State<CreateEntityScreen> {
                           print(formData);
                           await provider.createEntity(context,formData, selectedFileupload_Field);
                           Navigator.pop(context);
-                        
                       }
                     },
                     child: Container(

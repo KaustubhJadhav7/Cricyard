@@ -1,7 +1,7 @@
 import 'package:cricyard/views/screens/MenuScreen/tournament/views/RegisterTournament.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/all_screen/all_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/following_screen/myFollowingScreen.dart';
-import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournamnet_screen.dart';
+import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournament_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../../../Entity/add_tournament/My_Tournament/views/My_Tournament_create_entity_screen.dart';
 import '../../../../../core/app_export.dart';

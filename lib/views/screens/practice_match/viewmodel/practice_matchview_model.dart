@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cricyard/views/screens/practice_match/practiceRepository/practiceRepo.dart';
 import 'package:flutter/material.dart';
 
@@ -5,17 +7,39 @@ class PracticeMatchviewModel extends ChangeNotifier {
   final pracrepo = PracticeRepo();
 
   Future<dynamic>? createPracticeMatch(Map<String, dynamic> entity) async {
-    pracrepo.createPracticeMatch(entity).then(
-      (value) {
-        Map<String, dynamic> responseData = value.data;
-        return responseData;
-      },
-    ).onError(
-      (error, stackTrace) {
-        Map<String, dynamic> responseData = {};
-        return responseData;
-      },
-    );
+    try {
+      final value = await pracrepo.createPracticeMatch(entity);
+      print("Value of entity: $value");
+
+      // Map<String, dynamic> responseData = value.data;
+      Map<String, dynamic> responseData;
+
+    // If the value is a LinkedMap, we can convert it into a Map<String, dynamic>
+    if (value is LinkedHashMap) {
+      responseData = Map<String, dynamic>.from(value);
+    } else {
+      // If it's already a Map<String, dynamic>, use it directly
+      responseData = value;
+    }
+
+      return responseData;
+    } catch (error, stackTrace) {
+      print("Error occurred: $error");
+
+      return {}; // Return an empty map on error
+    }
+    // pracrepo.createPracticeMatch(entity).then(
+    //   (value) {
+    //     print("value of entity $value");
+    //     Map<String, dynamic> responseData = value.data;
+    //     return responseData;
+    //   },
+    // ).onError(
+    //   (error, stackTrace) {
+    //     Map<String, dynamic> responseData = {};
+    //     return responseData;
+    //   },
+    // );
   }
 
   // get All team

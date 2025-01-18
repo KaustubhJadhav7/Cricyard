@@ -127,6 +127,7 @@ class TeamRepo {
     try {
       final response =
           await _networkService.getGetApiResponse(TeamAppUrl.getMyTeam);
+          print('This is my getMyTeam data: $response');
       return response;
     } catch (e) {
       rethrow;
@@ -186,30 +187,30 @@ class TeamRepo {
     }
   }
 
-// // send invitation to player
-//   // Future<dynamic> invitePlayer(String mobNo, int teamId) async {
-//   //   final token = await TokenManager.getToken();
+// send invitation to player
+  // Future<dynamic> invitePlayer(String mobNo, int teamId) async {
+  //   final token = await TokenManager.getToken();
 
-//   //   Map<String, dynamic> entity = {};
-//   //   try {
-//   //     print("in post api$entity");
-//   //     dio.options.headers['Authorization'] = 'Bearer $token';
-//   //     final response = await dio.post(
-//   //         '$baseUrl/Teams/Teams/invite?Mob_number=$mobNo&TeamId=$teamId',
-//   //         data: entity);
+  //   Map<String, dynamic> entity = {};
+  //   try {
+  //     print("in post api$entity");
+  //     dio.options.headers['Authorization'] = 'Bearer $token';
+  //     final response = await dio.post(
+  //         '$baseUrl/Teams/Teams/invite?Mob_number=$mobNo&TeamId=$teamId',
+  //         data: entity);
 
-//   //     print(entity);
+  //     print(entity);
 
-//   //     // Assuming the response is a Map<String, dynamic>
-//   //     // Map<String, dynamic> responseData = response.data;
+  //     // Assuming the response is a Map<String, dynamic>
+  //     // Map<String, dynamic> responseData = response.data;
 
-//   //     return Future.delayed(Duration(seconds: 2), () => true);
-//   //   } catch (e) {
-//   //     throw Exception('Failed to Invite Player : $e');
-//   //   }
-//   // }
+  //     return Future.delayed(Duration(seconds: 2), () => true);
+  //   } catch (e) {
+  //     throw Exception('Failed to Invite Player : $e');
+  //   }
+  // }
 
-// // send invitation to player
+// send invitation to player
   Future<dynamic> invitePlayer(String mobNo, int teamId, dynamic data) async {
     try {
       final response = await _networkService.getPostApiResponse(
@@ -283,26 +284,26 @@ class TeamRepo {
     }
   }
 
-// // send invitation to team
-//   // Future<dynamic> inviteteam(String tournamentId, int teamId) async {
-//   //   final token = await TokenManager.getToken();
+// send invitation to team
+  // Future<dynamic> inviteteam(String tournamentId, int teamId) async {
+  //   final token = await TokenManager.getToken();
 
-//   //   Map<String, dynamic> entity = {};
-//   //   try {
-//   //     print("in post api$entity");
-//   //     dio.options.headers['Authorization'] = 'Bearer $token';
-//   //     final response = await dio.post(
-//   //         '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId=$tournamentId&TeamId=$teamId',
-//   //         data: entity);
+  //   Map<String, dynamic> entity = {};
+  //   try {
+  //     print("in post api$entity");
+  //     dio.options.headers['Authorization'] = 'Bearer $token';
+  //     final response = await dio.post(
+  //         '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId=$tournamentId&TeamId=$teamId',
+  //         data: entity);
 
-//   //     // print(entity);
+      // print(entity);
 
-//   //     // // Assuming the response is a Map<String, dynamic>
-//   //     // Map<String, dynamic> responseData = response.data;
+      // // Assuming the response is a Map<String, dynamic>
+      // Map<String, dynamic> responseData = response.data;
 
-//   //     return Future.delayed(Duration(seconds: 2), () => true);
-//   //   } catch (e) {
-//   //     throw Exception('Failed to Invite Team : $e');
-//   //   }
-//   // }
+  //     return Future.delayed(Duration(seconds: 2), () => true);
+  //   } catch (e) {
+  //     throw Exception('Failed to Invite Team : $e');
+  //   }
+  // }
 }

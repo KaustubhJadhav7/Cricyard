@@ -323,7 +323,6 @@ class _CreateFormState extends State<CreateForm> {
                     'button_caption': buttonCaptionController.text,
                     'components': components,
                   };
-                  final token = await TokenManager.getToken();
                   apiService.createDynamicForm(dynamicFormData);
                   Navigator.of(context).pop();
                 },

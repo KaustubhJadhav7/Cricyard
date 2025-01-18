@@ -55,9 +55,10 @@ class _RegisterTournamentState extends State<RegisterTournament> {
       if (selectTdata != null && selectTdata.isNotEmpty) {
         setState(() {
           tournament_nameItems = selectTdata;
+          // print('Tournament Items Set: $tournament_nameItems');
         });
       } else {
-        print(' tournament_name   data is null or empty');
+        print('Tournament Data is null or empty.');
       }
     } catch (e) {
       print('Failed to load  tournament_name   items: $e');
@@ -74,10 +75,10 @@ class _RegisterTournamentState extends State<RegisterTournament> {
       if (selectTdata != null && selectTdata.isNotEmpty) {
         setState(() {
           teamNameItems = selectTdata;
-          print(' team Data is : $teamNameItems');
+          // print('Team Items Set: $teamNameItems');
         });
       } else {
-        print(' team   data is null or empty');
+        print('Team Data is null or empty.');
       }
     } catch (e) {
       print('Failed to load  Teams  items: $e');
@@ -138,42 +139,6 @@ class _RegisterTournamentState extends State<RegisterTournament> {
             key: _formKey,
             child: Column(
               children: [
-// DropdownButtonFormField with default value and null check
-                //EXIST
-                // DropdownButtonFormField<String>(
-                //   decoration:
-                //       const InputDecoration(labelText: 'Tournament Name'),
-                //   value: selectedtournament_nameValue,
-                //   items: [
-                //     // Add an item with an empty value to represent no selection
-                //     const DropdownMenuItem<String>(
-                //       value: '',
-                //       child: Text('Select option'),
-                //     ),
-                //     // Map your dropdownItems as before
-                //     ...tournament_nameItems.map<DropdownMenuItem<String>>(
-                //       (item) {
-                //         return DropdownMenuItem<String>(
-                //           value: item['id'].toString(),
-                //           child: Text(item['tournament_name'].toString()),
-                //         );
-                //       },
-                //     ),
-                //   ],
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedtournament_nameValue = value!;
-                //     });
-                //   },
-                //   onSaved: (value) {
-                //     if (selectedtournament_nameValue.isEmpty) {
-                //       selectedtournament_nameValue = "no value";
-                //     }
-                //     formData['tournament_id'] = selectedtournament_nameValue;
-                //   },
-                // ),
-                //EXIST ABOVE FOR EXAMPLE
-                //BELOW IS MINE
                 Padding(
                   padding: getPadding(top: 18),
                   child: Column(
@@ -209,7 +174,9 @@ class _RegisterTournamentState extends State<RegisterTournament> {
                             border: InputBorder
                                 .none, // Hide the default dropdown border
                           ),
-                          value: selectedtournament_nameValue,
+                          value: selectedtournament_nameValue.isNotEmpty
+                              ? selectedtournament_nameValue
+                              : null,
                           items: [
                             // Add an item with an empty value to represent no selection
                             const DropdownMenuItem<String>(
@@ -245,42 +212,7 @@ class _RegisterTournamentState extends State<RegisterTournament> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-// DropdownButtonFormField For Team
-                // DropdownButtonFormField<String>(
-                //   decoration: const InputDecoration(labelText: 'Team Name'),
-                //   value: selectedteamName,
-                //   items: [
-                //     // Add an item with an empty value to represent no selection
-                //     const DropdownMenuItem<String>(
-                //       value: '',
-                //       child: Text('Select option'),
-                //     ),
-                //     // Map your dropdownItems as before
-                //     ...teamNameItems.map<DropdownMenuItem<String>>(
-                //       (item) {
-                //         return DropdownMenuItem<String>(
-                //           value: item['id'].toString(),
-                //           child: Text(item['team_name'].toString()),
-                //         );
-                //       },
-                //     ),
-                //   ],
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedteamName = value!;
-                //     });
-                //   },
-                //   onSaved: (value) {
-                //     if (selectedteamName.isEmpty) {
-                //       selectedteamName = "no value";
-                //     }
-                //     formData['team_id'] = selectedteamName;
-                //   },
-                // ),
-
                 Padding(
                   padding: getPadding(top: 18),
                   child: Column(
@@ -349,25 +281,7 @@ class _RegisterTournamentState extends State<RegisterTournament> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-                // GestureDetector(
-                //   onTap: () => _selectDate(context),
-                //   child: AbsorbPointer(
-                //     child: TextFormField(
-                //       decoration: const InputDecoration(
-                //         labelText: 'dates',
-                //         suffixIcon: Icon(Icons.calendar_today),
-                //       ),
-                //       controller: TextEditingController(
-                //         text: DateFormat('yyyy-MM-dd').format(selectedDate),
-                //       ),
-                //       onSaved: (value) => formData['dates'] =
-                //           DateFormat('yyyy-MM-dd').format(selectedDate),
-                //     ),
-                //   ),
-                // ),
-
                 Padding(
                   padding: getPadding(top: 18),
                   child: Column(
@@ -420,9 +334,7 @@ class _RegisterTournamentState extends State<RegisterTournament> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
                 CustomButton(
                   height: getVerticalSize(50),
                   text: "Submit",

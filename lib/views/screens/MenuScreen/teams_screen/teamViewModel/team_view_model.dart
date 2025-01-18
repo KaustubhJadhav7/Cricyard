@@ -129,7 +129,7 @@ class TeamViewModel extends ChangeNotifier {
     teamrepo.getMyTeam().then(
       (value) {
         List<Map<String, dynamic>> responseData = value.data;
-
+        print('This is my getMyTeam data: $responseData');
         teamNameItems = responseData;
       },
     ).onError(

@@ -169,12 +169,30 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
         _strikerController.text.isEmpty ||
         _nonStrikerController.text.isEmpty ||
         _bowlerController.text.isEmpty) {
-      showSnackBar(context, 'Error!! All fields are required. ', Colors.red);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error!! All fields are required.',
+            style: TextStyle(color: Colors.white), // Text color
+          ),
+          backgroundColor: Colors.red, // Background color
+          duration: Duration(seconds: 3), // Optional: Adjust the duration
+        ),
+      );
+
       return;
     }
     if (int.tryParse(_oversController.text) == null) {
-      showSnackBar(
-          context, 'Error!! Overs must be a valid integer.', Colors.red);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error!! Overs must be a valid integer.',
+            style: TextStyle(color: Colors.white), // Text color
+          ),
+          backgroundColor: Colors.red, // Background color
+          duration: Duration(seconds: 3), // Optional: Adjust the duration
+        ),
+      );
     }
     setState(() {
       _isLoading = true;
@@ -203,11 +221,24 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
 
     try {
       Map<String, dynamic> match = await model.createPracticeMatch(formData);
-
+      print("Practice match created successfully: $match");
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => PracticeMatchScoreScreen(entity: match),
+        ),
+      );
+    } catch (e) {
+      // Show an error message if the API call fails
+      print("Error occurred: $e");
+     ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to create practice match. Please try again.',
+            style: TextStyle(color: Colors.white), // Text color
+          ),
+          backgroundColor: Colors.red, // Background color
+          duration: Duration(seconds: 3), // Optional: Adjust the duration
         ),
       );
     } finally {

@@ -364,8 +364,32 @@ class teamsApiService {
       final response = await networkApiService.getGetApiResponse(
         ApiConstants.getEntitiesTeams,
       );
-      return (response as List).cast<TeamsModel>();
+      print("Raw API Response: $response");
+      // return (response as List).cast<TeamsModel>();
+      return (response as List).map((json) {
+      return TeamsModel.fromJson(json as Map<String, dynamic>);
+    }).toList();
     } catch (e) {
+      throw Exception('Failed to get all Teams: $e');
+    }
+  }
+  Future<List<Map<String, dynamic>>> getEntitiess() async {
+    try {
+      final response = await networkApiService.getGetApiResponse(
+        ApiConstants.getEntitiesTeams,
+      );
+      // Ensure the response is a list of maps
+      // print("Raw API Response: $response");
+      // print("API Response Type===>> ${response.runtimeType}");
+
+    if (response is List) {
+      return response.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception("Invalid API Response: Expected List, got ${response.runtimeType}");
+    }
+      // return TeamsModel.fromJson(json as Map<String, dynamic>);
+    }
+     catch (e) {
       throw Exception('Failed to get all Teams: $e');
     }
   }
@@ -387,10 +411,10 @@ class teamsApiService {
     try {
       final response = await networkApiService.getPostApiResponse(
         ApiConstants.createEntityTeams,
-        entity,
+        entity.toJson(),
         // token: token,
       );
-      return response;
+      return TeamsModel.fromJson(response);
     } catch (e) {
       throw Exception('Failed to create Team: $e');
     }
@@ -535,13 +559,13 @@ class teamsApiService {
     }
   }
 
-  Future<dynamic> inviteTeam(String tournamentId, int teamId) async {
+  Future<dynamic> inviteTeam(int tournamentId, int teamId) async {
     try {
       // final response = await networkApiService.getPostApiResponse(
       //   '$baseUrl/My_Tournament/My_Tournament/invite?tournamentId=$tournamentId&TeamId=$teamId',
       //   {},
       // );
-      final url = ApiConstants.inviteTeam.replaceFirst('{tournamentId}', tournamentId).replaceFirst('{teamId}', teamId.toString());
+      final url = ApiConstants.inviteTeam.replaceFirst('{tournamentId}', tournamentId.toString()).replaceFirst('{teamId}', teamId.toString());
       final response = await networkApiService.getPostApiResponse(url, {});
       return response;
     } catch (e) {

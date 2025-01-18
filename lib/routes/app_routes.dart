@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:cricyard/views/screens/MenuScreen/profile_screen/views/profile_screen.dart';
-import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournamnet_screen.dart';
+import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournament_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/views/tournamnetScreen.dart';
 import 'package:cricyard/views/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -10,10 +10,8 @@ import '../views/screens/Login Screen/view/login_one_screen.dart';
 import '../views/screens/MenuScreen/Matches/views/matches.dart';
 import '../views/screens/MenuScreen/Matches/views/score_counting.dart';
 import '../views/screens/MenuScreen/NewStreamFolder/VideoPlayer/VideoPlayerWidget.dart';
-
 import '../views/screens/MenuScreen/Notification/GetAllNotification.dart';
 import '../views/screens/MenuScreen/Notification/GetNotification.dart';
-
 import '../views/screens/MenuScreen/go_live_screen/go_live_screen.dart';
 import '../views/screens/MenuScreen/go_live_screen/live_cricket_fixture.dart';
 import '../views/screens/MenuScreen/go_live_screen/live_cricket_points_table.dart';

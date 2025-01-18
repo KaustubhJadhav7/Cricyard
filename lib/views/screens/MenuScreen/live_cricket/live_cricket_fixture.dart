@@ -16,7 +16,7 @@ class LiveCricketFixture extends StatefulWidget {
 }
 
 class _LiveCricketFixtureState extends State<LiveCricketFixture> {
-  final MatchApiService _apiService = MatchApiService();
+  final MatchApiService apiService = MatchApiService();
 
   List<Map<String, dynamic>> liveMatches = [];
   List<Map<String, dynamic>> searchEntities = [];
@@ -40,9 +40,13 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
     setState(() {
       isDataLoading = true;
     });
-    final data = await _apiService.liveMatches();
+    final data = await apiService.liveMatches();
     setState(() {
-      liveMatches = data;
+      // commented for testing
+      // liveMatches = data;
+      // liveMatches = data;
+      liveMatches = data.map((match) => _sanitizeMatchData(match)).toList();
+      print("liveMatches: $liveMatches");
       isDataLoading = false;
       print("Live Match Data-- $liveMatches");
     });
@@ -52,6 +56,19 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
   void initState() {
     fetchData();
     super.initState();
+  }
+
+  Map<String, dynamic> _sanitizeMatchData(Map<String, dynamic> match) {
+    return {
+      'tournament_name': match['tournament_name'] ?? 'Unknown Tournament',
+      'matchNo': match['matchNo'] ?? 'N/A',
+      'datetime_field': match['datetime_field'] ?? DateTime.now().toString(),
+      'team_1_name': match['team_1_name'] ?? 'Team 1',
+      'team_2_name': match['team_2_name'] ?? 'Team 2',
+      'extn12': match['extn12'] ?? '0',
+      'location': match['location'] ?? 'Unknown Location',
+      'id': match['id'] ?? -1,
+    };
   }
 
   @override
@@ -92,24 +109,55 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                       String time =
                           '${datetime.hour}:${datetime.minute.toString().padLeft(2, '0')}';
 
+                      // return _myContainer(
+                      //     index: index,
+                      //     cupTitle: data['tournament_name'],
+                      //     matchNo: data['matchNo'],
+                      //     time: time,
+                      //     day: shortDay,
+                      //     team1: data['team_1_name'],
+                      //     team2: data['team_2_name'],
+                      //     team1Runs: data['extn12'],
+                      //     team2Runs: data['extn12'],
+                      //     team1Wkts: data['extn12'],
+                      //     team2Wkts: data['extn12'],
+                      //     team1OversPlayed: data['extn12'],
+                      //     team2OversPlayed: data['extn12'],
+                      //     matchResult: data['location'],
+                      //     team1Logo: ImageConstant.imgEngRoundFlag,
+                      //     team2Logo: ImageConstant.imgEngRoundFlag,
+                      //     matchId: data['id']);
                       return _myContainer(
-                          index: index,
-                          cupTitle: data['tournament_name'],
-                          matchNo: data['matchNo'],
-                          time: time,
-                          day: shortDay,
-                          team1: data['team_1_name'],
-                          team2: data['team_2_name'],
-                          team1Runs: data['extn12'],
-                          team2Runs: data['extn12'],
-                          team1Wkts: data['extn12'],
-                          team2Wkts: data['extn12'],
-                          team1OversPlayed: data['extn12'],
-                          team2OversPlayed: data['extn12'],
-                          matchResult: data['location'],
-                          team1Logo: ImageConstant.imgEngRoundFlag,
-                          team2Logo: ImageConstant.imgEngRoundFlag,
-                          matchId: data['id']);
+                        index: index,
+                        cupTitle: data['tournament_name'] ??
+                            'Unknown Tournament', // Default title
+                        matchNo:
+                            data['matchNo'] ?? 'N/A', // Default match number
+                        time:
+                            time ?? 'Unknown Time', // Fallback if time is null
+                        day: shortDay ??
+                            'Unknown Day', // Fallback if day is null
+                        team1: data['team_1_name'] ??
+                            'Team 1', // Default team name
+                        team2: data['team_2_name'] ??
+                            'Team 2', // Default team name
+                        team1Runs: data['extn12'] ?? '0', // Default runs
+                        team2Runs: data['extn12'] ?? '0', // Default runs
+                        team1Wkts: data['extn12'] ?? '0', // Default wickets
+                        team2Wkts: data['extn12'] ?? '0', // Default wickets
+                        team1OversPlayed:
+                            data['extn12'] ?? '0.0', // Default overs played
+                        team2OversPlayed:
+                            data['extn12'] ?? '0.0', // Default overs played
+                        matchResult: data['location'] ??
+                            'Unknown Location', // Default location
+                        team1Logo: ImageConstant
+                            .imgEngRoundFlag, // Static image fallback
+                        team2Logo: ImageConstant
+                            .imgEngRoundFlag, // Static image fallback
+                        matchId: data['id'] ??
+                            -1, // Default ID (-1 indicates invalid ID)
+                      );
                     },
                   ),
                 ),
@@ -176,12 +224,12 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "$cupTitle | ${matchNo} Match",
+                            "${cupTitle ?? 'Unknown Cup'} | ${matchNo ?? 'N/A'} Match",
                             style: GoogleFonts.getFont('Poppins',
                                 color: Colors.white, fontSize: 14),
                           ),
                           Text(
-                            "$day | $time",
+                            "${day ?? 'Unknown Day'} | ${time ?? 'Unknown Time'}",
                             style: GoogleFonts.getFont('Poppins',
                                 color: Colors.grey, fontSize: 12),
                           ),
@@ -232,7 +280,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                       FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          "$team1",
+                                          "${team1 ?? "team1"}",
                                           style: GoogleFonts.getFont('Poppins',
                                               color: Colors.white,
                                               fontSize: 14),
@@ -250,7 +298,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "$team1Runs-$team1Wkts",
+                                        "${team1Runs ?? "team1Runs"}-${team1Wkts ?? "team1Wkts"}",
                                         style: GoogleFonts.getFont('Poppins',
                                             color: Colors.white, fontSize: 14),
                                       ),
@@ -258,7 +306,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                         width: 10,
                                       ),
                                       Text(
-                                        "($team1OversPlayed Over)",
+                                        "(${team1OversPlayed ?? "team1OversPlayed"}  Over)",
                                         style: GoogleFonts.getFont('Poppins',
                                             color: Colors.grey, fontSize: 12),
                                       ),
@@ -288,7 +336,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                       FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          "$team2",
+                                          "${team2 ?? "team2"}",
                                           style: GoogleFonts.getFont('Poppins',
                                               color: Colors.white,
                                               fontSize: 14),
@@ -312,7 +360,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "$team2Runs-$team2Wkts",
+                                          "${team2Runs ?? "team2runs"}-${team2Wkts ?? "team2Wkts"}",
                                           style: GoogleFonts.getFont('Poppins',
                                               color: Colors.white,
                                               fontSize: 14),
@@ -321,7 +369,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                                           width: 10,
                                         ),
                                         Text(
-                                          "($team2OversPlayed Over)",
+                                          "(${team2OversPlayed ?? "team2OversPlayed"} Over)",
                                           style: GoogleFonts.getFont('Poppins',
                                               color: Colors.grey, fontSize: 12),
                                         ),
@@ -354,7 +402,7 @@ class _LiveCricketFixtureState extends State<LiveCricketFixture> {
                     ),
                     Center(
                         child: Text(
-                      "$matchResult",
+                      "${matchResult ?? "matchResult"}",
                       style: GoogleFonts.getFont('Poppins',
                           color: const Color(0xFFFFBB0E), fontSize: 12),
                     ))

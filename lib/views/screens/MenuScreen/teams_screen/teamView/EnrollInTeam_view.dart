@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamViewModel/team_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../Utils/size_utils.dart';
@@ -42,26 +43,11 @@ class _EnrollInTeamViewState extends State<EnrollInTeamView> {
   // List<Map<String, dynamic>> teamNameItems = [];
   var selectedteamName = ''; // Use nullable type  Future<void> _load
 
-  // Future<void> loadTeamnameItems() async {
-  //   try {
-  //     final selectTdata = await teamapiService.getMyTeam();
-  //     // Handle null or empty dropdownData
-  //     if (selectTdata != null && selectTdata.isNotEmpty) {
-  //       setState(() {
-  //         teamNameItems = selectTdata;
-  //         print(' team Data is : $teamNameItems');
-  //       });
-  //     } else {
-  //       print(' team   data is null or empty');
-  //     }
-  //   } catch (e) {
-  //     print('Failed to load  Teams  items: $e');
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
+    final getmyTeam = Provider.of<TeamViewModel>(context, listen: false).getMyTeam;
+    print("This is my getmyTeam data===>>: $getmyTeam");
     Provider.of<TeamViewModel>(context, listen: false).teamNameItems;
 
     // loadTeamnameItems();
@@ -70,19 +56,47 @@ class _EnrollInTeamViewState extends State<EnrollInTeamView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-            height: getVerticalSize(49),
-            leadingWidth: 40,
-            leading: AppbarImage(
-                height: getSize(24),
-                width: getSize(24),
-                svgPath: ImageConstant.imgArrowleftBlueGray900,
-                margin: getMargin(left: 16, top: 12, bottom: 13),
-                onTap: () {
-                  Navigator.pop(context);
-                }),
-            centerTitle: true,
-            title: AppbarTitle(text: "Enroll In Team")),
+        // appBar: CustomAppBar(
+        //     height: getVerticalSize(49),
+        //     leadingWidth: 40,
+        //     leading: AppbarImage(
+        //         height: getSize(24),
+        //         width: getSize(24),
+        //         svgPath: ImageConstant.imgArrowleftBlueGray900,
+        //         margin: getMargin(left: 16, top: 12, bottom: 13),
+        //         onTap: () {
+        //           Navigator.pop(context);
+        //         }),
+        //     centerTitle: true,
+        //     title: AppbarTitle(text: "Enroll In Team")),
+        appBar: AppBar(
+          elevation: 0,
+          forceMaterialTransparency: true,
+          backgroundColor: Colors.grey[200],
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: const Color(0xFF219ebc),
+                    borderRadius: BorderRadius.circular(12)),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          title: Text(
+            "Enroll in Team",
+            style: GoogleFonts.getFont('Poppins',
+                fontSize: 20, color: Colors.black),
+          ),
+        ),
         body: Consumer<TeamViewModel>(builder: (context, value, child) {
           return SingleChildScrollView(
             child: Padding(

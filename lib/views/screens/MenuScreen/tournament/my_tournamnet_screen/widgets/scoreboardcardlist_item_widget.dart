@@ -8,6 +8,7 @@ import '../../views/inviteTeam_screen.dart';
 
 class ScoreboardcardlistItemWidget extends StatefulWidget {
   final Map<String, dynamic> tournamentData;
+  
   final VoidCallback onTap;
 
    ScoreboardcardlistItemWidget(
@@ -23,13 +24,14 @@ class ScoreboardcardlistItemWidget extends StatefulWidget {
 
 class _ScoreboardcardlistItemWidgetState extends State<ScoreboardcardlistItemWidget> {
   void _inviteTeam(BuildContext context) {
+    // print("Tournament Data: ${widget.tournamentData}");
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 InviteTeamScreen(widget.tournamentData['id'])) // Corrected screen name
         );
-    print("Invite Team clicked");
+    // print("Invite Team clicked");
   }
 
   final PhotoProvider _photoProvider = PhotoProvider();
