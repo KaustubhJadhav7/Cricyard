@@ -344,20 +344,29 @@ class _RegisterTournamentState extends State<RegisterTournament> {
                       _formKey.currentState!.save();
 
                       try {
-                        print(formData);
+                        print(
+                            "This is my formdata in register tournament $formData");
                         Map<String, dynamic> createdEntity =
                             await apiService.registerTournament(formData);
 
                         Navigator.pop(context);
                       } catch (e) {
+                        print('$e');
+                        String errorMessage =
+                            e.toString().contains('Team Already Registered!')
+                                ? 'Team Already Registered!'
+                                : 'Failed to register tournament: $e';
                         // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Error'),
-                              content:
-                                  Text('Failed to create My_Tournament: $e'),
+                              content: Text(
+                                // 'Failed to create My_Tournament: $e',
+                                errorMessage,
+                                style: const TextStyle(color: Colors.black),
+                              ),
                               actions: [
                                 TextButton(
                                   child: const Text('OK'),

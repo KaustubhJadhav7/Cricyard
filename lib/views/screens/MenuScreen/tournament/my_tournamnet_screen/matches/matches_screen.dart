@@ -49,7 +49,8 @@ class _MatchesScreenState extends State<MatchesScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text('Failed to fetch Match: $e'),
+            content: Text('Failed to fetch Match: $e',
+                style: const TextStyle(color: Colors.black)),
             actions: [
               TextButton(
                 child: const Text('OK'),
@@ -69,6 +70,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
       isLoading = true;
     });
     try {
+      print("tourId in fetchMatchesLive: --> $tourId");
       final fetchedEntities = await apiService.liveMatchesByTourId(tourId);
       print('FETCH LIVE MATCHES BY ID -$tourId is  $matchLive');
       setState(() {
@@ -76,6 +78,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
         isLoading = false;
       });
     } catch (e) {
+      print("Error is ===>$e");
       setState(() {
         isLoading = false;
       });
@@ -84,7 +87,8 @@ class _MatchesScreenState extends State<MatchesScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text('Failed to fetch Match: $e'),
+            content: Text('Failed to fetch Match: $e',
+                style: const TextStyle(color: Colors.black)),
             actions: [
               TextButton(
                 child: const Text('OK'),

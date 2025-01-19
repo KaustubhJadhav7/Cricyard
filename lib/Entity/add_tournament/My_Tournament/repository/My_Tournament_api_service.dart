@@ -318,7 +318,7 @@ class MyTournamentApiService {
     }
   }
 
-  Future<void> updateEntity( int entityId, Map<String, dynamic> entity) async {
+  Future<void> updateEntity(int entityId, Map<String, dynamic> entity) async {
     try {
       // await networkService.getPutApiResponse(
       //   '$baseUrl/My_Tournament/My_Tournament/$entityId',
@@ -368,7 +368,7 @@ class MyTournamentApiService {
       // );
       final response = await networkService.getPostApiResponse(
           ApiConstants.registerTournament, entity);
-
+      print("Registration Response: ====> $response");
       return response;
     } catch (e) {
       throw Exception('Failed to register tournament: $e');

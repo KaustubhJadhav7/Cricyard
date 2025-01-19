@@ -468,16 +468,12 @@ class MatchApiService {
   // Fetch live matches by tournament ID
   Future<List<Map<String, dynamic>>> liveMatchesByTourId(int tourId) async {
     try {
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final response = await networkApiService.getGetApiResponse(
-          '${ApiConstants.liveMatchesByTourId}?tourId=$tourId',
-        );
-        final entities = (response as List).cast<Map<String, dynamic>>();
-        return entities;
-      } else {
-        throw Exception('Token is null');
-      }
+      print("tourId is --> $tourId");
+      final response = await networkApiService.getGetApiResponse(
+        '${ApiConstants.liveMatchesByTourId}${tourId.toString()}',
+      );
+      final entities = (response as List).cast<Map<String, dynamic>>();
+      return entities;
     } catch (e) {
       throw Exception('Failed to get live matches by tournament ID: $e');
     }

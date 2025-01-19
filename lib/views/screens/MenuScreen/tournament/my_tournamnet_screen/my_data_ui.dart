@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../teams_screen/myteam_item_widget.dart';
 
-
 class MyMatchById extends StatefulWidget {
   final Map<String, dynamic> tournament;
   const MyMatchById({super.key, required this.tournament});
@@ -43,6 +42,7 @@ class _MyMatchByIdState extends State<MyMatchById>
     try {
       final List<Map<String, dynamic>> myteam =
           await teamapiService.getMyTeamByTourId(tId);
+      print("This is myteam====> $myteam");
       setState(() {
         enrolledTeams = myteam; // Store the fetched data
       });
@@ -67,7 +67,7 @@ class _MyMatchByIdState extends State<MyMatchById>
       setState(() {
         teamMembers = data;
       });
-      print("Response of get all member: $data");
+      // print("Response of get all member: $data");
 
       for (int i = 0; i < data.length; i++) {
         print("Team $i: ${data[i]}");
@@ -219,7 +219,7 @@ class _MyMatchByIdState extends State<MyMatchById>
     return Align(
       alignment: Alignment.centerRight,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height*0.15,
+        height: MediaQuery.of(context).size.height * 0.15,
         child: ListView.separated(
           padding: EdgeInsets.only(left: 20.h),
           scrollDirection: Axis.horizontal,
@@ -240,7 +240,8 @@ class _MyMatchByIdState extends State<MyMatchById>
                 getAllMember(data[selectedTeamIndexEnrolled]
                     ['id']); // Assuming 'id' is the team ID
               },
-              isEnrolled: true, players: teamMembers.length,
+              isEnrolled: true,
+              players: teamMembers.length,
             );
           },
         ),

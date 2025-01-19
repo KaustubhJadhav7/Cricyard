@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cricyard/Entity/highlights/Highlights/model/Highlights_model.dart';
 import 'package:cricyard/Entity/highlights/Highlights/viewmodel/Highlights_viewmodel.dart';
+import 'package:cricyard/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,16 +17,16 @@ import '../../../../views/widgets/app_bar/appbar_title.dart';
 import '../../../../views/widgets/app_bar/custom_app_bar.dart';
 import '../../../../theme/app_decoration.dart';
 
-class highlights_entity_list_screen extends StatefulWidget {
+class Highlights_entity_list_screen extends StatefulWidget {
   static const String routeName = '/entity-list';
 
   @override
-  _highlights_entity_list_screenState createState() =>
-      _highlights_entity_list_screenState();
+  _Highlights_entity_list_screenState createState() =>
+      _Highlights_entity_list_screenState();
 }
 
-class _highlights_entity_list_screenState
-    extends State<highlights_entity_list_screen> {
+class _Highlights_entity_list_screenState
+    extends State<Highlights_entity_list_screen> {
   final HighlightsApiService apiService = HighlightsApiService();
   // List<Map<String, dynamic>> entities = [];
   // List<Map<String, dynamic>> filteredEntities = [];
@@ -246,29 +247,45 @@ class _highlights_entity_list_screenState
         Provider.of<HighlightsProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
-      appBar: CustomAppBar(
-        height: getVerticalSize(49),
-        leadingWidth: 40,
-        leading: AppbarImage(
-            height: getSize(24),
-            width: getSize(24),
-            svgPath: ImageConstant.imgArrowleft,
-            margin: getMargin(left: 16, top: 12, bottom: 13),
-            onTap: () {
-              onTapArrowleft1(context);
-            }),
-        centerTitle: true,
-        title: AppbarTitle(text: " Highlights"),
-        actions: [
-          Switch(
-            activeColor: Colors.greenAccent,
-            inactiveThumbColor: Colors.white,
-            value: highlightModel.showCardView,
-            onChanged: (value) {
-              highlightsProvider.toggleViewMode();
-            },
+      // appBar: CustomAppBar(
+      //   height: getVerticalSize(49),
+      //   leadingWidth: 40,
+      //   leading: AppbarImage(
+      //       height: getSize(24),
+      //       width: getSize(24),
+      //       svgPath: ImageConstant.imgArrowleft,
+      //       margin: getMargin(left: 16, top: 12, bottom: 13),
+      //       onTap: () {
+      //         onTapArrowleft1(context);
+      //       }),
+      //   centerTitle: true,
+      //   title: AppbarTitle(text: " Highlights"),
+      //   actions: [
+      //     Switch(
+      //       activeColor: Colors.greenAccent,
+      //       inactiveThumbColor: Colors.white,
+      //       value: highlightModel.showCardView,
+      //       onChanged: (value) {
+      //         highlightsProvider.toggleViewMode();
+      //       },
+      //     ),
+      //   ],
+      // ),
+      appBar: AppBar(
+        title: Text("Highlights", style: theme.textTheme.headlineLarge),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: const Color(0xFF219ebc),
+                  borderRadius: BorderRadius.circular(12)),
+              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+            ),
           ),
-        ],
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -364,7 +381,7 @@ class _highlights_entity_list_screenState
   // Function to build normal view for a list item
 
   Widget _buildNormalView(Map<String, dynamic> entity) {
-    final values = entity.values.elementAt(21) ?? 'Authsec';
+    // final values = entity.values.elementAt(21) ?? 'Authsec';
     final highlightsProvider =
         Provider.of<HighlightsProvider>(context, listen: false);
     return SizedBox(

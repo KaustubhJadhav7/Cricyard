@@ -209,7 +209,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => highlights_entity_list_screen(),
+                      builder: (context) => Highlights_entity_list_screen(),
                     ),
                   );
                 },
@@ -224,7 +224,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => change_languageScreen(),
+                      builder: (context) => const ChangeLanguageScreen(),
                     ),
                   );
                 },
@@ -309,7 +309,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
       onPressed: () {
         if (requiresLogin && !isLogin) {
           showAlert(widget.context, 'Please login to access this feature');
+          print("Not Navigating to the next screen due to login state...");
         } else {
+          print("Navigating to the next screen...");
           onTap();
         }
       },

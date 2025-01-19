@@ -46,9 +46,14 @@ class _EnrollInTeamViewState extends State<EnrollInTeamView> {
   @override
   void initState() {
     super.initState();
-    final getmyTeam = Provider.of<TeamViewModel>(context, listen: false).getMyTeam;
-    print("This is my getmyTeam data===>>: $getmyTeam");
-    Provider.of<TeamViewModel>(context, listen: false).teamNameItems;
+    // final getmyTeam = Provider.of<TeamViewModel>(context, listen: false).getMyTeam;
+    // print("This is my getmyTeam data===>>: $getmyTeam");
+    // Provider.of<TeamViewModel>(context, listen: false).teamNameItems;
+    Future.microtask(() async {
+    final teamViewModel = Provider.of<TeamViewModel>(context, listen: false);
+    await teamViewModel.getMyTeam();
+    print("This is my teamNameItems data===>>: ${teamViewModel.teamNameItems}");
+  });
 
     // loadTeamnameItems();
   }

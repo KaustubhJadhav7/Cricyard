@@ -126,17 +126,28 @@ class TeamViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> teamNameItems = [];
 
   Future<dynamic> getMyTeam() async {
-    teamrepo.getMyTeam().then(
-      (value) {
-        List<Map<String, dynamic>> responseData = value.data;
-        print('This is my getMyTeam data: $responseData');
-        teamNameItems = responseData;
-      },
-    ).onError(
-      (error, stackTrace) {
-        print('error is $error');
-      },
-    );
+    // teamrepo.getMyTeam().then(
+    //   (value) {
+    //     List<Map<String, dynamic>> responseData = value.data;
+    //     print('This is my getMyTeam data: $responseData');
+    //     teamNameItems = responseData;
+    //   },
+    // ).onError(
+    //   (error, stackTrace) {
+    //     print('error is $error');
+    //   },
+    // );
+    try {
+      final List<dynamic> response = await teamrepo.getMyTeam();
+      // final List<Map<String, dynamic>> responseData = response.data;
+
+      print('This is my getMyTeam data: $response');
+
+      teamNameItems = response.cast<Map<String, dynamic>>();
+      notifyListeners(); // Notify listeners so UI updates
+    } catch (error) {
+      print('Error fetching team data: $error');
+    }
   }
 
 //   // my team enrolled in which team

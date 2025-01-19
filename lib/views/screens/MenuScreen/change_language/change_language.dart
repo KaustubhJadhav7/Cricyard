@@ -6,8 +6,8 @@ import '../../../widgets/custom_floating_button.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_outlined_button.dart';
 
-class change_languageScreen extends StatelessWidget {
-  const change_languageScreen({Key? key})
+class ChangeLanguageScreen extends StatelessWidget {
+  const ChangeLanguageScreen({Key? key})
       : super(
           key: key,
         );

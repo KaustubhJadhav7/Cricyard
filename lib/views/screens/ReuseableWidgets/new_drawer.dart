@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data' as typed_data; // Import 'dart:typed_data' with prefix
 
+import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
+import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -190,7 +192,15 @@ class _NewDrawerState extends State<NewDrawer> {
             onTap: () {
               if (isGuest) {
                 showLoginAlert(context);
-              } // Handle action
+              }
+              // else {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => Highlights_entity_list_screen(),
+              //     ),
+              //   );
+              // }
             },
           ),
           _createDrawerItem(
@@ -199,7 +209,14 @@ class _NewDrawerState extends State<NewDrawer> {
             onTap: () {
               if (isGuest) {
                 showLoginAlert(context);
-              } // Handle action
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChangeLanguageScreen(),
+                  ),
+                );
+              }
             },
           ),
           _createDrawerItem(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
 import 'package:cricyard/views/screens/MenuScreen/profile_screen/views/profile_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/my_tournamnet_screen/my_tournament_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/views/tournamnetScreen.dart';
@@ -142,6 +143,7 @@ class AppRoutes {
     // rtc2: (context) => Webrtc2(),
     // rtc3: (context) => mainStreamPage(),
 
+    change_lang_screen: (context) => ChangeLanguageScreen(),
     score: (context) => ScoreCounting(),
     matches: (context) => Matches(),
 

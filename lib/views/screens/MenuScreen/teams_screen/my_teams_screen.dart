@@ -21,7 +21,8 @@ class MyTeamScreen extends StatefulWidget {
   _MyTeamScreenState createState() => _MyTeamScreenState();
 }
 
-class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMixin{
+class _MyTeamScreenState extends State<MyTeamScreen>
+    with TickerProviderStateMixin {
   final teamsApiService teamapiService = teamsApiService();
   String? token;
 
@@ -63,7 +64,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
       setState(() {
         isteamLoading = true;
       });
-      final List<Map<String, dynamic>> myteam = await teamapiService.getMyTeam();
+      final List<Map<String, dynamic>> myteam =
+          await teamapiService.getMyTeam();
 
       setState(() {
         teams = myteam; // Store the fetched data
@@ -90,7 +92,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
   Future<void> fetchMyTeamsbyTournamentId(int tourId) async {
     try {
       final List<Map<String, dynamic>> myteam =
-      await teamapiService.getMyTeamByTourId(tourId);
+          await teamapiService.getMyTeamByTourId(tourId);
       setState(() {
         teams = myteam; // Store the fetched data
       });
@@ -114,13 +116,14 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
       isLoading = true;
     });
     try {
+      print('Fetching members for team ID: $teamId');
       final List<Map<String, dynamic>> data =
-      await teamapiService.getAllMembers(teamId);
-      teamMembers.clear();
+          await teamapiService.getAllMembers(teamId);
+      // teamMembers.clear();
       setState(() {
         teamMembers = data;
       });
-      print("Response: $data");
+      print("Response teamMembers: $data");
 
       for (int i = 0; i < data.length; i++) {
         print("Team $i: ${data[i]}");
@@ -139,7 +142,9 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
       setState(() {
         isteamLoading = true;
       });
-      final List<Map<String, dynamic>> myteam = await teamapiService.getEnrolledTeam();
+      final List<Map<String, dynamic>> myteam =
+          await teamapiService.getEnrolledTeam();
+      print("This is my enrolled team===> $myteam");
 
       setState(() {
         enrolledTeams = myteam; // Store the fetched data
@@ -168,15 +173,15 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        title: Padding(
-          padding: EdgeInsets.only(left: 20.h),
-          child: Text(
-            "My Team",
-            style: theme.textTheme.headlineLarge,
+          backgroundColor: Colors.grey[200],
+          title: Padding(
+            padding: EdgeInsets.only(left: 20.h),
+            child: Text(
+              "My Team",
+              style: theme.textTheme.headlineLarge,
+            ),
           ),
-        ),
-          leading:GestureDetector(
+          leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
@@ -185,7 +190,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color:const Color(0xFF219ebc),
+                    color: const Color(0xFF219ebc),
                     borderRadius: BorderRadius.circular(12)),
                 child: const Icon(
                   Icons.arrow_back_ios_new,
@@ -195,18 +200,29 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
             ),
           ),
           bottom: PreferredSize(
-              preferredSize:const Size.fromHeight(60) ,
-              child: _buildTabview(context))
-      ),
+              preferredSize: const Size.fromHeight(60),
+              child: _buildTabview(context))),
       body: isteamLoading
           ? const Center(child: CircularProgressIndicator())
           : TabBarView(
-        controller: _tabController,
-        children: [
-         teams.isEmpty ? const Center(child: Text("No Teams Created Yet!!",style: TextStyle(color: Colors.black,fontSize: 20),)) : _createdTabView(context),
-          enrolledTeams.isEmpty ? const Center(child: Text("No Teams Enrolled Yet!!",style: TextStyle(color: Colors.black,fontSize: 20),)) : _enrolledTabView(context),
-        ],
-      ),
+              controller: _tabController,
+              children: [
+                teams.isEmpty
+                    ? const Center(
+                        child: Text(
+                        "No Teams Created Yet!!",
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ))
+                    : _createdTabView(context),
+                enrolledTeams.isEmpty
+                    ? const Center(
+                        child: Text(
+                        "No Teams Enrolled Yet!!",
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ))
+                    : _enrolledTabView(context),
+              ],
+            ),
     );
   }
 
@@ -216,14 +232,15 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: 54.v),
-          _buildTeamCardList(context,teams,_tabController.index,false),
+          _buildTeamCardList(context, teams, _tabController.index, false),
           SizedBox(height: 54.v),
-          isLoading ?  const Center(child: CircularProgressIndicator()): teamMembers.isEmpty
-              ? _noPlayersWidget(
-              teams.isNotEmpty
-                  ? teams[selectedTeamIndex]['team_name']
-                  : 'Team')
-              : _newPlayerUi(),
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : teamMembers.isEmpty
+                  ? _noPlayersWidget(teams.isNotEmpty
+                      ? teams[selectedTeamIndex]['team_id']
+                      : 'Team')
+                  : _newPlayerUi(),
         ],
       ),
     );
@@ -234,7 +251,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
       height: 56.v,
       width: 424.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF0096c7), //const Color.fromARGB(255, 24, 140, 236),
+        color:
+            const Color(0xFF0096c7), //const Color.fromARGB(255, 24, 140, 236),
         // theme.colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(
           10.h,
@@ -247,8 +265,10 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
         labelColor: Colors.white,
         dividerColor: Colors.transparent,
         unselectedLabelColor: Colors.white,
-        unselectedLabelStyle: GoogleFonts.getFont('Poppins',color: Colors.white,fontWeight: FontWeight.w200,fontSize: 12),
-        labelStyle: GoogleFonts.getFont('Poppins',color: Colors.white,fontWeight: FontWeight.w600,fontSize: 18),
+        unselectedLabelStyle: GoogleFonts.getFont('Poppins',
+            color: Colors.white, fontWeight: FontWeight.w200, fontSize: 12),
+        labelStyle: GoogleFonts.getFont('Poppins',
+            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         tabs: const [
           Tab(
             child: Text(
@@ -271,20 +291,23 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: 54.v),
-          _buildTeamCardList(context,enrolledTeams,_tabController.index,true),
+          _buildTeamCardList(
+              context, enrolledTeams, _tabController.index, true),
           SizedBox(height: 54.v),
-          isLoading ?  const Center(child: CircularProgressIndicator()):  teamMembers.isEmpty
-              ? _noPlayersWidget(
-              enrolledTeams.isNotEmpty
-                  ? enrolledTeams[selectedTeamIndexEnrolled]['team_name']
-                  : 'Team')
-              : _newPlayerUi(),
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : teamMembers.isEmpty
+                  ? _noPlayersWidget(enrolledTeams.isNotEmpty
+                      ? enrolledTeams[selectedTeamIndexEnrolled]['team_name']
+                      : 'Team')
+                  : _newPlayerUi(),
         ],
       ),
     );
   }
 
-  Widget _buildTeamCardList(BuildContext context,List<Map<String, dynamic>> data,int tabIndex,bool isEnrolled) {
+  Widget _buildTeamCardList(BuildContext context,
+      List<Map<String, dynamic>> data, int tabIndex, bool isEnrolled) {
     return Align(
       alignment: Alignment.centerRight,
       child: SizedBox(
@@ -302,12 +325,39 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
             return myteam_item_widget(
               teamData: data[index],
               onTap: () {
+                // setState(() {
+                //   tabIndex == 0
+                //       ? selectedTeamIndex = index
+                //       : selectedTeamIndexEnrolled = index;
+                // });
                 setState(() {
-                 tabIndex == 0? selectedTeamIndex = index : selectedTeamIndexEnrolled = index;
-                });
-                print('id is ${data[index]['id']}');
-                tabIndex == 0? getAllMember(data[selectedTeamIndex]['id']) :  getAllMember(data[selectedTeamIndexEnrolled]['id']); // Assuming 'id' is the team ID
-              }, isEnrolled: isEnrolled, players: teamMembers.length,
+                if (tabIndex == 0) {
+                  selectedTeamIndex = index;
+                } else {
+                  selectedTeamIndexEnrolled = index;
+                }
+              });
+              // ------------
+                // print('id is ${data[index]['id']}');
+                // tabIndex == 0
+                //     ? getAllMember(data[selectedTeamIndex]['id'])
+                //     : getAllMember(data[selectedTeamIndexEnrolled]
+                //         ['id']); // Assuming 'id' is the team ID
+              // -------------
+              int teamId = tabIndex == 0
+                  ? data[selectedTeamIndex]['team_id']
+                  : data[selectedTeamIndexEnrolled]['team_id'];
+              print('Selected team ID: $teamId');
+
+              if (teamId != null) {
+                getAllMember(teamId);
+              } else {
+                print("Team ID is null for index: $index");
+              }
+                
+              },
+              isEnrolled: isEnrolled,
+              players: teamMembers.length,
             );
           },
         ),
@@ -331,17 +381,31 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 10,),
-            Text("Wicket Keepers", style: CustomTextStyles.titleMediumPoppinsGray50,),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Wicket Keepers",
+              style: CustomTextStyles.titleMediumPoppinsGray50,
+            ),
             _playerCategoryRow("Wicket Keeper", 2), // Row for wicket keepers
             const SizedBox(height: 10),
-            Text("Batsman", style: CustomTextStyles.titleMediumPoppinsGray50,),
+            Text(
+              "Batsman",
+              style: CustomTextStyles.titleMediumPoppinsGray50,
+            ),
             _playerCategoryRow("Batsman", 4),
-            const SizedBox(height: 10),// Row for batsmen
-            Text("All Rounder", style: CustomTextStyles.titleMediumPoppinsGray50,),
+            const SizedBox(height: 10), // Row for batsmen
+            Text(
+              "All Rounder",
+              style: CustomTextStyles.titleMediumPoppinsGray50,
+            ),
             _playerCategoryRow("All Rounders", 4),
-            const SizedBox(height: 10),// Row for all-rounders
-            Text("Bowlers", style: CustomTextStyles.titleMediumPoppinsGray50,),
+            const SizedBox(height: 10), // Row for all-rounders
+            Text(
+              "Bowlers",
+              style: CustomTextStyles.titleMediumPoppinsGray50,
+            ),
             _playerCategoryRow("Bowlers", 4), // Row for bowlers
           ],
         ),
@@ -362,17 +426,22 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
     List<Widget> rows = [];
     List<Widget> playersWidgets = [];
     int startIndex = 0;
-    Map<int, String> playerRoles = {}; // Store player roles using player index as key
+    Map<int, String> playerRoles =
+        {}; // Store player roles using player index as key
 
     // Determine the starting index for this category based on the previous category
     if (category == "Wicket Keeper") {
-      startIndex = 0; // Start from index 2 (Player 3) for non-wicket keeper categories
+      startIndex =
+          0; // Start from index 2 (Player 3) for non-wicket keeper categories
     } else if (category == "Batsman") {
-      startIndex = 2; // Start from index 2 (Player 3) for non-wicket keeper categories
+      startIndex =
+          2; // Start from index 2 (Player 3) for non-wicket keeper categories
     } else if (category == "All Rounders") {
-      startIndex = 5; // Start from index 2 (Player 3) for non-wicket keeper categories
+      startIndex =
+          5; // Start from index 2 (Player 3) for non-wicket keeper categories
     } else if (category == "Bowlers") {
-      startIndex = 8; // Start from index 2 (Player 3) for non-wicket keeper categories
+      startIndex =
+          8; // Start from index 2 (Player 3) for non-wicket keeper categories
     }
 
     int numberOfRows = (category == "Wicket Keeper") ? 1 : 1;
@@ -384,7 +453,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
         int index = startIndex + col;
         if (index < teamMembers.length) {
           final player = teamMembers[index];
-          final playerRole = playerRoles[index] ?? ''; // Retrieve previously assigned role
+          final playerRole =
+              playerRoles[index] ?? ''; // Retrieve previously assigned role
           playersWidgets.add(
             GestureDetector(
               onTap: () {
@@ -408,12 +478,20 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
                       fit: BoxFit.scaleDown,
                       child: Text(
                         "${player['player_name']}",
-                        style: GoogleFonts.getFont('Poppins', color: Colors.black, fontSize: 14,),
+                        style: GoogleFonts.getFont(
+                          'Poppins',
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     Text(
                       "${player['player_tag']}",
-                      style: GoogleFonts.getFont('Poppins', color: Colors.grey, fontSize: 10,),
+                      style: GoogleFonts.getFont(
+                        'Poppins',
+                        color: Colors.grey,
+                        fontSize: 10,
+                      ),
                     ),
                   ],
                 ),
@@ -459,7 +537,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Captain",
-                      style: GoogleFonts.getFont('Poppins', color: Colors.white),
+                      style:
+                          GoogleFonts.getFont('Poppins', color: Colors.white),
                     ),
                   ),
                 ),
@@ -475,7 +554,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Vice Captain",
-                      style: GoogleFonts.getFont('Poppins', color: Colors.white),
+                      style:
+                          GoogleFonts.getFont('Poppins', color: Colors.white),
                     ),
                   ),
                 ),
@@ -491,7 +571,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Wicket Keeper",
-                      style: GoogleFonts.getFont('Poppins', color: Colors.white),
+                      style:
+                          GoogleFonts.getFont('Poppins', color: Colors.white),
                     ),
                   ),
                 ),
@@ -514,8 +595,10 @@ class _MyTeamScreenState extends State<MyTeamScreen> with TickerProviderStateMix
           break; // Assuming only one player can have each role at a time
         }
       }
-      teamMembers[index]['player_tag'] = role; // Assign the new role to the selected player
-      final playerId = teamMembers[index]['id']; // Assuming each player has a unique ID
+      teamMembers[index]['player_tag'] =
+          role; // Assign the new role to the selected player
+      final playerId =
+          teamMembers[index]['id']; // Assuming each player has a unique ID
       teamapiService.updateTag(playerTag: role, id: playerId);
     });
   }

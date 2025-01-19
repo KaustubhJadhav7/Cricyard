@@ -128,7 +128,7 @@ class TeamRepo {
       final response =
           await _networkService.getGetApiResponse(TeamAppUrl.getMyTeam);
           print('This is my getMyTeam data: $response');
-      return response;
+      return response as List<dynamic>;
     } catch (e) {
       rethrow;
     }

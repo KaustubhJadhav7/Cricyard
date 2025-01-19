@@ -93,7 +93,7 @@ class ApiConstants {
   static const String myMatches = '$baseUrl/Match/Match/myMatches';
   static const String allMatchesByTourId = '$baseUrl/Match/Match/tournament';
   static const String liveMatches = '$baseUrl/Match/Match/status?status=Started';
-  static const String liveMatchesByTourId = '$baseUrl/Match/Match/status/tour?status=Started';
+  static const String liveMatchesByTourId = '$baseUrl/Match/Match/status/tour?status=Started&tourId=';
   // MatchSetting
   static const String getEntitiesMatchSetting = '$baseUrl/Match_Setting/Match_Setting';
   static const String getAllWithPaginationMatchSetting = '$baseUrl/Match_Setting/Match_Setting/getall/page';
