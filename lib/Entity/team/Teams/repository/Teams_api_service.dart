@@ -348,6 +348,7 @@
 // }
 import 'package:cricyard/Entity/team/Teams/model/Teams_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart'; // For MediaType
 import 'package:cricyard/providers/token_manager.dart';
 import 'dart:typed_data';
@@ -394,8 +395,7 @@ class teamsApiService {
     }
   }
 
-  Future<List<TeamsModel>> getAllWithPagination(
-      String token, int page, int size) async {
+  Future<List<TeamsModel>> getAllWithPagination(int page, int size) async {
     try {
       final response = await networkApiService.getGetApiResponse(
         '${ApiConstants.getAllWithPaginationTeams}?page=$page&size=$size',
@@ -412,8 +412,9 @@ class teamsApiService {
       final response = await networkApiService.getPostApiResponse(
         ApiConstants.createEntityTeams,
         entity.toJson(),
-        // token: token,
       );
+      debugPrint("API Response---->: ${response}");
+
       return TeamsModel.fromJson(response);
     } catch (e) {
       throw Exception('Failed to create Team: $e');

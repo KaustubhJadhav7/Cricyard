@@ -133,8 +133,16 @@ class TeamsModel {
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
       teamName: json['team_name'] ?? '', // Adjusted to match API field
       description: json['description'] ?? '',
-      members: json['members'] == null ? 0 : json['members'],
-      matches: json['matches'] == null ? 0 : json['matches'],
+       members: json['members'] is int
+        ? json['members']
+        : json['members'] != null
+            ? int.tryParse(json['members'].toString()) ?? 0
+            : 0,
+      matches: json['matches'] is int
+        ? json['matches']
+        : json['matches'] != null
+            ? int.tryParse(json['matches'].toString()) ?? 0
+            : 0,
       active: json['active'] ?? false,
       addMyself: json['add_myself'] ?? false,
       invited: json['invited'] ?? false, // Ensure this field is populated

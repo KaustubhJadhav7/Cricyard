@@ -29,11 +29,12 @@ class myteam_item_widget extends StatefulWidget {
 
 class _myteam_item_widgetState extends State<myteam_item_widget> {
   void _invitePlayer(BuildContext context) {
+    print('invite team screen:::  ${widget.teamData['id']}');
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => InvitePlayerView(
-                widget.teamData['id'])) // Corrected screen name
+                int.tryParse(widget.teamData['id'].toString()) ?? 0)) // Corrected screen name
         );
     print("Invite Player clicked");
   }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../repository/Teams_api_service.dart'; // Replace with the actual path of your API service
-import '/providers/token_manager.dart'; // Adjust the path accordingly
 
 class TeamsProvider extends ChangeNotifier {
   final teamsApiService apiService = teamsApiService();
@@ -13,6 +12,7 @@ class TeamsProvider extends ChangeNotifier {
   List<TeamsModel> entities = [];
   List<TeamsModel> filteredEntities = [];
   List<TeamsModel> searchEntities = [];
+  List<Map<String, dynamic>> searchEntitiess = [];
 
   bool showCardView = true;
   bool isLoading = false;
@@ -91,8 +91,9 @@ class TeamsProvider extends ChangeNotifier {
 
   Future<void> fetchWithoutPaging() async {
     try {
-      final fetchedEntities = await apiService.getEntities();
-      searchEntities = fetchedEntities;
+      final fetchedEntities = await apiService.getEntitiess();
+      print("This is fetched--> $fetchedEntities");
+      searchEntitiess = fetchedEntities;
       notifyListeners();
     } catch (e) {
       debugPrint('Failed to fetch teams: $e');
@@ -104,15 +105,12 @@ class TeamsProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final token = await TokenManager.getToken();
-      if (token != null) {
-        final fetchedEntities = await apiService.getAllWithPagination(
-            token, currentPage, pageSize);
+        final fetchedEntities = await apiService.getAllWithPagination(currentPage, pageSize);
         entities.addAll(fetchedEntities);
         filteredEntities = List.from(entities);
         currentPage++;
         notifyListeners();
-      }
+      
     } catch (e) {
       debugPrint('Failed to fetch teams data: $e');
     } finally {

@@ -46,7 +46,7 @@ class _MyTeamScreenState extends State<MyTeamScreen>
   }
 
   void _handleTabChange() {
-    getAllMember(teams[selectedTeamIndex]['id']);
+    // getAllMember(teams[selectedTeamIndex]['id']);
     setState(() {
       teamMembers = []; // Clear the team members list when switching tabs
     });
@@ -66,20 +66,60 @@ class _MyTeamScreenState extends State<MyTeamScreen>
       });
       final List<Map<String, dynamic>> myteam =
           await teamapiService.getMyTeam();
+      debugPrint("Fetched My Teams: $myteam");
 
+      // Sanitize the response data
+      final sanitizedTeams = myteam.map((team) {
+        return {
+          'createdAt':
+              team['createdAt'].toString() ?? 0, // Default to 0 if null
+          'createdBy':
+              team['createdBy'].toString() ?? 0, // Default to 0 if null
+          'updatedBy': team['updatedBy'].toString() ??
+              '', // Default to empty string if null
+          'updatedAt':
+              team['updatedAt'].toString() ?? 0, // Default to 0 if null
+          'accountId':
+              team['accountId'].toString() ?? 0, // Default to 0 if null
+          'extn1': team['extn1'] ?? '', // Default to empty string if null
+          'extn2': team['extn2'] ?? '', // Default to empty string if null
+          'extn3': team['extn3'] ?? '', // Default to empty string if null
+          'extn4': team['extn4'] ?? '', // Default to empty string if null
+          'extn5': team['extn5'] ?? '', // Default to empty string if null
+          'extn6': team['extn6'] ?? '', // Default to empty string if null
+          'extn7': team['extn7'] ?? '', // Default to empty string if null
+          'extn8': team['extn8'] ?? '', // Default to empty string if null
+          'extn9': team['extn9'] ?? '', // Default to empty string if null
+          'extn10': team['extn10'] ?? '', // Default to empty string if null
+          'extn11': team['extn11'] ?? '', // Default to empty string if null
+          'extn12': team['extn12'] ?? '', // Default to empty string if null
+          'extn13': team['extn13'] ?? '', // Default to empty string if null
+          'extn14': team['extn14'] ?? '', // Default to empty string if null
+          'extn15': team['extn15'] ?? '', // Default to empty string if null
+          'id': team['id'].toString() ?? 0, // Default to 0 if null
+          'team_id': team['team_id'].toString() ?? 0, // Default to 0 if null
+          'team_name': team['team_name'].toString() ??
+              'Unknown Team', // Default to 'Unknown Team' if null
+          'user_id': team['user_id'].toString() ?? 0, // Default to 0 if null
+          'player_name': team['player_name'].toString() ??
+              'Unknown Player', // Default to 'Unknown Player' if null
+          'player_tag': team['player_tag'].toString() ??
+              '', // Default to empty string if null
+        };
+      }).toList();
       setState(() {
-        teams = myteam; // Store the fetched data
+        teams = sanitizedTeams; // Store the fetched data
       });
 
       if (teams.isNotEmpty) {
         getAllMember(teams[selectedTeamIndex]['id']);
       }
 
-      print("Response: $myteam");
+      // print("Response: $myteam");
 
-      for (int i = 0; i < myteam.length; i++) {
-        print("Team $i: ${myteam[i]}");
-      }
+      // for (int i = 0; i < myteam.length; i++) {
+      //   print("Team $i: ${myteam[i]}");
+      // }
     } catch (e) {
       print("Error fetching myteam: $e");
     } finally {
@@ -96,11 +136,9 @@ class _MyTeamScreenState extends State<MyTeamScreen>
       setState(() {
         teams = myteam; // Store the fetched data
       });
-
       if (teams.isNotEmpty) {
         getAllMember(teams[selectedTeamIndex]['id']);
       }
-
       print("Response: $myteam");
 
       for (int i = 0; i < myteam.length; i++) {
@@ -123,7 +161,7 @@ class _MyTeamScreenState extends State<MyTeamScreen>
       setState(() {
         teamMembers = data;
       });
-      print("Response teamMembers: $data");
+      print("Response teamMembers:---->> $data");
 
       for (int i = 0; i < data.length; i++) {
         print("Team $i: ${data[i]}");
@@ -144,17 +182,56 @@ class _MyTeamScreenState extends State<MyTeamScreen>
       });
       final List<Map<String, dynamic>> myteam =
           await teamapiService.getEnrolledTeam();
-      print("This is my enrolled team===> $myteam");
+      // print("This is my enrolled team===> $myteam");
+
+      final sanitizedTeams = myteam.map((team) {
+        return {
+          'createdAt':
+              team['createdAt'].toString() ?? 0, // Default to 0 if null
+          'createdBy':
+              team['createdBy'].toString() ?? 0, // Default to 0 if null
+          'updatedBy': team['updatedBy'].toString() ??
+              '', // Default to empty string if null
+          'updatedAt':
+              team['updatedAt'].toString() ?? 0, // Default to 0 if null
+          'accountId':
+              team['accountId'].toString() ?? 0, // Default to 0 if null
+          'extn1': team['extn1'] ?? '', // Default to empty string if null
+          'extn2': team['extn2'] ?? '', // Default to empty string if null
+          'extn3': team['extn3'] ?? '', // Default to empty string if null
+          'extn4': team['extn4'] ?? '', // Default to empty string if null
+          'extn5': team['extn5'] ?? '', // Default to empty string if null
+          'extn6': team['extn6'] ?? '', // Default to empty string if null
+          'extn7': team['extn7'] ?? '', // Default to empty string if null
+          'extn8': team['extn8'] ?? '', // Default to empty string if null
+          'extn9': team['extn9'] ?? '', // Default to empty string if null
+          'extn10': team['extn10'] ?? '', // Default to empty string if null
+          'extn11': team['extn11'] ?? '', // Default to empty string if null
+          'extn12': team['extn12'] ?? '', // Default to empty string if null
+          'extn13': team['extn13'] ?? '', // Default to empty string if null
+          'extn14': team['extn14'] ?? '', // Default to empty string if null
+          'extn15': team['extn15'] ?? '', // Default to empty string if null
+          'id': team['id'] ?? 0, // Default to 0 if null
+          'team_id': team['team_id'] ?? 0, // Default to 0 if null
+          'team_name': team['team_name'] ??
+              'Unknown Team', // Default to 'Unknown Team' if null
+          'user_id': team['user_id'].toString() ?? 0, // Default to 0 if null
+          'player_name': team['player_name'].toString() ??
+              'Unknown Player', // Default to 'Unknown Player' if null
+          'player_tag': team['player_tag'].toString() ??
+              '', // Default to empty string if null
+        };
+      }).toList();
 
       setState(() {
-        enrolledTeams = myteam; // Store the fetched data
+        enrolledTeams = sanitizedTeams; // Store the fetched data
       });
 
       if (teams.isNotEmpty) {
         getAllMember(teams[selectedTeamIndex]['id']);
       }
 
-      print(" Enroll Response: $myteam");
+      // print(" Enroll Response: $myteam");
 
       for (int i = 0; i < myteam.length; i++) {
         print(" Enroll Team $i: ${myteam[i]}");
@@ -238,7 +315,7 @@ class _MyTeamScreenState extends State<MyTeamScreen>
               ? const Center(child: CircularProgressIndicator())
               : teamMembers.isEmpty
                   ? _noPlayersWidget(teams.isNotEmpty
-                      ? teams[selectedTeamIndex]['team_id']
+                      ? teams[selectedTeamIndex]['team_name']
                       : 'Team')
                   : _newPlayerUi(),
         ],
@@ -286,6 +363,7 @@ class _MyTeamScreenState extends State<MyTeamScreen>
   }
 
   Widget _enrolledTabView(BuildContext context) {
+    // print("enrolledTeams ===> ${enrolledTeams}");
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -299,7 +377,7 @@ class _MyTeamScreenState extends State<MyTeamScreen>
               : teamMembers.isEmpty
                   ? _noPlayersWidget(enrolledTeams.isNotEmpty
                       ? enrolledTeams[selectedTeamIndexEnrolled]['team_name']
-                      : 'Team')
+                      : 'Teams')
                   : _newPlayerUi(),
         ],
       ),
@@ -308,6 +386,9 @@ class _MyTeamScreenState extends State<MyTeamScreen>
 
   Widget _buildTeamCardList(BuildContext context,
       List<Map<String, dynamic>> data, int tabIndex, bool isEnrolled) {
+    print("my data is: ==>>$data");
+    print("my teamMembers is: ==>>$teamMembers");
+
     return Align(
       alignment: Alignment.centerRight,
       child: SizedBox(
@@ -331,30 +412,31 @@ class _MyTeamScreenState extends State<MyTeamScreen>
                 //       : selectedTeamIndexEnrolled = index;
                 // });
                 setState(() {
-                if (tabIndex == 0) {
-                  selectedTeamIndex = index;
-                } else {
-                  selectedTeamIndexEnrolled = index;
-                }
-              });
-              // ------------
+                  if (tabIndex == 0) {
+                    selectedTeamIndex = index;
+                  } else {
+                    selectedTeamIndexEnrolled = index;
+                  }
+                });
+                // ------------
                 // print('id is ${data[index]['id']}');
                 // tabIndex == 0
                 //     ? getAllMember(data[selectedTeamIndex]['id'])
                 //     : getAllMember(data[selectedTeamIndexEnrolled]
                 //         ['id']); // Assuming 'id' is the team ID
-              // -------------
-              int teamId = tabIndex == 0
-                  ? data[selectedTeamIndex]['team_id']
-                  : data[selectedTeamIndexEnrolled]['team_id'];
-              print('Selected team ID: $teamId');
+                // -------------
+                int? teamId = tabIndex == 0
+                    ? int.tryParse(
+                        data[selectedTeamIndex]['team_id'].toString())
+                    : int.tryParse(
+                        data[selectedTeamIndexEnrolled]['team_id'].toString());
+                print('Selected team ID: $teamId');
 
-              if (teamId != null) {
-                getAllMember(teamId);
-              } else {
-                print("Team ID is null for index: $index");
-              }
-                
+                if (teamId != null) {
+                  getAllMember(teamId);
+                } else {
+                  print("Team ID is null for index: $index");
+                }
               },
               isEnrolled: isEnrolled,
               players: teamMembers.length,
