@@ -5,9 +5,9 @@ import 'package:cricyard/core/utils/image_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../../theme/app_decoration.dart';
-import '../../../../providers/photo_provider.dart';
-import 'teamView/InvitePlayer_view.dart';
+import '../../../../../../../../theme/app_decoration.dart';
+import '../../../../../../providers/photo_provider.dart';
+import '../InvitePlayer_view.dart';
 
 class myteam_item_widget extends StatefulWidget {
   final Map<String, dynamic> teamData;

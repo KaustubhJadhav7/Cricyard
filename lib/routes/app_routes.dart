@@ -23,7 +23,7 @@ import '../views/screens/MenuScreen/profile_screen/views/pro_setting_screen.dart
 import '../views/screens/MenuScreen/profile_screen/views/profile_edit1.dart';
 import '../views/screens/MenuScreen/profile_screen/views/setting_screen.dart';
 import '../views/screens/MenuScreen/teams_screen/teamView/InvitePlayer_view.dart';
-import '../views/screens/MenuScreen/teams_screen/my_teams_screen.dart';
+import '../views/screens/MenuScreen/teams_screen/teamView/my_teams_screen.dart';
 import '../views/screens/MenuScreen/tournament/views/inviteTeam_screen.dart';
 import '../views/screens/profileManagement/profile_settings_f.dart';
 import '../views/screens/signupF/create_account_f.dart';

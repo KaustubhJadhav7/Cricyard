@@ -13,7 +13,7 @@ import 'package:cricyard/views/screens/MenuScreen/leaderboard_screen/leaderboard
 import 'package:cricyard/views/screens/MenuScreen/go_live_screen/go_live_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/live_cricket/live_cricket.dart';
 import 'package:cricyard/views/screens/MenuScreen/tournament/views/tournamnetScreen.dart';
-import 'package:cricyard/views/screens/MenuScreen/teams_screen/TeamsScreen.dart';
+import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamView/TeamsScreen.dart';
 import 'package:cricyard/views/screens/MenuScreen/find_friends_screen/find_friends_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/feedback_form/feedback.dart';
 import 'package:cricyard/views/screens/MenuScreen/merch/screens/home_screen.dart';

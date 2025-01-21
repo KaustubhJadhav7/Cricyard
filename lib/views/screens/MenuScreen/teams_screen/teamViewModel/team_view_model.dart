@@ -1,8 +1,120 @@
+import 'package:cricyard/Entity/team/Teams/repository/Teams_api_service.dart';
 import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamRepo/team_repo.dart';
 import 'package:flutter/material.dart';
 
 class TeamViewModel extends ChangeNotifier {
   final teamrepo = TeamRepo();
+  final teamsApiService teamapiService = teamsApiService();
+
+  List<Map<String, dynamic>> teams = [];
+  List<Map<String, dynamic>> enrolledTeams = [];
+  List<Map<String, dynamic>> teamMembers = [];
+  // bool isLoading = false;
+  bool isTeamLoading = false;
+
+  // Fetch all teams
+  Future<void> fetchMyTeams() async {
+    try {
+      isTeamLoading = true;
+      notifyListeners();
+
+      final List<Map<String, dynamic>> myTeams = await teamapiService.getMyTeam();
+      teams = _sanitizeTeamData(myTeams);
+
+      if (teams.isNotEmpty) {
+        await getAllMember(int.parse(teams[0]['id'].toString()));
+      }
+    } catch (e) {
+      debugPrint("Error fetching my teams: $e");
+    } finally {
+      isTeamLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Fetch teams by tournament ID
+  Future<void> fetchMyTeamsByTournamentId(int tourId) async {
+    try {
+      final List<Map<String, dynamic>> myTeams =
+          await teamapiService.getMyTeamByTourId(tourId);
+      teams = _sanitizeTeamData(myTeams);
+
+      if (teams.isNotEmpty) {
+        await getAllMember(int.parse(teams[0]['id'].toString()));
+      }
+    } catch (e) {
+      debugPrint("Error fetching teams by tournament ID: $e");
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  // Fetch team members
+  Future<void> getAllMember(int teamId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final List<Map<String, dynamic>> members =
+          await teamapiService.getAllMembers(teamId);
+      teamMembers = members;
+    } catch (e) {
+      debugPrint("Error fetching members for team ID $teamId: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Fetch enrolled teams
+  Future<void> fetchEnrolledTeams() async {
+    try {
+      isTeamLoading = true;
+      notifyListeners();
+
+      final List<Map<String, dynamic>> enrolled = await teamapiService.getEnrolledTeam();
+      enrolledTeams = _sanitizeTeamData(enrolled);
+    } catch (e) {
+      debugPrint("Error fetching enrolled teams: $e");
+    } finally {
+      isTeamLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Sanitize data
+  List<Map<String, dynamic>> _sanitizeTeamData(List<Map<String, dynamic>> rawTeams) {
+    return rawTeams.map((team) {
+      return {
+        'createdAt': team['createdAt']?.toString() ?? '0',
+        'createdBy': team['createdBy']?.toString() ?? '0',
+        'updatedBy': team['updatedBy']?.toString() ?? '',
+        'updatedAt': team['updatedAt']?.toString() ?? '0',
+        'accountId': team['accountId']?.toString() ?? '0',
+        'extn1': team['extn1'] ?? '',
+        'extn2': team['extn2'] ?? '',
+        'extn3': team['extn3'] ?? '',
+        'extn4': team['extn4'] ?? '',
+        'extn5': team['extn5'] ?? '',
+        'extn6': team['extn6'] ?? '',
+        'extn7': team['extn7'] ?? '',
+        'extn8': team['extn8'] ?? '',
+        'extn9': team['extn9'] ?? '',
+        'extn10': team['extn10'] ?? '',
+        'extn11': team['extn11'] ?? '',
+        'extn12': team['extn12'] ?? '',
+        'extn13': team['extn13'] ?? '',
+        'extn14': team['extn14'] ?? '',
+        'extn15': team['extn15'] ?? '',
+        'id': team['id']?.toString() ?? '0',
+        'team_id': team['team_id']?.toString() ?? '0',
+        'team_name': team['team_name'] ?? 'Unknown Team',
+        'user_id': team['user_id']?.toString() ?? '0',
+        'player_name': team['player_name'] ?? 'Unknown Player',
+        'player_tag': team['player_tag'] ?? '',
+      };
+    }).toList();
+  }
 
 //   Future<List<Map<String, dynamic>>> getEntities() async {
 //     try {

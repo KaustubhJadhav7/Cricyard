@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../Entity/matches/Match/repository/Match_api_service.dart';
-import '../../teams_screen/myteam_item_widget.dart';
+import '../../teams_screen/teamView/widget/myteam_item_widget.dart';
 
 class MyMatchById extends StatefulWidget {
   final Map<String, dynamic> tournament;

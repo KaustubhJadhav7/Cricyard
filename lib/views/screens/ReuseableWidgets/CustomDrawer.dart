@@ -8,7 +8,7 @@ import 'package:cricyard/views/screens/MenuScreen/change_language/change_languag
 import 'package:cricyard/views/screens/MenuScreen/find_friends_screen/find_friends_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/leaderboard_screen/leaderboard_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/live_cricket/live_cricket.dart';
-import 'package:cricyard/views/screens/MenuScreen/teams_screen/TeamsScreen.dart';
+import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamView/TeamsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;

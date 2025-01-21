@@ -4,8 +4,8 @@ import 'package:cricyard/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../Entity/team/Teams/repository/Teams_api_service.dart';
-import 'myteam_item_widget.dart';
+import '../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
+import 'widget/myteam_item_widget.dart';
 
 // Define a class for player data
 class Player {
@@ -386,8 +386,8 @@ class _MyTeamScreenState extends State<MyTeamScreen>
 
   Widget _buildTeamCardList(BuildContext context,
       List<Map<String, dynamic>> data, int tabIndex, bool isEnrolled) {
-    print("my data is: ==>>$data");
-    print("my teamMembers is: ==>>$teamMembers");
+    // print("my data is: ==>>$data");
+    // print("my teamMembers is: ==>>$teamMembers");
 
     return Align(
       alignment: Alignment.centerRight,
