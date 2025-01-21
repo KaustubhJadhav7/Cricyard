@@ -5,10 +5,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cricyard/views/screens/MenuScreen/NewStreamFolder/VideoPlayer/StreamingService.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -28,7 +29,7 @@ class _YouTubeStreamWidgetState extends State<YouTubeStreamWidget> {
   Timer? _fetchFramesTimer;
   final int frameRate = 5; // Frames per second for video
   final int segmentDuration = 3; // Duration in seconds for each segment
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   bool isProcessing = false;
   String youtubeStreamUrl =
       "rtmp://a.rtmp.youtube.com/live2/7buf-bmud-db7b-ajep-2p17"; // Replace with your YouTube RTMP URL
@@ -175,7 +176,7 @@ class _YouTubeStreamWidgetState extends State<YouTubeStreamWidget> {
         '-framerate $frameRate -i $framesDir/frame_%d.jpg -c:v mpeg4 -q:v 5 -t $segmentDuration -vf "fps=$frameRate" $segmentPath';
 
     print('Running FFmpeg command: $ffmpegCommand');
-    await _flutterFFmpeg.execute(ffmpegCommand).then((rc) async {
+    await FFmpegKit.execute(ffmpegCommand).then((rc) async {
       print("FFmpeg process exited with rc $rc");
       if (rc == 0) {
         print('Next video segment created successfully at $segmentPath');

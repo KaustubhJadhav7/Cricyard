@@ -39,7 +39,7 @@ class _RegstrationDetailsFState extends State<RegstrationDetailsF> {
   var selectedCity = '';
   DateTime selectedDate = DateTime.now();
 
-  final List<String> cityList = [
+  List<String> cityList = [
     // List of some Indian cities for demonstration
     'Pune', 'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Ahmedabad', 'Chennai',
     'Kolkata', 'Jaipur', 'Surat', 'Lucknow', 'Kanpur', 'Nagpur',
@@ -292,12 +292,14 @@ class _RegstrationDetailsFState extends State<RegstrationDetailsF> {
                   ),
                 ),
                 DropdownSearch<String>(
+                  // items: cityList,
+                  items: (f , cs) => cityList,
                   popupProps: const PopupProps.menu(
                     showSelectedItems: true,
                     // disabledItemFn: (String s) => s.startsWith('I'),
                   ),
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
                       labelText: "City",
                       hintText: "Select City",
                       hintStyle:
@@ -306,7 +308,6 @@ class _RegstrationDetailsFState extends State<RegstrationDetailsF> {
                           color: Colors.black), // Set label text color
                     ),
                   ),
-                  items: cityList,
                   onChanged: (value) {
                     setState(() {
                       selectedCity = value!;

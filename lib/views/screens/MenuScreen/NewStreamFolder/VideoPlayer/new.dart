@@ -5,8 +5,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cricyard/resources/api_constants.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -30,7 +31,7 @@ class _VideoCreatorWidgetState extends State<VideoCreatorWidget> {
   VideoPlayerController? _nextVideoPlayerController;
   bool _isVideoReady = false;
   bool _isLoading = false;
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   bool isProcessing = false;
   Uint8List? lastFrameBytes;
   String? nextVideoPath;
@@ -151,7 +152,7 @@ class _VideoCreatorWidgetState extends State<VideoCreatorWidget> {
         '-framerate 7 -i $framesDir/frame_%d.jpg -c:v mpeg4 -q:v 5 -vf "fps=7" $videoPath';
 
     print('Running FFmpeg command: $ffmpegCommand');
-    await _flutterFFmpeg.execute(ffmpegCommand).then((rc) async {
+    await FFmpegKit.execute(ffmpegCommand).then((rc) async {
       print("FFmpeg process exited with rc $rc");
       if (rc == 0) {
         print('Next video created successfully at $videoPath');

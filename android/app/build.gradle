@@ -49,6 +49,7 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+         // multiDexEnabled true
     }
 
     buildTypes {
@@ -66,4 +67,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    // implementation 'androidx.camera:camera-core:1.4.1'
+    // implementation 'androidx.camera:camera-camera2:1.4.1'
+    // implementation 'androidx.camera:camera-video:1.4.1'
+
+}

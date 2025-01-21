@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -36,7 +37,8 @@ class _StreamVideoWidgetState extends State<StreamVideoWidget> {
   VideoPlayerController? _videoPlayerController;
   bool _isVideoReady = false;
   bool _isLoading = false;
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FFmpegKit _flutterFFmpeg = FFmpegKit();
   bool isProcessing = false;
   Uint8List? lastFrameBytes;
 
@@ -208,7 +210,7 @@ class _StreamVideoWidgetState extends State<StreamVideoWidget> {
         '-framerate $frameRate -i $framesDir/frame_%d.jpg -c:v mpeg4 -q:v 5 -t $segmentDuration -vf "fps=$frameRate" $segmentPath';
 
     print('Running FFmpeg command: $ffmpegCommand');
-    await _flutterFFmpeg.execute(ffmpegCommand).then((rc) async {
+    await FFmpegKit.execute(ffmpegCommand).then((rc) async {
       print("FFmpeg process exited with rc $rc");
       if (rc == 0) {
         print('Next video segment created successfully at $segmentPath');
@@ -247,7 +249,7 @@ class _StreamVideoWidgetState extends State<StreamVideoWidget> {
 
         print(
             'Running FFmpeg command to combine video and audio: $ffmpegCombineCommand');
-        await _flutterFFmpeg.execute(ffmpegCombineCommand).then((rc) async {
+        await FFmpegKit.execute(ffmpegCombineCommand).then((rc) async {
           print("FFmpeg process exited with rc $rc");
           if (rc == 0) {
             await streamToYouTube(combinedSegmentPath);
@@ -291,7 +293,7 @@ class _StreamVideoWidgetState extends State<StreamVideoWidget> {
         '-re -i $segmentPath -f lavfi -t 1 -i anullsrc=channel_layout=stereo:sample_rate=44100 -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 50 -qmin 10 -qmax 51 -c:a aac -b:a 128k -ar 44100 -flvflags no_duration_filesize   -f flv $fullRtmpUrl';
 
     print('Running FFmpeg command to stream to YouTube: $ffmpegStreamCommand');
-    await _flutterFFmpeg.execute(ffmpegStreamCommand).then((rc) {
+    await FFmpegKit.execute(ffmpegStreamCommand).then((rc) {
       print("FFmpeg process for streaming exited with rc $rc");
       if (rc == 0) {
         print('Streaming to YouTube started successfully');

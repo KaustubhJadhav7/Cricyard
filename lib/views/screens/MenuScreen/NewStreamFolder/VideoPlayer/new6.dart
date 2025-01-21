@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cricyard/resources/api_constants.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -29,7 +30,7 @@ class _VideoCreatorWidget6State extends State<VideoCreatorWidget6> {
   VideoPlayerController? _videoPlayerController;
   bool _isVideoReady = false;
   bool _isLoading = false;
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   bool isProcessing = false;
   Uint8List? lastFrameBytes;
 
@@ -119,7 +120,7 @@ class _VideoCreatorWidget6State extends State<VideoCreatorWidget6> {
         '-framerate $frameRate -i $framesDir/frame_%d.jpg -c:v mpeg4 -q:v 5 -t $segmentDuration -vf "fps=$frameRate" $segmentPath';
 
     print('Running FFmpeg command: $ffmpegCommand');
-    await _flutterFFmpeg.execute(ffmpegCommand).then((rc) async {
+    await FFmpegKit.execute(ffmpegCommand).then((rc) async {
       print("FFmpeg process exited with rc $rc");
       if (rc == 0) {
         print('Next video segment created successfully at $segmentPath');

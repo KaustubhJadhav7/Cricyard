@@ -1,3 +1,4 @@
+import 'package:cricyard/data/network/network_api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -5,6 +6,9 @@ import 'dart:typed_data';
 
 import '../../../../../providers/token_manager.dart';
 import '../../../../../resources/api_constants.dart';
+
+final NetworkApiService _networkApiService = NetworkApiService();
+
 
 class StreamingService {
   final String baseUrl = ApiConstants.baseUrl;
@@ -27,27 +31,52 @@ class StreamingService {
     }
   }
 
+  // Future<Map<String, dynamic>?> getStartMatch(int matchId) async {
+  //   try {
+  //     final token = await TokenManager.getToken();
+  //     dio.options.headers['Authorization'] = 'Bearer $token';
+  //     final response =
+  //         await dio.get('$baseUrl/Start_Match/Start_Match/matchId/$matchId');
+
+  //     print('score response ${response.data}');
+  //     // Check if response is successful and data is not null
+  //     if (response.statusCode == 200 && response.data != null) {
+  //       print('response get..');
+  //       // Assuming the response is a Map<String, dynamic>
+  //       Map<String, dynamic> responseData = response.data;
+  //       return responseData;
+  //       //
+  //     } else {
+  //       // If response is not successful, return null
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     // Handle errors and return null
+  //     print('Failed to get Match: $e');
+  //     return null;
+  //   }
+  // }
   Future<Map<String, dynamic>?> getStartMatch(int matchId) async {
     try {
-      final token = await TokenManager.getToken();
-      dio.options.headers['Authorization'] = 'Bearer $token';
-      final response =
-          await dio.get('$baseUrl/Start_Match/Start_Match/matchId/$matchId');
+      // Construct the URL
+      final String url =
+          '$baseUrl/Start_Match/Start_Match/matchId/$matchId';
 
-      print('score response ${response.data}');
-      // Check if response is successful and data is not null
-      if (response.statusCode == 200 && response.data != null) {
-        print('response get..');
-        // Assuming the response is a Map<String, dynamic>
-        Map<String, dynamic> responseData = response.data;
-        return responseData;
+      // Use the NetworkApiService to make the GET request
+      final response = await _networkApiService.getGetApiResponse(url);
+
+      print('Score response: $response');
+
+      // Ensure the response is valid and cast it to Map<String, dynamic>
+      if (response != null && response is Map<String, dynamic>) {
+        print('Response received successfully.');
+        return response;
       } else {
-        // If response is not successful, return null
+        print('Response is either null or not a Map.');
         return null;
       }
     } catch (e) {
-      // Handle errors and return null
-      print('Failed to get Match: $e');
+      print('Failed to get match: $e');
       return null;
     }
   }
