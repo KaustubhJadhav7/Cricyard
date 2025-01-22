@@ -101,8 +101,10 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 CustomImageView(
                   imagePath: ImageConstant.imgImageRemovebgPreview,
-                  height: 59.v,
-                  width: 382.h,
+                  // height: 59.v,
+                  // width: 382.h,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  width: MediaQuery.of(context).size.height * 0.98,
                 ),
                 const Spacer(
                   flex: 62,
