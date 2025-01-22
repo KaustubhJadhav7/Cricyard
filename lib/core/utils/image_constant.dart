@@ -40,7 +40,7 @@ class ImageConstant {
   static String imgBell = '$imagePath/bell2.png';
   static String imgCricketPlayer = '$imagePath/cricket-player.png';
 
-  static String editIcon = '$imagePath/editIcon.png';
+  static String editIcon = '$imagePath/edit.png';
 
   static String home = '$imagePath/homeIcon1000.svg';
   static String imgOverflowmenu = 'assets/images/img_overflowmenu.svg';
@@ -158,11 +158,14 @@ class ImageConstant {
   static String imgPolygon1 = '$imagePath/img_polygon_1.svg';
 
 // login Four images
+
   static String imgWorst = '$imagePath/img_worst.png';
+
+  static String forms = '$imagePath/forms.png';
 
   static String imgItSJustFine = '$imagePath/img_it_s_just_fine.png';
 
-  static String imgNeutral = '$imagePath/img_neutral.png';
+  static String imgNeutral = '$imagePath/img_neutral.jpg';
 
   static String imgGood = '$imagePath/img_good.png';
 
@@ -251,7 +254,7 @@ class ImageConstant {
 
 // login Four images
   static String imgArrowLeftOnprimary32x32 =
-      '$imagePath/img_arrow_left_onprimary_32x32.svg';
+      '$imagePath/img_arrow_left.svg';
 
   static String imgTelevisionErrorcontainer =
       '$imagePath/img_television_errorcontainer.svg';

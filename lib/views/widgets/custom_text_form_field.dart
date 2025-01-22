@@ -188,14 +188,14 @@ class CustomTextFormField extends StatelessWidget {
       // Existing cases...
       case TextFormFieldFontStyle.RobotoMedium18:
         return TextStyle(
-          color: ColorConstant.whiteA700,
+          color: ColorConstant.black900,
           fontSize: getFontSize(18),
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500,
         );
       default:
         return TextStyle(
-          color: ColorConstant.blueGray200,
+          color: Colors.black,
           fontSize: getFontSize(16),
           fontFamily: 'Gilroy',
           fontWeight: FontWeight.w500,

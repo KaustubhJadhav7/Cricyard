@@ -197,54 +197,55 @@ class Profile_ScreenState extends State<Profile_Screen>
                 isLoading ? const Center(child: CircularProgressIndicator()):  Stack(
                     children: [
                       CircleAvatar(
-                        radius: 100,
+                        radius: MediaQuery.of(context).size.height * 0.1,
                         backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : AssetImage(ImageConstant.editModel) as ImageProvider,
                       ),
                       Positioned(
                         right: 0,
                         bottom: 0,
                         child: CustomIconButton(
-                          height: 32.adaptSize,
-                          width: 32.adaptSize,
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.05,
                           alignment: Alignment.centerRight,
                           onTap: () {
                             onTapBtnEdit(context);
                           },
-                          padding_f: EdgeInsets.all(8.h),
+                          // padding_f: EdgeInsets.all(8.h),
                           // decoration: IconButtonStyleHelper.fillPrimary,
-                          child: CustomImageView(
-                            imagePath: ImageConstant.editIcon,
-                            height: 28.adaptSize,
-                            width: 28.adaptSize,
+                          child: Icon(
+                            Icons.edit,
+                            size: MediaQuery.of(context).size.height * 0.03,
+                            color: Colors.black,
+                            // width: 28.adaptSize,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 161.h),
-                    child: CustomIconButton(
-                      height: 32.adaptSize,
-                      width: 32.adaptSize,
-                      // padding: EdgeInsets.all(8.h),
+                  // Padding(
+                  //   padding: EdgeInsets.only(right: 161.h),
+                  //   child: CustomIconButton(
+                  //     height: 32.adaptSize,
+                  //     width: 32.adaptSize,
+                  //     // padding: EdgeInsets.all(8.h),
 
-                      alignment: Alignment.centerRight,
-                      onTap: () {
-                        onTapBtnEdit(context);
-                      },
-                      padding_f: EdgeInsets.all(8.h),
-                      decoration: IconButtonStyleHelper.fillPrimary,
-                      child: CustomImageView(
-                        svgPath: ImageConstant.imgEdit,
-                        height: 28.adaptSize,
-                        width: 28.adaptSize,
-                        // decoration: IconButtonStyleHelper.outlineIndigo,
-                      ),
-                    ),
-                  ),
+                  //     alignment: Alignment.centerRight,
+                  //     onTap: () {
+                  //       onTapBtnEdit(context);
+                  //     },
+                  //     padding_f: EdgeInsets.all(8.h),
+                  //     decoration: IconButtonStyleHelper.fillPrimary,
+                  //     child: CustomImageView(
+                  //       svgPath: ImageConstant.imgEdit,
+                  //       height: 28.adaptSize,
+                  //       width: 28.adaptSize,
+                  //       // decoration: IconButtonStyleHelper.outlineIndigo,
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: 2.v),
                   Text(
-                    'Hello ${capitalize(userData['fullName'] ?? '')}!',
+                    'Hello ${capitalize(userData['fullName'] ?? '')} !',
                     overflow: TextOverflow.clip,
                     style: CustomTextStyles.headlineSmallSemiBold,
                   ),
@@ -275,10 +276,10 @@ class Profile_ScreenState extends State<Profile_Screen>
                           11.h,
                         ),
                       ),
-                      tabs: const [
+                      tabs:  [
                         Tab(
                           child: Text(
-                            "My Profile",
+                            "My Profile", style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.02),
                           ),
                         ),
                         Tab(
@@ -297,22 +298,22 @@ class Profile_ScreenState extends State<Profile_Screen>
                   _buildTabbarview(context)
                 ],
               ),
-              SizedBox(height: 5.v)
+              SizedBox(height: 2.v)
             ],
           ),
         ),
         bottomNavigationBar: BottomAppBarWidget(),
-        floatingActionButton: CustomFloatingButton(
-          height: 64,
-          width: 64,
-          alignment: Alignment.topCenter,
-          child: CustomImageView(
-            svgPath: ImageConstant.imgLocation,
-            height: 32.0.v,
-            width: 32.0.h,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: CustomFloatingButton(
+        //   height: 64,
+        //   width: 64,
+        //   alignment: Alignment.topCenter,
+        //   child: CustomImageView(
+        //     svgPath: ImageConstant.imgLocation,
+        //     height: 32.0.v,
+        //     width: 32.0.h,
+        //   ),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
@@ -320,7 +321,7 @@ class Profile_ScreenState extends State<Profile_Screen>
   /// Section Widget
   Widget _buildTabbarview(BuildContext context) {
     return SizedBox(
-      height: 430.v,
+      height: 730.v,
       child: TabBarView(
         controller: tabviewController,
         children: const [LoginThreePage(), LoginThreePage(), LoginThreePage()],

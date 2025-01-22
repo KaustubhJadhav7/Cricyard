@@ -1,5 +1,6 @@
 // // ignore_for_file: use_build_context_synchronously
 import 'package:cricyard/core/utils/size_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../Utils/image_constant.dart';
@@ -181,8 +182,6 @@ import '../../../../Utils/size_utils.dart';
 //     _loadtournament_nameItems();
 //   }
 
-  
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -363,7 +362,6 @@ import '../../../../Utils/size_utils.dart';
 
 //                 const SizedBox(height: 16),
 
-                
 //                 //   padding: getPadding(top: 19),
 //                 //   child: Column(
 //                 //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,7 +471,6 @@ import '../../../../Utils/size_utils.dart';
 //                             margin: getMargin(top: 6),
 //                           )
 //                         ])),
-
 
 //                 //   padding: getPadding(top: 18),
 //                 //   child: Column(
@@ -608,7 +605,8 @@ class _MyTournamentCreateEntityScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = Provider.of<MyTournamentProvider>(context, listen: false);
+      final provider =
+          Provider.of<MyTournamentProvider>(context, listen: false);
       provider.fetchtournament_nameItems();
     });
   }
@@ -638,9 +636,12 @@ class _MyTournamentCreateEntityScreenState
             ),
             Padding(
               padding: EdgeInsets.only(left: 18.h),
-              child: const Text(
+              child: Text(
                 "Create Tournament",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: GoogleFonts.getFont('Poppins',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black),
               ),
             ),
           ],
@@ -673,7 +674,8 @@ class _MyTournamentCreateEntityScreenState
                           ),
                           IconButton(
                             icon: const Icon(Icons.remove),
-                            onPressed: () => provider.removelogoImageUploadRow(index),
+                            onPressed: () =>
+                                provider.removelogoImageUploadRow(index),
                           ),
                         ],
                       ),
@@ -684,7 +686,14 @@ class _MyTournamentCreateEntityScreenState
 
                 // Display selected images
                 provider.selectedLogoImages.isEmpty
-                    ? const Center(child: Text('Images Not Available'))
+                    ? Center(
+                        child: Text(
+                        'Images Not Available',
+                        style: GoogleFonts.getFont('Poppins',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ))
                     : SizedBox(
                         height: 100,
                         child: ListView.builder(
@@ -722,6 +731,7 @@ class _MyTournamentCreateEntityScreenState
                 // Venues field
                 CustomTextFormField(
                   hintText: "Please Enter Venues",
+                  hintStyle: TextStyle(fontSize: 20.0, color: const Color.fromARGB(255, 0, 0, 0)),
                   onsaved: (value) => formData['venues'] = value,
                 ),
 

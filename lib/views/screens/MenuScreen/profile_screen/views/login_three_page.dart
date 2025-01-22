@@ -71,7 +71,7 @@ class LoginThreePageState extends State<LoginThreePage>
         padding: const EdgeInsets.only(top: 20.0,left: 20,right: 20),
         child: Container(
           width: double.infinity,
-          height: MediaQuery.of(context).size.height*0.5,
+          height: MediaQuery.of(context).size.height*0.7,
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(12)

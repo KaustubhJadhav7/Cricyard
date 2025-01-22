@@ -91,6 +91,15 @@ class feedbackScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Positioned(
+                          bottom: 20.0, // Position from the bottom
+                          right: 126.0, // Position from the right
+                          child: Image.asset(
+                            ImageConstant.forms, 
+                            height: 64.0, // Adjust image size
+                            width: 64.0,
+                          ),
+                        ),
                         SizedBox(height: 59.v),
                         _buildRowName(context),
                         SizedBox(height: 29.v),
@@ -159,18 +168,24 @@ class feedbackScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: _buildBottomAppBarSea(context),
-        floatingActionButton: CustomFloatingButton(
-          height: 64,
-          width: 64,
-          alignment: Alignment.topCenter,
-          child: CustomImageView(
-            svgPath: ImageConstant.imgLocation,
-            height: 32.0.v,
-            width: 32.0.h,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // bottomNavigationBar: _buildBottomAppBarSea(context),
+        // floatingActionButton: CustomFloatingButton(
+        //   height: 64,
+        //   width: 64,
+        //   alignment: Alignment.topCenter,
+        //   child:
+        //       // CustomImageView(
+        //       //   svgPath: ImageConstant.forms,
+        //       //   height: 32.0.v,
+        //       //   width: 32.0.h,
+        //       // ),
+        //       Image.asset(
+        //     ImageConstant.forms, // path to the asset image
+        //     height: 32.0.v,
+        //     width: 32.0.h,
+        //   ),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       ),
     );
   }
@@ -191,7 +206,7 @@ class feedbackScreen extends StatelessWidget {
             CustomTextFormField(
               width: 160.h,
               controller: nameController,
-              hintText: "Widle Studio",
+              hintText: "Your Name",
               hintStyle: theme.textTheme.labelMedium!,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 10.h,
@@ -271,7 +286,7 @@ class feedbackScreen extends StatelessWidget {
           CustomTextFormField(
             width: 160.h,
             controller: emailController,
-            hintText: "xyz123@gmail.com",
+            hintText: "Your Email",
             hintStyle: theme.textTheme.bodySmall!,
             textInputType: TextInputType.emailAddress,
             contentPadding: EdgeInsets.symmetric(
@@ -352,7 +367,7 @@ class feedbackScreen extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
-                            style: theme.textTheme.labelLarge,
+                            style: CustomTextStyles.labelLargeCyan900,
                           ),
                         )
                       ],
@@ -383,7 +398,7 @@ class feedbackScreen extends StatelessWidget {
                         SizedBox(height: 1.v),
                         Text(
                           "Fine",
-                          style: theme.textTheme.labelLarge,
+                          style: CustomTextStyles.labelLargeCyan900,
                         )
                       ],
                     ),
@@ -410,11 +425,11 @@ class feedbackScreen extends StatelessWidget {
                         SizedBox(
                           width: 34.h,
                           child: Text(
-                            "Look\nGood",
+                            "Looks\nGood",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
-                            style: theme.textTheme.labelLarge,
+                            style: CustomTextStyles.labelLargeCyan900,
                           ),
                         )
                       ],
@@ -446,7 +461,7 @@ class feedbackScreen extends StatelessWidget {
                             "Very\nGood",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.labelLarge,
+                            style: CustomTextStyles.labelLargeCyan900,
                           ),
                         )
                       ],
@@ -491,94 +506,94 @@ class feedbackScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomAppBarSea(BuildContext context) {
-    return SizedBox(
-      child: SizedBox(
-        height: 115.v,
-        width: 409.h,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 409.h,
-                margin: EdgeInsets.only(top: 35.v),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 13.h,
-                  vertical: 15.v,
-                ),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: fs.Svg(
-                      ImageConstant.imgGroup94,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomIconButton(
-                      height: 50.adaptSize,
-                      width: 50.adaptSize,
-                      padding_f: EdgeInsets.all(13.h),
-                      child: CustomImageView(
-                        svgPath: ImageConstant.imgSearch,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 27.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(12.h),
-                        child: CustomImageView(
-                          svgPath: ImageConstant.imgBxCricketBall,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 123.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(12.h),
-                        child: CustomImageView(
-                          svgPath: ImageConstant.imgFluentLive24Filled,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 26.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(10.h),
-                        child: CustomImageView(
-                          svgPath: ImageConstant.imgNotification,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            CustomFloatingButton(
-              height: 64,
-              width: 64,
-              alignment: Alignment.topCenter,
-              child: CustomImageView(
-                svgPath: ImageConstant.imgLocation,
-                height: 32.0.v,
-                width: 32.0.h,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildBottomAppBarSea(BuildContext context) {
+  //   return SizedBox(
+  //     child: SizedBox(
+  //       height: 115.v,
+  //       width: 409.h,
+  //       child: Stack(
+  //         alignment: Alignment.topCenter,
+  //         children: [
+  //           Align(
+  //             alignment: Alignment.bottomCenter,
+  //             child: Container(
+  //               width: 409.h,
+  //               margin: EdgeInsets.only(top: 35.v),
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: 13.h,
+  //                 vertical: 15.v,
+  //               ),
+  //               decoration: BoxDecoration(
+  //                 image: DecorationImage(
+  //                   image: fs.Svg(
+  //                     ImageConstant.imgGroup94,
+  //                   ),
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //               ),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: [
+  //                   CustomIconButton(
+  //                     height: 50.adaptSize,
+  //                     width: 50.adaptSize,
+  //                     padding_f: EdgeInsets.all(13.h),
+  //                     child: CustomImageView(
+  //                       svgPath: ImageConstant.imgSearch,
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 27.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(12.h),
+  //                       child: CustomImageView(
+  //                         svgPath: ImageConstant.imgBxCricketBall,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 123.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(12.h),
+  //                       child: CustomImageView(
+  //                         svgPath: ImageConstant.imgFluentLive24Filled,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 26.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(10.h),
+  //                       child: CustomImageView(
+  //                         svgPath: ImageConstant.imgNotification,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           CustomFloatingButton(
+  //             height: 64,
+  //             width: 64,
+  //             alignment: Alignment.topCenter,
+  //             child: CustomImageView(
+  //               svgPath: ImageConstant.imgLocation,
+  //               height: 32.0.v,
+  //               width: 32.0.h,
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Navigates back to the previous screen.
   onTapBtnArrowleftone(BuildContext context) {

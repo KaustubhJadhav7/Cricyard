@@ -32,7 +32,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     final provider = Provider.of<ProductProvider>(context, listen: false);
     provider.getProduct();
     return Scaffold(
-      backgroundColor:Colors.grey[200],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
@@ -43,7 +43,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                  color:const Color(0xFF219ebc),
+                  color: const Color(0xFF219ebc),
                   borderRadius: BorderRadius.circular(12)),
               child: const Icon(
                 Icons.arrow_back_ios_new,
@@ -66,7 +66,10 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
               child: Consumer<ProductProvider>(
                 builder: (context, provider, _) => Badge(
                   label: Text("${provider.cart.length}"),
-                  child: const Icon(Icons.shopping_cart,color:  Color(0xFF219ebc),),
+                  child: const Icon(
+                    Icons.shopping_cart,
+                    color: Color(0xFF219ebc),
+                  ),
                 ),
               ),
             ),
@@ -74,9 +77,9 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.grey[700],
+        foregroundColor: const Color.fromARGB(255, 68, 67, 67),
         title: const Text(
-          "Bat Shope",
+          "Bat Shop",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
         ),
       ),
@@ -106,9 +109,9 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                           color: Color(0xFF219ebc),
                         ),
                         filled: true,
-                        fillColor:Colors.white,
+                        fillColor: Colors.white,
                         focusColor: Colors.white,
-                        label: Text("Search... for your fav bat"),
+                        label: Text("Search... for your favourite bat"),
                         border: InputBorder.none,
                       ),
                     ),
@@ -120,12 +123,13 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                     "Popular premium products",
                     style: TextStyle(
                       color: Colors.grey[700],
+                      fontSize: 14,
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: provider.searchedProducts.length,

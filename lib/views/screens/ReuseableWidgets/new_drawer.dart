@@ -308,19 +308,22 @@ class _NewDrawerState extends State<NewDrawer> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: MediaQuery.of(context).size.height * 0.01,
             ),
             CircleAvatar(
-                radius: 70,
+                // radius: 70,
+                radius: MediaQuery.of(context).size.height * 0.08,
                 backgroundImage: _imageBytes != null
                     ? MemoryImage(_imageBytes!)
                     : const NetworkImage(
                             'https://media.istockphoto.com/id/1332100919/vector/man-icon-black-icon-person-symbol.jpg?s=612x612&w=0&k=20&c=AVVJkvxQQCuBhawHrUhDRTCeNQ3Jgt0K1tXjJsFy1eg=')
                         as ImageProvider),
-            const SizedBox(height: 10),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Text(
               'Welcome',
-              style: GoogleFonts.poppins(color: Colors.white, fontSize: 20),
+              style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.height * 0.03),
             ),
           ],
         ),

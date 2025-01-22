@@ -1,4 +1,4 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -23,8 +23,7 @@ class ProductTile extends StatelessWidget {
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color:Colors.white),
+            borderRadius: BorderRadius.circular(12), color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,9 +56,38 @@ class ProductTile extends StatelessWidget {
                           child: Image.network(
                             productModel.image.toString(),
                             width: double.infinity,
-                            fit: BoxFit.fill,
+                            // fit: BoxFit.fill,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.broken_image,
+                                  size: 100, color: Colors.grey);
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
                           ),
                         ),
+                        // child: Hero(
+                        //   tag: heroTag,
+                        //   child: CachedNetworkImage(
+                        //     imageUrl: productModel.image.toString(),
+                        //     width: double.infinity,
+                        //     // Optional: Provide a placeholder while the image loads
+                        //     placeholder: (context, url) => const Center(
+                        //       child: CircularProgressIndicator(),
+                        //     ),
+                        //     // Optional: Provide an error widget if the image fails to load
+                        //     errorWidget: (context, url, error) => const Icon(
+                        //       Icons.broken_image,
+                        //       size: 100,
+                        //       color: Colors.grey,
+                        //     ),
+                        //     // fit: BoxFit
+                        //     //     .fill, // Uncomment if you want to control the fit
+                        //   ),
+                        // ),
                       ),
                     ),
                   ),
@@ -71,17 +99,26 @@ class ProductTile extends StatelessWidget {
             ),
             Text(
               "${productModel.name}",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             Text(
               "Price: \$${productModel.price}",
-              style: const TextStyle(fontSize: 16,color: Colors.black87),
+              style: const TextStyle(fontSize: 16, color: Colors.black87),
             ),
 
-            Text("reviews ${productModel.reviews}", style: const TextStyle(fontSize: 16,color: Colors.black),),
+            Text(
+              "reviews ${productModel.reviews}",
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+            ),
             Row(
               children: [
-                Text("${productModel.rating}" ,style: const TextStyle(fontSize: 16,color: Colors.black87),),
+                Text(
+                  "${productModel.rating}",
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                ),
                 const SizedBox(
                   width: 6,
                 ),
