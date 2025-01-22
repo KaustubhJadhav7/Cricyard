@@ -109,8 +109,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 CustomImageView(
                   imagePath: ImageConstant.imgCricyard1,
-                  height: 251.v,
-                  width: 291.h,
+                  // height: 251.v,
+                  // width: 291.h,
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.height * 0.45,
                 ),
                 const Spacer(
                   flex: 37,

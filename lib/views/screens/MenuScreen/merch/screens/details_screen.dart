@@ -16,11 +16,14 @@ class DetailsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: const Text("Are you sure want to add?"),
+        content: Text(
+          "Are you sure want to add?",
+          style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.03),
+        ),
         actions: [
           MaterialButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancle"),
+            child: const Text("Cancel"),
           ),
           MaterialButton(
             onPressed: () {
@@ -95,11 +98,33 @@ class DetailsScreen extends StatelessWidget {
                                 Colors.transparent,
                                 BlendMode.dstOut,
                               ),
+                              // child: Hero(
+                              //   tag: heroTag,
+                              //   child: Image.network(
+                              //     productModel.image.toString(),
+                              //     width: double.infinity,
+                              //   ),
+                              // ),
                               child: Hero(
                                 tag: heroTag,
                                 child: Image.network(
                                   productModel.image.toString(),
                                   width: double.infinity,
+                                  // fit: BoxFit.fill,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.broken_image,
+                                        size:
+                                            MediaQuery.of(context).size.height *
+                                                0.2,
+                                        color: Colors.grey);
+                                  },
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
@@ -144,6 +169,9 @@ class DetailsScreen extends StatelessWidget {
                           fontSize: 14,
                           color: Colors.black87),
                     ),
+                    const SizedBox(
+                      height: 25,
+                    ),
                   ],
                 )),
             Padding(
@@ -158,9 +186,11 @@ class DetailsScreen extends StatelessWidget {
                   style: const ButtonStyle(
                       backgroundColor:
                           MaterialStatePropertyAll(Color(0xFF219ebc))),
-                  child: const Text(
+                  child: Text(
                     "Add to cart",
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: MediaQuery.of(context).size.height * 0.03),
                   ),
                 ),
               ),

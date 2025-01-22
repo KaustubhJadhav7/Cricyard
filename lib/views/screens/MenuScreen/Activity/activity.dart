@@ -51,7 +51,8 @@ class activityScreen extends StatelessWidget {
               SizedBox(height: 2.v),
               Text(
                 "Abhay Patel",
-                style: CustomTextStyles.headlineSmallSemiBold,
+                // style: CustomTextStyles.headlineSmallSemiBold,
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 15.v),
               _buildCardOne(context),
@@ -92,7 +93,7 @@ class activityScreen extends StatelessWidget {
       ),
       title: AppbarTitle(
         text: "Activity",
-        margin: EdgeInsets.only(left: 32.h),
+        margin: EdgeInsets.only(left: 32.h, right: 32.h, top: 30.h),
       ),
       height: 1,
     );
@@ -132,23 +133,26 @@ class activityScreen extends StatelessWidget {
                     children: [
                       Text(
                         "Weekly report".toUpperCase(),
-                        style: CustomTextStyles.labelSmallBold,
+                        // style: CustomTextStyles.labelSmallBold,
+                        style: TextStyle(color: Colors.black),
                       ),
                       Text(
                         "21/06/2020 – 27/06/2020".toUpperCase(),
-                        style:
-                            CustomTextStyles.bodySmallOpenSansOnErrorContainer,
+                        // style:CustomTextStyles.bodySmallOpenSansOnErrorContainer,
+                        style: TextStyle(color: Colors.black),
                       )
                     ],
                   ),
                   SizedBox(height: 29.v),
                   Text(
                     "YOUR performance".toUpperCase(),
-                    style: theme.textTheme.bodyMedium,
+                    // style: theme.textTheme.bodyMedium,
+                    style: TextStyle(color: Colors.black),
                   ),
                   Text(
                     "10% growth".toUpperCase(),
-                    style: CustomTextStyles.headlineSmallOnErrorContainer,
+                    // style: CustomTextStyles.headlineSmallOnErrorContainer,
+                    style: TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -165,7 +169,8 @@ class activityScreen extends StatelessWidget {
                 ),
                 child: Text(
                   "Ludimos © all rights reserved".toUpperCase(),
-                  style: CustomTextStyles.openSansOnErrorContainer,
+                  // style: CustomTextStyles.openSansOnErrorContainer,
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
@@ -247,7 +252,8 @@ class activityScreen extends StatelessWidget {
                     children: [
                       Text(
                         "50".toUpperCase(),
-                        style: theme.textTheme.labelMedium,
+                        // style: theme.textTheme.labelMedium,
+                        style: TextStyle(color: Colors.black),
                       ),
                       Expanded(
                         child: Padding(
@@ -274,12 +280,14 @@ class activityScreen extends StatelessWidget {
                           children: [
                             Text(
                               "10".toUpperCase(),
-                              style: theme.textTheme.labelMedium,
+                              // style: theme.textTheme.labelMedium,
+                              style: TextStyle(color: Colors.black),
                             ),
                             SizedBox(height: 20.v),
                             Text(
                               "2".toUpperCase(),
-                              style: theme.textTheme.labelMedium,
+                              // style: theme.textTheme.labelMedium,
+                              style: TextStyle(color: Colors.black),
                             )
                           ],
                         ),
@@ -319,24 +327,24 @@ class activityScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   "21 July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                                 Spacer(
                                                   flex: 50,
                                                 ),
                                                 Text(
                                                   "23 July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                                 Spacer(
                                                   flex: 49,
                                                 ),
                                                 Text(
                                                   "27July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(color: Colors.black),
                                                 )
                                               ],
                                             ),

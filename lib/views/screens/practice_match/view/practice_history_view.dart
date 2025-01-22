@@ -189,7 +189,7 @@ class _PracticeHistoryViewState extends State<PracticeHistoryView> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
+          height: MediaQuery.of(context).size.height * 0.35,
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -218,6 +218,8 @@ class _PracticeHistoryViewState extends State<PracticeHistoryView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Expanded(
+                      child: 
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -271,6 +273,7 @@ class _PracticeHistoryViewState extends State<PracticeHistoryView> {
                           ],
                         ),
                       ],
+                    ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

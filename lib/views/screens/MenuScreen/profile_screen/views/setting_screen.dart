@@ -88,12 +88,12 @@ class SettingScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.setting_profile_logo,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath:
+                                    //       ImageConstant.setting_profile_logo,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: 36.h,
@@ -109,19 +109,19 @@ class SettingScreen extends StatelessWidget {
                                 SizedBox(height: 9.v),
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.setting_securitylogo,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath:
+                                    //       ImageConstant.setting_securitylogo,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: 36.h,
                                         top: 4.v,
                                       ),
                                       child: Text(
-                                        "security",
+                                        "Security",
                                         style: theme.textTheme.titleMedium,
                                       ),
                                     )
@@ -130,12 +130,12 @@ class SettingScreen extends StatelessWidget {
                                 SizedBox(height: 9.v),
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.setting_notification,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath:
+                                    //       ImageConstant.setting_notification,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: 36.h,
@@ -152,11 +152,11 @@ class SettingScreen extends StatelessWidget {
                                 SizedBox(height: 9.v),
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath: ImageConstant.setting_privacy,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath: ImageConstant.setting_privacy,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: 36.h,
@@ -179,7 +179,7 @@ class SettingScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 10.h),
                           child: Text(
-                            "Cache & cellular",
+                            "Cache & Cellular",
                             style: theme.textTheme.titleMedium,
                           ),
                         ),
@@ -203,12 +203,12 @@ class SettingScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.setting_free_space,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath:
+                                    //       ImageConstant.setting_free_space,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Opacity(
                                       opacity: 0.9,
                                       child: Padding(
@@ -217,9 +217,8 @@ class SettingScreen extends StatelessWidget {
                                           top: 5.v,
                                         ),
                                         child: Text(
-                                          "Free up space",
-                                          style: CustomTextStyles
-                                              .titleMediumPrimary,
+                                          "Free Up Space",
+                                          style: theme.textTheme.titleMedium,
                                         ),
                                       ),
                                     )
@@ -228,12 +227,12 @@ class SettingScreen extends StatelessWidget {
                                 SizedBox(height: 9.v),
                                 Row(
                                   children: [
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.setting_datasaver,
-                                      height: 30.adaptSize,
-                                      width: 30.adaptSize,
-                                    ),
+                                    // CustomImageView(
+                                    //   imagePath:
+                                    //       ImageConstant.setting_datasaver,
+                                    //   height: 30.adaptSize,
+                                    //   width: 30.adaptSize,
+                                    // ),
                                     Opacity(
                                       opacity: 0.9,
                                       child: Padding(
@@ -244,8 +243,7 @@ class SettingScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           "Data Saver",
-                                          style: CustomTextStyles
-                                              .titleMediumPrimary,
+                                          style: theme.textTheme.titleMedium,
                                         ),
                                       ),
                                     )
@@ -266,17 +264,17 @@ class SettingScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomAppBarWidget(),
-        floatingActionButton: CustomFloatingButton(
-          height: 64,
-          width: 64,
-          alignment: Alignment.topCenter,
-          child: CustomImageView(
-            svgPath: ImageConstant.imgLocation,
-            height: 32.0.v,
-            width: 32.0.h,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: CustomFloatingButton(
+        //   height: 64,
+        //   width: 64,
+        //   alignment: Alignment.topCenter,
+        //   child: CustomImageView(
+        //     svgPath: ImageConstant.imgLocation,
+        //     height: 32.0.v,
+        //     width: 32.0.h,
+        //   ),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
@@ -312,11 +310,11 @@ class SettingScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.setting_subscription,
-                      height: 30.adaptSize,
-                      width: 30.adaptSize,
-                    ),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.setting_subscription,
+                    //   height: 30.adaptSize,
+                    //   width: 30.adaptSize,
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(
                         left: 35.h,
@@ -332,11 +330,11 @@ class SettingScreen extends StatelessWidget {
                 SizedBox(height: 9.v),
                 Row(
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.setting_help,
-                      height: 30.adaptSize,
-                      width: 30.adaptSize,
-                    ),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.setting_help,
+                    //   height: 30.adaptSize,
+                    //   width: 30.adaptSize,
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(
                         left: 36.h,
@@ -354,11 +352,11 @@ class SettingScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 91.h),
                   child: Row(
                     children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.setting_terms,
-                        height: 30.adaptSize,
-                        width: 30.adaptSize,
-                      ),
+                      // CustomImageView(
+                      //   imagePath: ImageConstant.setting_terms,
+                      //   height: 30.adaptSize,
+                      //   width: 30.adaptSize,
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(
                           left: 36.h,
@@ -411,11 +409,11 @@ class SettingScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.setting_reportspam,
-                      height: 30.adaptSize,
-                      width: 30.adaptSize,
-                    ),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.setting_reportspam,
+                    //   height: 30.adaptSize,
+                    //   width: 30.adaptSize,
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(
                         left: 36.h,
@@ -431,11 +429,11 @@ class SettingScreen extends StatelessWidget {
                 SizedBox(height: 9.v),
                 Row(
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.setting_addaccount,
-                      height: 30.adaptSize,
-                      width: 30.adaptSize,
-                    ),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.setting_addaccount,
+                    //   height: 30.adaptSize,
+                    //   width: 30.adaptSize,
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(
                         left: 36.h,
@@ -455,11 +453,11 @@ class SettingScreen extends StatelessWidget {
 
                   child: Row(
                     children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.setting_logout,
-                        height: 30.adaptSize,
-                        width: 30.adaptSize,
-                      ),
+                      // CustomImageView(
+                      //   imagePath: ImageConstant.setting_logout,
+                      //   height: 30.adaptSize,
+                      //   width: 30.adaptSize,
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(
                           left: 36.h,
@@ -555,16 +553,16 @@ class SettingScreen extends StatelessWidget {
                 ),
               ),
             ),
-            CustomFloatingButton(
-              height: 64,
-              width: 64,
-              alignment: Alignment.topCenter,
-              child: CustomImageView(
-                svgPath: ImageConstant.imgLocation,
-                height: 32.0.v,
-                width: 32.0.h,
-              ),
-            )
+            // CustomFloatingButton(
+            //   height: 64,
+            //   width: 64,
+            //   alignment: Alignment.topCenter,
+            //   child: CustomImageView(
+            //     svgPath: ImageConstant.imgLocation,
+            //     height: 32.0.v,
+            //     width: 32.0.h,
+            //   ),
+            // )
           ],
         ),
       ),

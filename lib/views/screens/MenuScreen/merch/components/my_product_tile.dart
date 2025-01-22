@@ -29,13 +29,13 @@ class ProductTile extends StatelessWidget {
           children: [
             // product image
             SizedBox(
-              height: 340,
+              height: MediaQuery.of(context).size.height * 0.3,
               child: Stack(
                 children: [
                   ClipPath(
                     clipper: mClipper(),
                     child: Container(
-                      height: 350,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       width: double.infinity,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
@@ -58,8 +58,8 @@ class ProductTile extends StatelessWidget {
                             width: double.infinity,
                             // fit: BoxFit.fill,
                             errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.broken_image,
-                                  size: 100, color: Colors.grey);
+                              return Icon(Icons.broken_image,
+                                  size: MediaQuery.of(context).size.height * 0.2, color: Colors.grey);
                             },
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
@@ -99,32 +99,32 @@ class ProductTile extends StatelessWidget {
             ),
             Text(
               "${productModel.name}",
-              style: const TextStyle(
-                  fontSize: 20,
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
             ),
             Text(
               "Price: \$${productModel.price}",
-              style: const TextStyle(fontSize: 16, color: Colors.black87),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.026, color: Colors.black87),
             ),
 
             Text(
               "reviews ${productModel.reviews}",
-              style: const TextStyle(fontSize: 16, color: Colors.black),
+              style:  TextStyle(fontSize: MediaQuery.of(context).size.height * 0.026, color: Colors.black),
             ),
             Row(
               children: [
                 Text(
                   "${productModel.rating}",
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  style:  TextStyle(fontSize: MediaQuery.of(context).size.height * 0.026, color: Colors.black87),
                 ),
                 const SizedBox(
                   width: 6,
                 ),
-                const Icon(
+                 Icon(
                   Icons.star,
-                  size: 16,
+                  size: MediaQuery.of(context).size.height * 0.026,
                   color: Colors.amber,
                 ),
               ],

@@ -120,16 +120,17 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                 const SizedBox(height: 25),
                 Center(
                   child: Text(
-                    "Popular premium products",
+                    "Popular Premium Products",
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 14,
+                      fontWeight: FontWeight.bold
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.65,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: provider.searchedProducts.length,

@@ -20,6 +20,7 @@ class ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print("userdata from activity page: ${userData}");
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -31,10 +32,11 @@ class ActivityScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Padding(
+              Align(alignment: Alignment.topLeft,
+              child: Padding(
                 padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 9.v,
+                  // top: 5.v,
+                  // bottom: 9.v,
                 ),
                 child: CustomIconButton(
                   height: 32.adaptSize,
@@ -51,54 +53,56 @@ class ActivityScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              ),
               Stack(
                 children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgWhatsappImage20230313,
-                    height: 100.adaptSize,
-                    width: 100.adaptSize,
-                    radius: BorderRadius.circular(
-                      50.h,
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: CustomIconButton(
-                      height: 32.adaptSize,
-                      width: 32.adaptSize,
-                      alignment: Alignment.centerRight,
-                      onTap: () {
-                        onTapBtnEdit(context);
-                      },
-                      padding_f: EdgeInsets.all(8.h),
+                  // CustomImageView(
+                  //   imagePath: ImageConstant.imgWhatsappImage20230313,
+                  //   height: 100.adaptSize,
+                  //   width: 100.adaptSize,
+                  //   radius: BorderRadius.circular(
+                  //     50.h,
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   right: 0,
+                  //   bottom: 0,
+                  //   child: CustomIconButton(
+                  //     height: 32.adaptSize,
+                  //     width: 32.adaptSize,
+                  //     alignment: Alignment.centerRight,
+                  //     onTap: () {
+                  //       onTapBtnEdit(context);
+                  //     },
+                  //     padding_f: EdgeInsets.all(8.h),
                       // decoration: IconButtonStyleHelper.fillPrimary,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.editIcon,
-                        height: 28.adaptSize,
-                        width: 28.adaptSize,
-                      ),
-                    ),
-                  ),
+                      // child: CustomImageView(
+                      //   imagePath: ImageConstant.editIcon,
+                      //   height: 28.adaptSize,
+                      //   width: 28.adaptSize,
+                      // ),
+                  //   ),
+                  // ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 141.h),
-                child: CustomIconButton(
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
-                  padding_f: EdgeInsets.all(8.h),
-                  alignment: Alignment.centerRight,
-                  child: CustomImageView(
-                    svgPath: ImageConstant.imgEdit,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(right: 141.h),
+              //   child: CustomIconButton(
+              //     height: 32.adaptSize,
+              //     width: 32.adaptSize,
+              //     padding_f: EdgeInsets.all(8.h),
+              //     alignment: Alignment.centerRight,
+              //     child: CustomImageView(
+              //       svgPath: ImageConstant.imgEdit,
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 2.v),
               Text(
-                ' Hello ${userData['firstName']}!',
+                'Hello ${userData['fullName'] ?? 'User'}!',
                 overflow: TextOverflow.clip,
-                style: CustomTextStyles.headlineSmallSemiBold,
+                style: TextStyle(fontSize: 16, color: Colors.black),
+                // style: CustomTextStyles.headlineSmallSemiBold,
               ),
               SizedBox(height: 15.v),
               _buildCardOne(context),
@@ -117,7 +121,7 @@ class ActivityScreen extends StatelessWidget {
         //     width: 32.0.h,
         //   ),
         // ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
@@ -139,18 +143,18 @@ class ActivityScreen extends StatelessWidget {
       leadingWidth: 64.h,
       leading: AppbarLeadingIconbutton(
         imagePath: ImageConstant.imgArrowLeft,
-        margin: EdgeInsets.only(
-          left: 32.h,
-          top: 9.v,
-          bottom: 14.v,
-        ),
+        // margin: EdgeInsets.only(
+        //   left: MediaQuery.of(context).size.width * 0.08,
+        //   top: MediaQuery.of(context).size.height * 0.7,
+        //   // bottom: 14.v,
+        // ),
         onTap: () {
           onTapArrowleftone(context);
         },
       ),
       title: AppbarTitle(
         text: "Activity",
-        margin: EdgeInsets.only(left: 32.h),
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.7),
       ),
       height: 1,
     );
@@ -164,15 +168,15 @@ class ActivityScreen extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgCardPerformance,
-            height: 369.v,
-            width: 387.h,
-            radius: BorderRadius.circular(
-              25.h,
-            ),
-            alignment: Alignment.center,
-          ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgCardPerformance,
+          //   height: 369.v,
+          //   width: 387.h,
+          //   radius: BorderRadius.circular(
+          //     25.h,
+          //   ),
+          //   alignment: Alignment.center,
+          // ),
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
@@ -190,23 +194,26 @@ class ActivityScreen extends StatelessWidget {
                     children: [
                       Text(
                         "Weekly report".toUpperCase(),
-                        style: CustomTextStyles.labelSmallBold,
+                        // style: CustomTextStyles.labelSmallBold,
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       Text(
                         "21/06/2020 – 27/06/2020".toUpperCase(),
-                        style:
-                            CustomTextStyles.bodySmallOpenSansOnErrorContainer,
+                        // style: CustomTextStyles.bodySmallOpenSansOnErrorContainer,
+                        style: TextStyle(color: Colors.black),
                       )
                     ],
                   ),
                   SizedBox(height: 29.v),
                   Text(
                     "YOUR performance".toUpperCase(),
-                    style: theme.textTheme.bodyMedium,
+                    // style: theme.textTheme.bodyMedium,
+                    style: TextStyle(color: Colors.black),
                   ),
                   Text(
                     "10% growth".toUpperCase(),
-                    style: CustomTextStyles.headlineSmallOnErrorContainer,
+                    // style: CustomTextStyles.headlineSmallOnErrorContainer,
+                    style: TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -223,28 +230,29 @@ class ActivityScreen extends StatelessWidget {
                 ),
                 child: Text(
                   "Ludimos © all rights reserved".toUpperCase(),
-                  style: CustomTextStyles.openSansOnErrorContainer,
+                  // style: CustomTextStyles.openSansOnErrorContainer,
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
           ),
-          CustomImageView(
-            imagePath: ImageConstant.imgImage60,
-            height: 16.v,
-            width: 58.h,
-            alignment: Alignment.topRight,
-            margin: EdgeInsets.only(
-              top: 18.v,
-              right: 34.h,
-            ),
-          ),
-          CustomImageView(
-            svgPath: ImageConstant.imgVectorOnerrorcontainer,
-            height: 68.v,
-            width: 156.h,
-            alignment: Alignment.centerLeft,
-            margin: EdgeInsets.only(left: 26.h),
-          ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgImage60,
+          //   height: 16.v,
+          //   width: 58.h,
+          //   alignment: Alignment.topRight,
+          //   margin: EdgeInsets.only(
+          //     top: 18.v,
+          //     right: 34.h,
+          //   ),
+          // ),
+          // CustomImageView(
+          //   svgPath: ImageConstant.imgVectorOnerrorcontainer,
+          //   height: 68.v,
+          //   width: 156.h,
+          //   alignment: Alignment.centerLeft,
+          //   margin: EdgeInsets.only(left: 26.h),
+          // ),
           Align(
             alignment: Alignment.topLeft,
             child: Container(
@@ -265,29 +273,29 @@ class ActivityScreen extends StatelessWidget {
               ),
             ),
           ),
-          CustomImageView(
-            imagePath: ImageConstant.imgVector78x39,
-            height: 78.v,
-            width: 39.h,
-            radius: BorderRadius.circular(
-              19.h,
-            ),
-            alignment: Alignment.topLeft,
-            margin: EdgeInsets.only(
-              left: 57.h,
-              top: 123.v,
-            ),
-          ),
-          CustomImageView(
-            imagePath: ImageConstant.imgMaskGroup,
-            height: 110.v,
-            width: 136.h,
-            alignment: Alignment.topRight,
-            margin: EdgeInsets.only(
-              top: 29.v,
-              right: 26.h,
-            ),
-          ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgVector78x39,
+          //   height: 78.v,
+          //   width: 39.h,
+          //   radius: BorderRadius.circular(
+          //     19.h,
+          //   ),
+          //   alignment: Alignment.topLeft,
+          //   margin: EdgeInsets.only(
+          //     left: 57.h,
+          //     top: 123.v,
+          //   ),
+          // ),
+          // CustomImageView(
+          //   imagePath: ImageConstant.imgMaskGroup,
+          //   height: 110.v,
+          //   width: 136.h,
+          //   alignment: Alignment.topRight,
+          //   margin: EdgeInsets.only(
+          //     top: 29.v,
+          //     right: 26.h,
+          //   ),
+          // ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -305,7 +313,8 @@ class ActivityScreen extends StatelessWidget {
                     children: [
                       Text(
                         "50".toUpperCase(),
-                        style: theme.textTheme.labelMedium,
+                        // style: theme.textTheme.labelMedium,
+                        style: TextStyle(color: Colors.black),
                       ),
                       Expanded(
                         child: Padding(
@@ -332,12 +341,14 @@ class ActivityScreen extends StatelessWidget {
                           children: [
                             Text(
                               "10".toUpperCase(),
-                              style: theme.textTheme.labelMedium,
+                              // style: theme.textTheme.labelMedium,
+                              style: TextStyle(color: Colors.black),
                             ),
                             SizedBox(height: 20.v),
                             Text(
                               "2".toUpperCase(),
-                              style: theme.textTheme.labelMedium,
+                              // style: theme.textTheme.labelMedium,
+                              style: TextStyle(color: Colors.black),
                             )
                           ],
                         ),
@@ -377,24 +388,27 @@ class ActivityScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   "21 July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
                                                 ),
                                                 Spacer(
                                                   flex: 50,
                                                 ),
                                                 Text(
                                                   "23 July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
                                                 ),
                                                 Spacer(
                                                   flex: 49,
                                                 ),
                                                 Text(
                                                   "27July",
-                                                  style: theme
-                                                      .textTheme.labelSmall,
+                                                  // style: theme.textTheme.labelSmall,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
                                                 )
                                               ],
                                             ),
@@ -402,29 +416,29 @@ class ActivityScreen extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Container(
-                                        height: 70.v,
-                                        width: 176.h,
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10.v),
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: fs.Svg(
-                                              ImageConstant.imgGroup58,
-                                            ),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        child: CustomImageView(
-                                          svgPath: ImageConstant.imgPath2,
-                                          height: 45.v,
-                                          width: 134.h,
-                                          alignment: Alignment.bottomLeft,
-                                        ),
-                                      ),
-                                    )
+                                    // Align(
+                                    //   alignment: Alignment.topLeft,
+                                    //   child: Container(
+                                    //     height: 70.v,
+                                    //     width: 176.h,
+                                    //     padding: EdgeInsets.symmetric(
+                                    //         vertical: 10.v),
+                                    //     decoration: BoxDecoration(
+                                          // image: DecorationImage(
+                                          //   image: fs.Svg(
+                                          //     ImageConstant.imgGroup58,
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                    //     ),
+                                    //     child: CustomImageView(
+                                    //       svgPath: ImageConstant.imgPath2,
+                                    //       height: 45.v,
+                                    //       width: 134.h,
+                                    //       alignment: Alignment.bottomLeft,
+                                    //     ),
+                                    //   ),
+                                    // )
                                   ],
                                 ),
                               )
@@ -455,21 +469,21 @@ class ActivityScreen extends StatelessWidget {
                     child: SizedBox(
                       height: 78.adaptSize,
                       width: 78.adaptSize,
-                      child: CircularProgressIndicator(
-                        value: 0.5,
-                        strokeWidth: 4.h,
-                      ),
+                      // child: CircularProgressIndicator(
+                      //   value: 0.5,
+                      //   strokeWidth: 4.h,
+                      // ),
                     ),
                   ),
-                  CustomImageView(
-                    imagePath: ImageConstant.imgVector78x66,
-                    height: 78.v,
-                    width: 66.h,
-                    radius: BorderRadius.circular(
-                      22.h,
-                    ),
-                    alignment: Alignment.centerRight,
-                  )
+                  // CustomImageView(
+                  //   imagePath: ImageConstant.imgVector78x66,
+                  //   height: 78.v,
+                  //   width: 66.h,
+                  //   radius: BorderRadius.circular(
+                  //     22.h,
+                  //   ),
+                  //   alignment: Alignment.centerRight,
+                  // )
                 ],
               ),
             ),

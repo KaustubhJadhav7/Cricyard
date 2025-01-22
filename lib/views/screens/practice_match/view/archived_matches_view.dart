@@ -251,7 +251,7 @@ class _archivedMatchesViewState extends State<archivedMatchesView> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
