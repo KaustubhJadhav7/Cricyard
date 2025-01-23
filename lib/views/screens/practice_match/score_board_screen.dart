@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cricyard/views/screens/practice_match/view/widget/expandable_container.dart';
 import 'package:cricyard/views/screens/practice_match/view/widget/overs_container.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -74,6 +76,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
 
   Future<Uint8List> generateScoreBoardPdf() async {
     final pdf = pw.Document();
+    final font = await PdfGoogleFonts.robotoRegular();
+    print('scoreBoardData : ${scoreBoardData}');
 
     pdf.addPage(
       pw.Page(
@@ -81,7 +85,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
           return pw.Column(
             children: [
               pw.Text("${widget.team1} vs ${widget.team2} Scoreboard",
-                  style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 20)),
+                  style: pw.TextStyle(font: font, fontSize: 20)),
               pw.SizedBox(height: 10),
               for (var data in scoreBoardData)
                 pw.Column(
@@ -91,7 +95,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                       padding: const pw.EdgeInsets.all(8.0),
                       decoration: pw.BoxDecoration(color: PdfColors.blue),
                       child: pw.Text(
-                        '${data['name']} - ${data['totalRuns']}/${data['totalWkts']} (${data['overCount']})',
+                        '${data['name'] ?? 'Unknown Team'} - ${data['totalRuns'] ?? 0}/${data['totalWkts'] ?? 0} (${data['overCount'] ?? '0.0'})',
                         style:
                             pw.TextStyle(color: PdfColors.white, fontSize: 16),
                       ),
@@ -117,8 +121,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                               ],
                             ),
                           ),
-                          for (var player in data['players']
-                              .where((p) => p['player_type'] == 'Batsman'))
+                          for (var player in data['players'].where((p) =>
+                              p != null && p['player_type'] == 'Batsman'))
                             pw.Container(
                               color: PdfColors.grey200,
                               child: pw.Row(
@@ -127,29 +131,35 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                                 children: [
                                   pw.Container(
                                       width: 100,
-                                      child: pw.Text(player['player_name'])),
+                                      child: pw.Text(player['player_name'] ??
+                                          'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
-                                          player['total_run'].toString())),
+                                          player['total_run'].toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
-                                          player['total_ball'].toString())),
+                                          player['total_ball'].toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_four']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(player['current_match_six']
-                                          .toString())),
+                                              .toString() ??
+                                          'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_strike_rate']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                 ],
                               ),
                             ),
@@ -169,8 +179,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                               ],
                             ),
                           ),
-                          for (var player in data['players']
-                              .where((p) => p['player_type'] == 'Baller'))
+                          for (var player in data['players'].where(
+                              (p) => p != null && p['player_type'] == 'Baller'))
                             pw.Container(
                               color: PdfColors.grey200,
                               child: pw.Row(
@@ -179,17 +189,20 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                                 children: [
                                   pw.Container(
                                       width: 100,
-                                      child: pw.Text(player['player_name'])),
+                                      child: pw.Text(player['player_name'] ??
+                                          'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_over']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_maidan_over']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(player['current_match_run']
@@ -198,12 +211,14 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_wicket']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                   pw.Container(
                                       width: 40,
                                       child: pw.Text(
                                           player['current_match_economy_rate']
-                                              .toString())),
+                                                  .toString() ??
+                                              'Unknown Name')),
                                 ],
                               ),
                             ),
@@ -219,13 +234,32 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
     );
 
     return pdf.save();
+
+    
   }
 
   Future<void> generateAndDownloadPdf() async {
-    final pdfData = await generateScoreBoardPdf();
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdfData,
+    try {
+      final pdfData = await generateScoreBoardPdf();
+      // await savePdfLocally(pdfData);
+      await Printing.sharePdf(
+      bytes: pdfData,
+      filename: 'scoreboard.pdf',
     );
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdfData,
+      );
+    } catch (e) {
+      print("Error generating or downloading PDF: $e");
+    }
+  }
+
+  Future<void> savePdfLocally(Uint8List pdfData) async {
+    final directory = await getApplicationDocumentsDirectory();
+    print('directory: $directory');
+    final file = File('${directory.path}/scoreboard.pdf');
+    await file.writeAsBytes(pdfData);
+    print("PDF saved at: ${file.path}");
   }
 
   @override

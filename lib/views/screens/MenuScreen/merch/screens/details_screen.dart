@@ -187,7 +187,7 @@ class DetailsScreen extends StatelessWidget {
                       backgroundColor:
                           MaterialStatePropertyAll(Color(0xFF219ebc))),
                   child: Text(
-                    "Add to cart",
+                    "Add to Cart",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: MediaQuery.of(context).size.height * 0.03),

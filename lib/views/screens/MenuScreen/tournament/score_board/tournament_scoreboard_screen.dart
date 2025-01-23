@@ -97,7 +97,7 @@ class _TournamentScoreBoardScreenState extends State<TournamentScoreBoardScreen>
           return pw.Column(
             children: [
               pw.Text("${widget.team1} vs ${widget.team2} Scoreboard",
-                  style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 20)),
+                  style: pw.TextStyle(fontSize: 20)),
               pw.SizedBox(height: 10),
               for (var data in scoreBoardData)
                 pw.Column(

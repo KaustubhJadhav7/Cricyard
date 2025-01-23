@@ -82,7 +82,7 @@ class feedbackScreen extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 20.h),
                                   child: Text(
-                                    "Feedback form",
+                                    "Feedback Form",
                                     style: CustomTextStyles
                                         .headlineLargePoppinsBlack900,
                                   ),

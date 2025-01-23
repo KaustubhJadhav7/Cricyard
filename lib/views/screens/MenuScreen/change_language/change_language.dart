@@ -1,4 +1,5 @@
 import 'package:cricyard/core/app_export.dart';
+import 'package:cricyard/views/screens/ReuseableWidgets/BottomAppBarWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 
@@ -16,7 +17,33 @@ class ChangeLanguageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
+        appBar: AppBar(
+        title: Text(
+          "Change Language",
+          style: theme.textTheme.headlineLarge,
+        ),
+        leading:GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color:const Color(0xFF219ebc),
+                  borderRadius: BorderRadius.circular(12)),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        
+      ),
+        body: SingleChildScrollView(
+        child: SizedBox(
           width: double.maxFinite,
           child: Column(
             children: [
@@ -51,19 +78,21 @@ class ChangeLanguageScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomAppBarSearch(context),
-        floatingActionButton: CustomFloatingButton(
-          height: 64,
-          width: 64,
-          alignment: Alignment.topCenter,
-          child: CustomImageView(
-            imagePath: ImageConstant.imgLocation,
-            height: 32.0.v,
-            width: 32.0.h,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // bottomNavigationBar: _buildBottomAppBarSearch(context),
+        // floatingActionButton: CustomFloatingButton(
+        //   height: 64,
+        //   width: 64,
+        //   alignment: Alignment.topCenter,
+        //   child: CustomImageView(
+        //     imagePath: ImageConstant.imgLocation,
+        //     height: 32.0.v,
+        //     width: 32.0.h,
+        //   ),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
+        bottomNavigationBar: BottomAppBarWidget(),
+      )
     );
   }
 
@@ -75,8 +104,22 @@ class ChangeLanguageScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Padding(
+          //     padding: EdgeInsets.only(top: 9.v, bottom: 6.v),
+          //     child: CustomIconButton(
+          //       height: 32.adaptSize,
+          //       width: 32.adaptSize,
+          //       decoration: IconButtonStyleHelper.outlineIndigo,
+          //       onTap: () {
+          //         Navigator.pop(context);
+          //       },
+          //       child: CustomImageView(
+          //         svgPath: ImageConstant.imgArrowleft,
+          //       ),
+          //     ),
+          //   ),
           CustomImageView(
-            imagePath: ImageConstant.imgTelevision,
+            svgPath: ImageConstant.imgTelevision,
             height: 24.adaptSize,
             width: 24.adaptSize,
             margin: EdgeInsets.only(
@@ -84,16 +127,16 @@ class ChangeLanguageScreen extends StatelessWidget {
               bottom: 8.v,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 24.h),
-            child: Text(
-              "Change Language",
-              style: theme.textTheme.headlineSmall,
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(left: 24.h),
+          //   child: Text(
+          //     "Change Language",
+          //     style: theme.textTheme.headlineSmall,
+          //   ),
+          // ),
           Spacer(),
           CustomImageView(
-            imagePath: ImageConstant.imgTelevisionErrorcontainer,
+            svgPath: ImageConstant.imgTelevisionErrorcontainer,
             height: 24.adaptSize,
             width: 24.adaptSize,
             margin: EdgeInsets.only(
@@ -111,9 +154,9 @@ class ChangeLanguageScreen extends StatelessWidget {
               height: 24.adaptSize,
               width: 24.adaptSize,
               decoration: IconButtonStyleHelper.fillErrorContainer,
-              child: CustomImageView(
-                imagePath: ImageConstant.imgVector,
-              ),
+              // child: CustomImageView(
+              //   imagePath: ImageConstant.imgVector,
+              // ),
             ),
           )
         ],
@@ -124,7 +167,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildMarathiButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Marathiमराठी",
+      text: "Marathi मराठी",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -135,7 +178,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildTeluguButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Telugu",
+      text: "Telugu తెలుగు",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -146,7 +189,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildTamilButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Tamil",
+      text: "Tamil தமிழ்",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -157,7 +200,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildKannadaButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Kannada",
+      text: "Kannada ಕನ್ನಡ",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -168,7 +211,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildGujratiButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Gujrati",
+      text: "Gujrati ગુજરાતી",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -179,7 +222,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildHindiButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Hindi",
+      text: "Hindi हिंदी",
       margin: EdgeInsets.only(
         left: 32.h,
         right: 31.h,
@@ -190,7 +233,7 @@ class ChangeLanguageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildBengaliButton(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Bengali",
+      text: "Bangla বাংলা",
       margin: EdgeInsets.only(
         left: 29.h,
         right: 34.h,
@@ -210,92 +253,92 @@ class ChangeLanguageScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomAppBarSearch(BuildContext context) {
-    return SizedBox(
-      child: SizedBox(
-        height: 115.v,
-        width: 409.h,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 409.h,
-                margin: EdgeInsets.only(top: 35.v),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 13.h,
-                  vertical: 15.v,
-                ),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: fs.Svg(
-                      ImageConstant.imgGroup94,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomIconButton(
-                      height: 50.adaptSize,
-                      width: 50.adaptSize,
-                      padding_f: EdgeInsets.all(13.h),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgSearch,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 27.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(12.h),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgBxCricketBall,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 123.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(12.h),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgFluentLive24Filled,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 26.h),
-                      child: CustomIconButton(
-                        height: 50.adaptSize,
-                        width: 50.adaptSize,
-                        padding_f: EdgeInsets.all(10.h),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgNotification,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            CustomFloatingButton(
-              height: 64,
-              width: 64,
-              alignment: Alignment.topCenter,
-              child: CustomImageView(
-                imagePath: ImageConstant.imgLocation,
-                height: 32.0.v,
-                width: 32.0.h,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildBottomAppBarSearch(BuildContext context) {
+  //   return SizedBox(
+  //     child: SizedBox(
+  //       height: 115.v,
+  //       width: 409.h,
+  //       child: Stack(
+  //         alignment: Alignment.topCenter,
+  //         children: [
+  //           Align(
+  //             alignment: Alignment.bottomCenter,
+  //             child: Container(
+  //               width: 409.h,
+  //               margin: EdgeInsets.only(top: 35.v),
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: 13.h,
+  //                 vertical: 15.v,
+  //               ),
+  //               // decoration: BoxDecoration(
+  //               //   image: DecorationImage(
+  //               //     image: fs.Svg(
+  //               //       ImageConstant.imgGroup94,
+  //               //     ),
+  //               //     fit: BoxFit.cover,
+  //               //   ),
+  //               // ),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: [
+  //                   CustomIconButton(
+  //                     height: 50.adaptSize,
+  //                     width: 50.adaptSize,
+  //                     padding_f: EdgeInsets.all(13.h),
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgSearch,
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 27.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(12.h),
+  //                       child: CustomImageView(
+  //                         imagePath: ImageConstant.imgBxCricketBall,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 123.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(12.h),
+  //                       child: CustomImageView(
+  //                         imagePath: ImageConstant.imgFluentLive24Filled,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(left: 26.h),
+  //                     child: CustomIconButton(
+  //                       height: 50.adaptSize,
+  //                       width: 50.adaptSize,
+  //                       padding_f: EdgeInsets.all(10.h),
+  //                       child: CustomImageView(
+  //                         imagePath: ImageConstant.imgNotification,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           // CustomFloatingButton(
+  //           //   height: 64,
+  //           //   width: 64,
+  //           //   alignment: Alignment.topCenter,
+  //           //   child: CustomImageView(
+  //           //     imagePath: ImageConstant.imgLocation,
+  //           //     height: 32.0.v,
+  //           //     width: 32.0.h,
+  //           //   ),
+  //           // )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
