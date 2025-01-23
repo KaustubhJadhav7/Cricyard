@@ -10,12 +10,13 @@ class OversContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 10),
         const Divider(color: Colors.grey,),
         Row(
           children: [
             Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.2,
                 color: Colors.grey[300],
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -23,7 +24,7 @@ class OversContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Ov $overNumber", style: GoogleFonts.getFont('Poppins', color: Colors.black, fontSize: 14),),
+                      Text("Over $overNumber", style: GoogleFonts.getFont('Poppins', color: Colors.black, fontSize: 14),),
                       Text("${data['totalRun']} Runs", style: GoogleFonts.getFont('Poppins', color: Colors.grey, fontSize: 14),),
                     ],
                   ),
@@ -33,7 +34,7 @@ class OversContainer extends StatelessWidget {
             Expanded(
               flex: 5,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.2,
                 color: Colors.grey[300],
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
@@ -83,7 +84,7 @@ class OversContainer extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 3.0),
       child: Container(
         height: 25,
         width: 25,

@@ -234,8 +234,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
     );
 
     return pdf.save();
-
-    
   }
 
   Future<void> generateAndDownloadPdf() async {
@@ -243,9 +241,9 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen>
       final pdfData = await generateScoreBoardPdf();
       // await savePdfLocally(pdfData);
       await Printing.sharePdf(
-      bytes: pdfData,
-      filename: 'scoreboard.pdf',
-    );
+        bytes: pdfData,
+        filename: 'scoreboard.pdf',
+      );
       await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async => pdfData,
       );

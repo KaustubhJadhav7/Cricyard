@@ -385,6 +385,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../PracticeMatchScoreScreen.dart';
 import 'package:cricyard/views/screens/practice_match/PracticeMatchService.dart';
+
 final PracticeMatchService scoreservice = PracticeMatchService();
 
 class SecondInningPlayerEntryView extends StatefulWidget {
@@ -392,9 +393,8 @@ class SecondInningPlayerEntryView extends StatefulWidget {
   final Map<String, dynamic> match;
   final int battingTeamId;
   final int bowlingTeamId;
-  
-//   final PracticeMatchService scoreservice = PracticeMatchService();
 
+//   final PracticeMatchService scoreservice = PracticeMatchService();
 
   const SecondInningPlayerEntryView(
       {super.key,
@@ -429,11 +429,13 @@ class _SecondInningPlayerEntryViewState
   }
 
   Future<void> fetchPlayers() async {
-    final battingPlayers = await Provider.of<PracticeMatchviewModel>(context, listen: false)
-        .getAllPlayersInTeam(widget.battingTeamId);
+    final battingPlayers =
+        await Provider.of<PracticeMatchviewModel>(context, listen: false)
+            .getAllPlayersInTeam(widget.battingTeamId);
 
-    final bowlingPlayers = await Provider.of<PracticeMatchviewModel>(context, listen: false)
-        .getAllPlayersInTeam(widget.bowlingTeamId);
+    final bowlingPlayers =
+        await Provider.of<PracticeMatchviewModel>(context, listen: false)
+            .getAllPlayersInTeam(widget.bowlingTeamId);
 
     setState(() {
       battingTeamPlayers = battingPlayers;
@@ -452,9 +454,20 @@ class _SecondInningPlayerEntryViewState
   }
 
   void _startMatch() async {
-    if (_strikerController.text.isEmpty ||
-        _nonStrikerController.text.isEmpty ||
-        _bowlerController.text.isEmpty) {
+    final striker = _strikerController.text.trim();
+    final nonStriker = _nonStrikerController.text.trim();
+    final bowler = _bowlerController.text.trim();
+    // if (_strikerController.text.isEmpty ||
+    //     _nonStrikerController.text.isEmpty ||
+    //     _bowlerController.text.isEmpty) {
+    //   showSnackBar(context, 'Fields cannot be empty', Colors.red);
+    //   return;
+    // }
+    print("Striker: $striker");
+    print("Non-Striker: $nonStriker");
+    print("Bowler: $bowler");
+
+    if (striker.isEmpty || nonStriker.isEmpty || bowler.isEmpty) {
       showSnackBar(context, 'Fields cannot be empty', Colors.red);
       return;
     }
@@ -463,25 +476,31 @@ class _SecondInningPlayerEntryViewState
       _isLoading = true;
     });
 
-    await scoreservice
-        .newPlayerEntryInningend(
-      _strikerController.text,
-      _nonStrikerController.text,
-      _bowlerController.text,
-      widget.lastRecord,
-    )
-        .then(
-      (value) => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PracticeMatchScoreScreen(entity: widget.match),
-        ),
-      ),
-    );
-
-    setState(() {
-      _isLoading = false;
-    });
+    try {
+      await scoreservice
+          .newPlayerEntryInningend(
+            _strikerController.text,
+            _nonStrikerController.text,
+            _bowlerController.text,
+            widget.lastRecord,
+          )
+          .then(
+            (value) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    PracticeMatchScoreScreen(entity: widget.match),
+              ),
+            ),
+          );
+    } catch (e) {
+      // Handle errors (e.g., show a snackbar)
+      showSnackBar(context, 'Error starting match: $e', Colors.red);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void showSnackBar(BuildContext context, String msg, Color color) {
@@ -520,8 +539,7 @@ class _SecondInningPlayerEntryViewState
         ),
         title: Text(
           "Select players for 2nd Innings",
-          style:
-              GoogleFonts.poppins(fontSize: 20, color: Colors.black),
+          style: GoogleFonts.poppins(fontSize: 20, color: Colors.black),
         ),
       ),
       body: _buildTextFieldsAndButton(),
@@ -595,19 +613,26 @@ class _SecondInningPlayerEntryViewState
           return data;
         }
         return data.where((String option) {
-          return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+          return option
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
         }).toList();
       },
       onSelected: (String selection) {
         controller.text = selection;
+        print('$label selected: $selection');
       },
       fieldViewBuilder: (BuildContext context,
           TextEditingController textEditingController,
           FocusNode fieldFocusNode,
           VoidCallback onFieldSubmitted) {
+          textEditingController.text = controller.text;
         return TextField(
           controller: textEditingController,
           focusNode: fieldFocusNode,
+          onChanged: (value) {
+          controller.text = value; // Sync controller when text changes
+        },
           decoration: InputDecoration(
             labelText: label,
             border: const UnderlineInputBorder(),

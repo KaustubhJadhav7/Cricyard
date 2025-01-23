@@ -630,7 +630,7 @@ class _PracticeMatchScoreScreenState extends State<PracticeMatchScoreScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.27,
+              height: MediaQuery.of(context).size.height * 0.47,
               width: double.infinity,
               child: Stack(
                 children: [
@@ -643,7 +643,7 @@ class _PracticeMatchScoreScreenState extends State<PracticeMatchScoreScreen> {
                   //   ),
                   // ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.27,
+                    height: MediaQuery.of(context).size.height * 0.37,
                     width: double.infinity,
                     decoration: const BoxDecoration(color: Color(0xFF219ebc)),
                     child: Padding(
@@ -1004,7 +1004,7 @@ class _PracticeMatchScoreScreenState extends State<PracticeMatchScoreScreen> {
 
   Widget _buildPlayerInfo() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.12,
+      height: MediaQuery.of(context).size.height * 0.20,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -1024,7 +1024,7 @@ class _PracticeMatchScoreScreenState extends State<PracticeMatchScoreScreen> {
           children: [
             _buildPlayerName(),
             SizedBox(
-              height: 10.v,
+              height: 5.v,
             ),
             _buildScoreEntryRow(overBalls),
           ],
