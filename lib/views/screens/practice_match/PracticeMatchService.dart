@@ -151,7 +151,6 @@ class PracticeMatchService {
           data: entity);
       // Assuming the response is a Map<String, dynamic>
       Map<String, dynamic> responseData = response.data;
-
       return responseData;
     } catch (e) {
       throw Exception('Failed to create entity: $e');

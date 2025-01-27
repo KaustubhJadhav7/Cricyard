@@ -26,75 +26,77 @@ class GoLiveScreen extends StatelessWidget {
         backgroundColor: appTheme.gray100,
         body: SizedBox(
           width: double.maxFinite,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 17.h,
-                  vertical: 45.v,
-                ),
-                child: Column(
-                  children: [
-                    headerWidget(context, _scaffoldKey),
-                    SizedBox(height: 35.v),
-                    CustomButton(
-                      text: 'Go Live',
-                      onTap: () {
-                        // Closes the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PublishVideoAudioWidget(matchId: 14),
-                          ),
-                        );
-                        // Add your logic for menu 2 here
-                      },
-                    ),
-                    CustomButton(
-                      text: 'view Live',
-                      onTap: () {
-                        // Closes the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StreamVideoWidgetTest(
-                              matchId: 14,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 17.h,
+                    vertical: 45.v,
+                  ),
+                  child: Column(
+                    children: [
+                      headerWidget(context, _scaffoldKey),
+                      SizedBox(height: 35.v),
+                      CustomButton(
+                        text: 'Go Live',
+                        onTap: () {
+                          // Closes the drawer
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PublishVideoAudioWidget(matchId: 14),
                             ),
-                            // builder: (context) => VideoStreamingOnly(),
-                            // builder: (context) => pickvideo(),
-                          ),
-                        );
-                        // Add your logic for menu 2 here
-                      },
-                    ),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgRectangle32,
-                      height: 230.v,
-                      width: 371.h,
-                      radius: BorderRadius.circular(
-                        20.h,
+                          );
+                          // Add your logic for menu 2 here
+                        },
                       ),
-                    ),
-                    SizedBox(height: 26.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 31.h),
-                        child: Text(
-                          "Trending series",
-                          style: theme.textTheme.headlineLarge,
+                      CustomButton(
+                        text: 'view Live',
+                        onTap: () {
+                          // Closes the drawer
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StreamVideoWidgetTest(
+                                matchId: 14,
+                              ),
+                              // builder: (context) => VideoStreamingOnly(),
+                              // builder: (context) => pickvideo(),
+                            ),
+                          );
+                          // Add your logic for menu 2 here
+                        },
+                      ),
+                      CustomImageView(
+                        imagePath: ImageConstant.imgRectangle32,
+                        height: 230.v,
+                        width: 371.h,
+                        radius: BorderRadius.circular(
+                          20.h,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 9.v),
-                    _buildIndianPremimumRow(context),
-                    SizedBox(height: 9.v)
-                  ],
+                      SizedBox(height: 26.v),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 31.h),
+                          child: Text(
+                            "Trending series",
+                            style: theme.textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 9.v),
+                      _buildIndianPremimumRow(context),
+                      SizedBox(height: 9.v)
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 9.v)
-            ],
+                SizedBox(height: 9.v)
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: BottomAppBarWidget(),

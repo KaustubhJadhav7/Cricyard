@@ -20,6 +20,8 @@ class ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     // print("userdata from activity page: ${userData}");
     return SafeArea(
       child: Scaffold(
@@ -27,32 +29,35 @@ class ActivityScreen extends StatelessWidget {
         body: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(
-            horizontal: 20.h,
-            vertical: 22.v,
+            // horizontal: 20.h,
+            // vertical: 22.v,
+            horizontal: screenWidth * 0.05,
+            vertical: screenHeight * 0.02,
           ),
           child: Column(
             children: [
-              Align(alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  // top: 5.v,
-                  // bottom: 9.v,
-                ),
-                child: CustomIconButton(
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
-                  // padding: EdgeInsets.all(3.h),
-                  decoration: IconButtonStyleHelper.outlineIndigo,
-                  onTap: () {
-                    onTapBtnArrowleftone(context);
-                  },
-                  child: CustomImageView(
-                    svgPath: ImageConstant.imgArrowleft,
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      // top: 5.v,
+                      // bottom: 9.v,
+                      ),
+                  child: CustomIconButton(
                     height: 32.adaptSize,
                     width: 32.adaptSize,
+                    // padding: EdgeInsets.all(3.h),
+                    decoration: IconButtonStyleHelper.outlineIndigo,
+                    onTap: () {
+                      onTapBtnArrowleftone(context);
+                    },
+                    child: CustomImageView(
+                      svgPath: ImageConstant.imgArrowleft,
+                      height: 32.adaptSize,
+                      width: 32.adaptSize,
+                    ),
                   ),
                 ),
-              ),
               ),
               Stack(
                 children: [
@@ -75,12 +80,12 @@ class ActivityScreen extends StatelessWidget {
                   //       onTapBtnEdit(context);
                   //     },
                   //     padding_f: EdgeInsets.all(8.h),
-                      // decoration: IconButtonStyleHelper.fillPrimary,
-                      // child: CustomImageView(
-                      //   imagePath: ImageConstant.editIcon,
-                      //   height: 28.adaptSize,
-                      //   width: 28.adaptSize,
-                      // ),
+                  // decoration: IconButtonStyleHelper.fillPrimary,
+                  // child: CustomImageView(
+                  //   imagePath: ImageConstant.editIcon,
+                  //   height: 28.adaptSize,
+                  //   width: 28.adaptSize,
+                  // ),
                   //   ),
                   // ),
                 ],
@@ -101,7 +106,7 @@ class ActivityScreen extends StatelessWidget {
               Text(
                 'Hello ${userData['fullName'] ?? 'User'}!',
                 overflow: TextOverflow.clip,
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.01, color: Colors.black),
                 // style: CustomTextStyles.headlineSmallSemiBold,
               ),
               SizedBox(height: 15.v),
@@ -162,9 +167,13 @@ class ActivityScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildCardOne(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 369.v,
-      width: 387.h,
+      // height: 369.v,
+      // width: 387.h,
+      height: screenHeight * 0.4,
+      width: screenWidth * 0.9,
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
@@ -181,9 +190,15 @@ class ActivityScreen extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Padding(
               padding: EdgeInsets.only(
-                left: 22.h,
-                top: 17.v,
-                right: 195.h,
+                // left: 22.h,
+                // top: 17.v,
+                // right: 195.h,
+                left: MediaQuery.of(context).size.width *
+                    0.06, // 6% of screen width
+                top: MediaQuery.of(context).size.height *
+                    0.02, // 2% of screen height
+                right: MediaQuery.of(context).size.width *
+                    0.5, // 50% of screen width
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -225,13 +240,16 @@ class ActivityScreen extends StatelessWidget {
               opacity: 0.3,
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: 22.v,
-                  right: 17.h,
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  right: MediaQuery.of(context).size.width * 0.04,
                 ),
                 child: Text(
                   "Ludimos © all rights reserved".toUpperCase(),
                   // style: CustomTextStyles.openSansOnErrorContainer,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: MediaQuery.of(context).size.width * 0.015,
+                  ),
                 ),
               ),
             ),
@@ -424,12 +442,12 @@ class ActivityScreen extends StatelessWidget {
                                     //     padding: EdgeInsets.symmetric(
                                     //         vertical: 10.v),
                                     //     decoration: BoxDecoration(
-                                          // image: DecorationImage(
-                                          //   image: fs.Svg(
-                                          //     ImageConstant.imgGroup58,
-                                          //   ),
-                                          //   fit: BoxFit.cover,
-                                          // ),
+                                    // image: DecorationImage(
+                                    //   image: fs.Svg(
+                                    //     ImageConstant.imgGroup58,
+                                    //   ),
+                                    //   fit: BoxFit.cover,
+                                    // ),
                                     //     ),
                                     //     child: CustomImageView(
                                     //       svgPath: ImageConstant.imgPath2,

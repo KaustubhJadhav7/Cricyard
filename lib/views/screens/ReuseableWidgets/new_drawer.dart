@@ -448,7 +448,7 @@ class _NewDrawerState extends State<NewDrawer> {
           print('Invalid image data format');
         }
       } else {
-        print('Failed to load image data: ${response.statusCode}');
+        print('Failed to load image data: ${response.statusCode} : ${response.body}');
       }
       setState(() {
         isLoading = false;
