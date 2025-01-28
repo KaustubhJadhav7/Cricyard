@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cricyard/core/utils/size_utils.dart';
 import 'package:cricyard/views/screens/Login%20Screen/view/decision.dart';
+import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
 import 'package:cricyard/views/screens/main_app_screen/tabbed_layout_component_f.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,57 +19,33 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // var isLogin = false;
-  //
-  // Map<String, dynamic> userData = {};
-  //
-  // Future<void> checkifLogin() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   bool? isLoggedIn = prefs.getBool('isLoggedIn');
-  //   var userdatastr = prefs.getString('userData');
-  //
-  //   if (kDebugMode) {
-  //     print('userData....$userdatastr');
-  //   }
-  //   if (isLoggedIn != null && isLoggedIn) {
-  //     setState(() {
-  //       isLogin = true;
-  //     });
-  //   }
-  //
-  //   if (userdatastr != null) {
-  //     try {
-  //       userData = json.decode(userdatastr);
-  //       if (kDebugMode) {
-  //         print(userData['token']);
-  //       }
-  //     } catch (e) {
-  //       if (kDebugMode) {
-  //         print("error is ..................$e");
-  //       }
-  //     }
-  //   } else {
-  //     setState(() {
-  //       isLogin = false;
-  //     });
-  //   }
-  // }
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Newdashboard(),)));
-    // checkifLogin().then((value) async => {
-    //       Future.delayed(const Duration(seconds: 3), () {
-    //         Navigator.pushReplacement(
-    //           context,
-    //           MaterialPageRoute(
-    //               builder: (context) =>
-    //                   isLogin ? Newdashboard() : const DecisionScreen()),
-    //           // isLogin ? Dashboardcreen() : const LoginScreenF(false)),
-    //         );
-    //       })
-    //     });
+    _checkSportSelection();
+    // Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Newdashboard(),)));
+    // Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SportSelectionScreen())));
+  }
+
+  Future<void> _checkSportSelection() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? selectedSport = prefs.getString('preferred_sport');
+
+    if (selectedSport != null) {
+      // Sport is selected, navigate directly to the dashboard or home screen
+      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Newdashboard()),
+      ));
+    } else {
+      // No sport selected, navigate to the sport selection screen
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => SportSelectionScreen()),
+      // );
+      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SportSelectionScreen())));
+    }
   }
 
   @override
@@ -127,21 +104,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: SingleChildScrollView(
-  //       child: SizedBox(
-  //         width: MediaQuery.of(context).size.width,
-  //         height: MediaQuery.of(context).size.height,
-  //         child: Center(
-  //           child: SvgPicture.asset(
-  //             'assets/images/cloudnsuresp.svg',
-  //             width: 100,
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+
 }

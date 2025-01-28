@@ -3,6 +3,7 @@ import 'dart:typed_data' as typed_data; // Import 'dart:typed_data' with prefix
 
 import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
 import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
+import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,6 +105,22 @@ class _NewDrawerState extends State<NewDrawer> {
                   ),
                 );
               }
+            },
+          ),
+          _createDrawerItem(
+            icon: Icons.sports,
+            text: 'Preferred Sport',
+            onTap: () {
+              // if (isGuest) {
+              //   showLoginAlert(context);
+              // } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SportSelectionScreen(),
+                  ),
+                );
+              // }
             },
           ),
           _createDrawerItem(
