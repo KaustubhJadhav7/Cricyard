@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data' as typed_data; // Import 'dart:typed_data' with prefix
 
 import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
-import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/Scorecard/footballMatchScore.dart';
 import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
 import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
 import 'package:flutter/material.dart';
