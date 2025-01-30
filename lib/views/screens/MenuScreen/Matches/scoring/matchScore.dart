@@ -409,7 +409,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
         winningTeamName = ballingTeam;
         msg = '$ballingTeam won by $winByWicketMargin wickets';
       });
-      print("Team2Wing");
+      print("Team2Win");
     }
   }
 
@@ -1432,6 +1432,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
       children: children.map((child) => Expanded(child: child)).toList(),
     );
   }
+
 
   Widget _newButton(
       BuildContext ctx, String text, int data, String type, Color color) {

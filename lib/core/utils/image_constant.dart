@@ -40,6 +40,8 @@ class ImageConstant {
   static String imgBell = '$imagePath/bell2.png';
   static String imgCricketPlayer = '$imagePath/cricket-player.png';
 
+  static String footballStadium = 'assets/images/footballStadium.png';
+
   static String editIcon = '$imagePath/edit.png';
 
   static String home = '$imagePath/homeIcon1000.svg';
@@ -253,8 +255,7 @@ class ImageConstant {
   static String imgSave = '$imagePath/img_save.svg';
 
 // login Four images
-  static String imgArrowLeftOnprimary32x32 =
-      '$imagePath/img_arrow_left.svg';
+  static String imgArrowLeftOnprimary32x32 = '$imagePath/img_arrow_left.svg';
 
   static String imgTelevisionErrorcontainer =
       '$imagePath/img_television_errorcontainer.svg';

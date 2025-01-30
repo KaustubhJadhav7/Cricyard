@@ -104,6 +104,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/footballStadium.png
     - assets/icon/
     - assets/vectors/
     - assets/fonts/Roboto-Regular.ttf

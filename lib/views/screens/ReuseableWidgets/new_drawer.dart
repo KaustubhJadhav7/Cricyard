@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data' as typed_data; // Import 'dart:typed_data' with prefix
 
 import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
+import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/footballMatchScore.dart';
 import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
 import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,22 @@ class _NewDrawerState extends State<NewDrawer> {
             },
           ),
           _createDrawerItem(
+            icon: Icons.person,
+            text: 'Football Scoreboard',
+            onTap: () {
+              if (isGuest) {
+                showLoginAlert(context);
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FootballScoreboardScreen(),
+                  ),
+                );
+              }
+            },
+          ),
+          _createDrawerItem(
             icon: Icons.lock,
             text: 'Change Password',
             onTap: () {
@@ -114,12 +131,12 @@ class _NewDrawerState extends State<NewDrawer> {
               // if (isGuest) {
               //   showLoginAlert(context);
               // } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SportSelectionScreen(),
-                  ),
-                );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SportSelectionScreen(),
+                ),
+              );
               // }
             },
           ),
@@ -465,7 +482,8 @@ class _NewDrawerState extends State<NewDrawer> {
           print('Invalid image data format');
         }
       } else {
-        print('Failed to load image data: ${response.statusCode} : ${response.body}');
+        print(
+            'Failed to load image data: ${response.statusCode} : ${response.body}');
       }
       setState(() {
         isLoading = false;
