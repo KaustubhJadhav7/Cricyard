@@ -1,36 +1,35 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cricyard/views/screens/practice_match/PracticeMatchService.dart';
+import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/Scorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
+import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
+import 'package:cricyard/views/screens/practice_match/view/practice_history_view.dart';
+import 'package:cricyard/views/screens/practice_match/view/practice_teams_view.dart';
 import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../PracticeMatchScoreScreen.dart';
+import '../../../../../../screens/practice_match/PracticeMatchScoreScreen.dart';
 
-class CreatePracticeMatchView extends StatefulWidget {
-  const CreatePracticeMatchView({super.key});
+class CreateFootballPracticeMatch extends StatefulWidget {
+  const CreateFootballPracticeMatch({super.key});
 
   @override
-  State<CreatePracticeMatchView> createState() =>
-      _CreatePracticeMatchViewState();
+  State<CreateFootballPracticeMatch> createState() =>
+      _CreateFootballPracticeMatchState();
 }
 
-class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
+class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatch> {
   TextEditingController _hostTeamController = TextEditingController();
-  TextEditingController _visitorTeamController = TextEditingController();
-  TextEditingController _oversController = TextEditingController();
-  TextEditingController _strikerController = TextEditingController();
-  TextEditingController _nonStrikerController = TextEditingController();
-  TextEditingController _bowlerController = TextEditingController();
+  TextEditingController _awayTeamController = TextEditingController();
+  
+  
 
-  FocusNode _strikerFocusNode = FocusNode();
-  FocusNode _nonStrikerFocusNode = FocusNode();
-  FocusNode _bowlerFocusNode = FocusNode();
+  
   FocusNode _hostFocusNode = FocusNode();
-  FocusNode _visitorFocusNode = FocusNode();
-  FocusNode _oversFocusNode = FocusNode();
+  FocusNode _awayFocusNode = FocusNode();
 
   String selectedOption = 'Host';
   String selectedOptedOption = 'Bat';
@@ -44,16 +43,15 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
     super.initState();
     Provider.of<PracticeMatchviewModel>(context, listen: false).getAllTeam();
     _hostTeamController.addListener(_updateHostRadio);
-    _visitorTeamController.addListener(_updateVisitorRadio);
+    _awayTeamController.addListener(_updateAwayRadio);
   }
 
   @override
   void dispose() {
     _hostTeamController.dispose();
-    _visitorTeamController.dispose();
+    _awayTeamController.dispose();
     _hostFocusNode.dispose();
-    _visitorFocusNode.dispose();
-    _oversFocusNode.dispose();
+    _awayFocusNode.dispose();
     super.dispose();
   }
 
@@ -64,12 +62,14 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
     });
   }
 
-  void _updateVisitorRadio() {
+  void _updateAwayRadio() {
     setState(() {
-      selectedOption = _visitorTeamController
+      selectedOption = _awayTeamController
           .text; // Whenever visitor team text changes, select the visitor radio
     });
   }
+
+ 
 
   void showSnackBar(BuildContext context, String msg, Color color) {
     final mediaQuery = MediaQuery.of(context);
@@ -165,15 +165,12 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
 
   void _submitForm(PracticeMatchviewModel model) async {
     if (_hostTeamController.text.isEmpty ||
-        _visitorTeamController.text.isEmpty ||
-        _strikerController.text.isEmpty ||
-        _nonStrikerController.text.isEmpty ||
-        _bowlerController.text.isEmpty) {
+        _awayTeamController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'Error!! All fields are required.',
-            style: TextStyle(color: Colors.white), // Text color
+            style: TextStyle(color: Colors.white,fontSize: 14), // Text color
           ),
           backgroundColor: Colors.red, // Background color
           duration: Duration(seconds: 3), // Optional: Adjust the duration
@@ -182,50 +179,37 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
 
       return;
     }
-    if (int.tryParse(_oversController.text) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error!! Overs must be a valid integer.',
-            style: TextStyle(color: Colors.white), // Text color
-          ),
-          backgroundColor: Colors.red, // Background color
-          duration: Duration(seconds: 3), // Optional: Adjust the duration
-        ),
-      );
-    }
+    
     setState(() {
       _isLoading = true;
     });
 
     String hostTeam = _hostTeamController.text;
-    String visitorTeam = _visitorTeamController.text;
-    String overs = _oversController.text;
+    String awayTeam = _awayTeamController.text;
     String tossWinner = selectedOption;
     String optedTo = selectedOptedOption;
-    String striker = _strikerController.text;
-    String nonStriker = _nonStrikerController.text;
-    String bowler = _bowlerController.text;
 
     Map<String, String> formData = {
       'hostTeam': hostTeam,
-      'visitorTeam': visitorTeam,
-      'match_overs': overs,
+      'awayTeam': awayTeam,
       'tossWinner': tossWinner,
       'opted_to': optedTo,
-      'striker_player_name': striker,
-      'non_striker_player_name': nonStriker,
-      'baller_player_name': bowler,
     };
     print(formData);
 
     try {
-      Map<String, dynamic> match = await model.createPracticeMatch(formData);
-      print("Practice match created successfully: $match");
+      // Map<String, dynamic> match = await model.createPracticeMatch(formData);
+      // print(" Football Practice match created successfully: $match");
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => PracticeMatchScoreScreen(entity: match),
+      //   ),
+      // );
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PracticeMatchScoreScreen(entity: match),
+          builder: (context) => FootballScoreboardScreen(entity: formData),
         ),
       );
     } catch (e) {
@@ -250,15 +234,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
     // You can now send `formData` to the backend
   }
 
-  // void getAllTeams() async {
-  //   final data = await practiceService.getAllTeam();
-  //   print(data);
-  //   setState(() {
-  //     createdTeams =
-  //         data.map<String>((team) => team['team_name'] as String).toList();
-  //   });
-  //   print("created Team-$createdTeams");
-  // }
+  
 
 
 
@@ -274,7 +250,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
             children: [
               Text(
                 "Teams",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
+                style: GoogleFonts.getFont('Poppins', color: Colors.blue, fontSize: 16),
               ),
               const SizedBox(height: 8),
               Container(
@@ -300,9 +276,9 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
                           _buildAutocompleteTextField(_hostTeamController,
                               'Host Team', _hostFocusNode, value.createdTeams),
                           _buildAutocompleteTextField(
-                              _visitorTeamController,
+                              _awayTeamController,
                               'Visitor Team',
-                              _visitorFocusNode,
+                              _awayFocusNode,
                               value.createdTeams),
                         ],
                       );
@@ -311,7 +287,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
               const SizedBox(height: 16),
               Text(
                 "Toss Won by?",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
+                style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
               ),
               const SizedBox(height: 8),
               Container(
@@ -336,17 +312,17 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
                             : _hostTeamController.text,
                         _hostTeamController),
                     _buildRadio(
-                        _visitorTeamController.text.isEmpty
+                        _awayTeamController.text.isEmpty
                             ? 'Visitor'
-                            : _visitorTeamController.text,
-                        _visitorTeamController),
+                            : _awayTeamController.text,
+                        _awayTeamController),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                "Opted to ?",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
+                "Opted For ?",
+                style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
               ),
               const SizedBox(height: 8),
               Container(
@@ -365,117 +341,13 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildOptedRadio('Bat'),
-                    _buildOptedRadio('Ball'),
+                    _buildOptedRadio('Start - Kickoff'),
+                    _buildOptedRadio('Sides'),
                   ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Overs",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildTextField(
-                    _oversController,
-                    'Overs',
-                    _oversFocusNode,
-                    TextInputType.number,
-                    FilteringTextInputFormatter.digitsOnly,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Text(
-                "Striker",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: _buildAutocompleteTextField(_strikerController,
-                      'Striker', _strikerFocusNode, dummyPlayers),
                 ),
               ),
               const SizedBox(height: 30),
-              Text(
-                "Non-Striker",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: _buildAutocompleteTextField(_nonStrikerController,
-                      'Non-Striker', _nonStrikerFocusNode, dummyPlayers),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Text(
-                "Opening Bowler",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: _buildTextField(_bowlerController, 'Bowler',
-                      _bowlerFocusNode, TextInputType.text),
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
+            
               Consumer<PracticeMatchviewModel>(
                 builder: (context, value, child) {
                   return SizedBox(
@@ -484,7 +356,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
+                            WidgetStateProperty.all<Color>(Colors.blue),
                       ),
                       onPressed: () {
                         _submitForm(value);
@@ -494,7 +366,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
                               color: Colors.white,
                             )
                           : Text(
-                              "Start Match",
+                              "Kick Off",
                               style: GoogleFonts.getFont('Poppins',
                                   color: Colors.white,
                                   fontSize: 16,
@@ -508,6 +380,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
           ),
         ),
       ),
+      
     );
   }
 
@@ -617,7 +490,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
         ),
         Text(
           controller.text.isEmpty ? '$value Team' : controller.text.toString(),
-          style: GoogleFonts.getFont('Poppins', color: Colors.black),
+          style: GoogleFonts.getFont('Poppins', color: Colors.black,fontSize: 15),
         ),
       ],
     );
@@ -639,7 +512,7 @@ class _CreatePracticeMatchViewState extends State<CreatePracticeMatchView> {
         ),
         Text(
           value,
-          style: GoogleFonts.getFont('Poppins', color: Colors.black),
+          style: GoogleFonts.getFont('Poppins', color: Colors.black, fontSize: 15),
         ),
       ],
     );

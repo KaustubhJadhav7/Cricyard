@@ -1,25 +1,26 @@
+import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/FootballPracticeMatch/createFootballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
 import 'package:cricyard/views/screens/practice_match/view/archived_matches_view.dart';
+import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
+import 'package:cricyard/views/screens/practice_match/view/practice_history_view.dart';
 import 'package:cricyard/views/screens/practice_match/view/practice_teams_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../MenuScreen/new_dash/Newdashboard.dart';
-import 'create_practice_match_view.dart';
-import 'practice_history_view.dart';
 
-class PracticeMatchHomeScreen extends StatefulWidget {
-  const PracticeMatchHomeScreen({super.key});
+class FootballPracticeMatchHomeScreen extends StatefulWidget {
+  const FootballPracticeMatchHomeScreen({super.key});
 
   @override
-  State<PracticeMatchHomeScreen> createState() =>
-      _PracticeMatchHomeScreenState();
+  State<FootballPracticeMatchHomeScreen> createState() =>
+      _FootballPracticeMatchHomeScreenState();
 }
 
-class _PracticeMatchHomeScreenState extends State<PracticeMatchHomeScreen> {
+class _FootballPracticeMatchHomeScreenState extends State<FootballPracticeMatchHomeScreen> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    const CreatePracticeMatchView(),
+    const CreateFootballPracticeMatch(),
     const PracticeTeamsView(),
     PracticeHistoryView()
   ];
@@ -63,7 +64,7 @@ class _PracticeMatchHomeScreenState extends State<PracticeMatchHomeScreen> {
           ),
         ),
         title: Text(
-          "Practice Match",
+          "Football Practice Match",
           style:
               GoogleFonts.getFont('Poppins', fontSize: 20, color: Colors.black),
         ),
@@ -88,7 +89,7 @@ class _PracticeMatchHomeScreenState extends State<PracticeMatchHomeScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Score',
+            label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.accessibility_new_sharp),
