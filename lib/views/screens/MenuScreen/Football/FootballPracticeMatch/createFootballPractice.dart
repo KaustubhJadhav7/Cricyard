@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/Scorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/Scorecard/footballMatchScore.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
 import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
 import 'package:cricyard/views/screens/practice_match/view/practice_history_view.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../screens/practice_match/PracticeMatchScoreScreen.dart';
+import '../../../practice_match/PracticeMatchScoreScreen.dart';
 
 class CreateFootballPracticeMatch extends StatefulWidget {
   const CreateFootballPracticeMatch({super.key});

@@ -1,4 +1,4 @@
-import 'package:cricyard/views/screens/MenuScreen/Matches/scoring/Football/FootballPracticeMatch/createFootballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/FootballPracticeMatch/createFootballPractice.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
 import 'package:cricyard/views/screens/practice_match/view/archived_matches_view.dart';
 import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
