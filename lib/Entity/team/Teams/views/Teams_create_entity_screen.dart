@@ -298,7 +298,7 @@ class _TeamsCreateEntityScreenState extends State<TeamsCreateEntityScreen> {
   // Uint8List? _logoImageBytes; // Uint8List to store the image data
   // String? _logoImageFileName; // String to store the image file name
   // bool isActive = false;
-  // bool addMyself = false; 
+  // bool addMyself = false;
 
   @override
   void initState() {
@@ -433,7 +433,8 @@ class _TeamsCreateEntityScreenState extends State<TeamsCreateEntityScreen> {
                               right: 0,
                               child: IconButton(
                                 icon: const Icon(Icons.add_a_photo),
-                                onPressed: () => provider.showImageSourceDialog(context),
+                                onPressed: () =>
+                                    provider.showImageSourceDialog(context),
                               ),
                             ),
                           ],
@@ -523,10 +524,11 @@ class _TeamsCreateEntityScreenState extends State<TeamsCreateEntityScreen> {
                           if (provider.formKey.currentState!.validate()) {
                             provider.formKey.currentState!.save();
                             provider.formData.active = provider.isActive;
-      provider.formData.addMyself = provider.addMyself;
+                            provider.formData.addMyself = provider.addMyself;
 
                             await provider.createEntity(
-                              provider.formData, // Pass TeamsModel instance directly
+                              provider
+                                  .formData, // Pass TeamsModel instance directly
                               provider.logoImageFileName,
                               provider.logoImageBytes,
                               context,

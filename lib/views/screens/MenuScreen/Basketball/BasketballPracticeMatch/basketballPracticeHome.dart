@@ -1,4 +1,5 @@
-import 'package:cricyard/views/screens/MenuScreen/Football/FootballPracticeMatch/createFootballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/BasketballPracticeMatch/createBasketballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/createFootballPractice.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
 import 'package:cricyard/views/screens/practice_match/view/archived_matches_view.dart';
 import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
@@ -7,20 +8,20 @@ import 'package:cricyard/views/screens/practice_match/view/practice_teams_view.d
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-class FootballPracticeMatchHomeScreen extends StatefulWidget {
-  const FootballPracticeMatchHomeScreen({super.key});
+class BasketballPracticeMatchHomeScreen extends StatefulWidget {
+  const BasketballPracticeMatchHomeScreen({super.key});
 
   @override
-  State<FootballPracticeMatchHomeScreen> createState() =>
-      _FootballPracticeMatchHomeScreenState();
+  State<BasketballPracticeMatchHomeScreen> createState() =>
+      _BasketballPracticeMatchHomeScreenState();
 }
 
-class _FootballPracticeMatchHomeScreenState extends State<FootballPracticeMatchHomeScreen> {
+class _BasketballPracticeMatchHomeScreenState
+    extends State<BasketballPracticeMatchHomeScreen> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    const CreateFootballPracticeMatch(),
+    const CreateBasketballPracticeMatch(),
     const PracticeTeamsView(),
     PracticeHistoryView()
   ];
@@ -64,7 +65,7 @@ class _FootballPracticeMatchHomeScreenState extends State<FootballPracticeMatchH
           ),
         ),
         title: Text(
-          "Football Practice Match",
+          "Basketball Practice Match",
           style:
               GoogleFonts.getFont('Poppins', fontSize: 20, color: Colors.black),
         ),

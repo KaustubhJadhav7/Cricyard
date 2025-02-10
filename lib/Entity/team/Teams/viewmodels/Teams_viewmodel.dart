@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cricyard/Entity/team/Teams/model/Teams_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../repository/Teams_api_service.dart'; // Replace with the actual path of your API service
 
@@ -105,12 +107,12 @@ class TeamsProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-        final fetchedEntities = await apiService.getAllWithPagination(currentPage, pageSize);
-        entities.addAll(fetchedEntities);
-        filteredEntities = List.from(entities);
-        currentPage++;
-        notifyListeners();
-      
+      final fetchedEntities =
+          await apiService.getAllWithPagination(currentPage, pageSize);
+      entities.addAll(fetchedEntities);
+      filteredEntities = List.from(entities);
+      currentPage++;
+      notifyListeners();
     } catch (e) {
       debugPrint('Failed to fetch teams data: $e');
     } finally {
@@ -121,7 +123,7 @@ class TeamsProvider extends ChangeNotifier {
 
   Future<void> deleteEntity(TeamsModel entity) async {
     try {
-      await apiService.deleteEntity( entity.id);
+      await apiService.deleteEntity(entity.id);
       entities.remove(entity);
       notifyListeners();
     } catch (e) {
@@ -194,35 +196,41 @@ class TeamsProvider extends ChangeNotifier {
   //   });
   // }
 
-  Future createEntity(
-    TeamsModel formData, 
-    dynamic logoImageFileName, 
-    Uint8List? logoImageBytes, 
-    BuildContext context
-  ) async {
+  Future createEntity(TeamsModel formData, dynamic logoImageFileName,
+      Uint8List? logoImageBytes, BuildContext context) async {
     try {
       isLoading = true;
       notifyListeners();
-
       // // Set additional formData properties
       // formData['active'] = isActive;
       // formData['add_myself'] = addMyself;
+      //? Uncomment following lines to add preferred sport as field while passing data ------
+      // final prefs = await SharedPreferences.getInstance();
+      // String? preferredSport = prefs.getString('preferred_sport') ?? 'Unknown';
+      //   formData = formData.copyWith(preferredSport: preferredSport); // Assuming copyWith exists
+      // TeamsModel createdEntity = await apiService.createEntity(formData);
+      //? Uncomment above lines to add preferred sport as field while passing data ------
+      debugPrint("Before removing preferred_sport: ${formData.toJson()}");
+      Map<String, dynamic> jsonData = formData.toJson();
+      jsonData.remove('preferred_sport');
+      debugPrint("Final JSON Data (Before API Call): ${jsonEncode(jsonData)}");
 
-        TeamsModel createdEntity = await apiService.createEntity(formData);
+      TeamsModel createdEntity =
+          await apiService.createEntity(jsonData);
 
-        // If logo image is provided, upload it
-        if (logoImageBytes != null && logoImageFileName != null) {
-          await apiService.uploadLogoImage(
-            createdEntity.id.toString(),
-            'Teams',
-            logoImageFileName,
-            logoImageBytes,
-          );
-        }
 
-        // Success, navigate back
-        Navigator.pop(context);
-      
+      // If logo image is provided, upload it
+      if (logoImageBytes != null && logoImageFileName != null) {
+        await apiService.uploadLogoImage(
+          createdEntity.id.toString(),
+          'Teams',
+          logoImageFileName,
+          logoImageBytes,
+        );
+      }
+
+      // Success, navigate back
+      Navigator.pop(context);
     } catch (e) {
       debugPrint("Failed to create Teams: $e");
 
@@ -232,7 +240,8 @@ class TeamsProvider extends ChangeNotifier {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text('Failed to create Teams: $e', style: const TextStyle(color: Colors.black)),
+            content: Text('Failed to create Teams: $e',
+                style: const TextStyle(color: Colors.black)),
             actions: [
               TextButton(
                 child: const Text('OK'),
@@ -259,12 +268,11 @@ class TeamsProvider extends ChangeNotifier {
       // Set the active status in the entity
       entity.active = isActive;
 
-        // Update the entity
-        await apiService.updateEntity(entity.id, entity);
+      // Update the entity
+      await apiService.updateEntity(entity.id, entity);
 
-        // On successful update, navigate back
-        Navigator.pop(context);
-      
+      // On successful update, navigate back
+      Navigator.pop(context);
     } catch (e) {
       debugPrint("Failed to update Teams: $e");
 
@@ -273,7 +281,8 @@ class TeamsProvider extends ChangeNotifier {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text('Failed to update Teams: $e', style: const TextStyle(color: Colors.black)),
+            content: Text('Failed to update Teams: $e',
+                style: const TextStyle(color: Colors.black)),
             actions: [
               TextButton(
                 child: const Text('OK'),

@@ -41,6 +41,8 @@ class ImageConstant {
   static String imgCricketPlayer = '$imagePath/cricket-player.png';
 
   static String footballStadium = 'assets/images/footballStadium.png';
+  static String basketballStadium = 'assets/images/basketball.png';
+  static String basketball = 'assets/images/basketBallnew.png';
 
   static String editIcon = '$imagePath/edit.png';
 

@@ -58,8 +58,8 @@ class _NewdashboardState extends State<Newdashboard> {
       isLogin = prefs.getBool('isLoggedIn') ?? false;
     });
     print("LoginState-$isLogin");
-    String? savedSport = prefs.getString('preferred_sport');
     await Future.delayed(Duration(seconds: 2));
+    String? savedSport = prefs.getString('preferred_sport');
     print('Saved Sport fetched: $savedSport');
   }
 

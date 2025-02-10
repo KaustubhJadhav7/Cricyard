@@ -221,7 +221,7 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
                   // Store goal details in match events
                   matchEvents.add(
                       "$team: $goalScorer scored at ${event['time']}" +
-                          (assist.isNotEmpty ? " (Assist: $assist)" : "") + "🎉");
+                          (assist.isNotEmpty ? " (Assist: $assist)" : "") + " 🎉🎉");
 
                   // Push to undo stack
                   undoneEvents.add(event);
@@ -862,18 +862,7 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
                               backgroundColor: Color(0xFF219ebc),
                               width: screenWidth * 0.25,
                             ),
-                            // customButton(
-                            //   text: "$hostTeam Yellow Card",
-                            //   onPressed: () => addCard("$hostTeam", "Yellow"),
-                            //   backgroundColor: Color.fromARGB(255, 203, 206, 8),
-                            //   width: screenWidth * 0.25,
-                            // ),
-                            // customButton(
-                            //   text: "$hostTeam Red Card",
-                            //   onPressed: () => addCard("$hostTeam", "Red"),
-                            //   backgroundColor: Color.fromARGB(255, 255, 0, 0),
-                            //   width: screenWidth * 0.25,
-                            // ),
+                            
                           ],
                         ),
                       ),

@@ -85,7 +85,7 @@
 //     bool? active,
 //     bool? addMyself,
 //     bool? invited,
-    
+
 //   }) {
 //     return TeamsModel(
 //       id: id ?? this.id,
@@ -110,6 +110,7 @@ class TeamsModel {
   int id;
   String? teamName;
   String? description;
+  String? preferredSport;
   int? members;
   int? matches;
   bool active;
@@ -120,6 +121,7 @@ class TeamsModel {
     required this.id,
     required this.teamName,
     required this.description,
+    this.preferredSport,
     required this.members,
     required this.matches,
     required this.active,
@@ -130,19 +132,22 @@ class TeamsModel {
   /// Factory method to create an instance from JSON
   factory TeamsModel.fromJson(Map<String, dynamic> json) {
     return TeamsModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
       teamName: json['team_name'] ?? '', // Adjusted to match API field
       description: json['description'] ?? '',
-       members: json['members'] is int
-        ? json['members']
-        : json['members'] != null
-            ? int.tryParse(json['members'].toString()) ?? 0
-            : 0,
+      preferredSport: json['preferred_sport'] ?? '',
+      members: json['members'] is int
+          ? json['members']
+          : json['members'] != null
+              ? int.tryParse(json['members'].toString()) ?? 0
+              : 0,
       matches: json['matches'] is int
-        ? json['matches']
-        : json['matches'] != null
-            ? int.tryParse(json['matches'].toString()) ?? 0
-            : 0,
+          ? json['matches']
+          : json['matches'] != null
+              ? int.tryParse(json['matches'].toString()) ?? 0
+              : 0,
       active: json['active'] ?? false,
       addMyself: json['add_myself'] ?? false,
       invited: json['invited'] ?? false, // Ensure this field is populated
@@ -155,6 +160,7 @@ class TeamsModel {
       'id': id,
       'team_name': teamName,
       'description': description,
+      'preferred_sport': preferredSport,
       'members': members,
       'matches': matches,
       'active': active,
@@ -169,6 +175,7 @@ class TeamsModel {
       id: map['id'] ?? 0,
       teamName: map['team_name'] ?? '',
       description: map['description'] ?? '',
+      preferredSport: map['preferred_sport'] ?? '',
       members: map['members'] ?? 0,
       matches: map['matches'] ?? 0,
       active: map['active'] ?? false,
@@ -183,6 +190,7 @@ class TeamsModel {
       'id': id,
       'team_name': teamName,
       'description': description,
+      'preferred_sport': preferredSport,
       'members': members,
       'matches': matches,
       'active': active,
@@ -196,6 +204,7 @@ class TeamsModel {
     int? id,
     String? teamName,
     String? description,
+    String? preferredSport,
     int? members,
     int? matches,
     bool? active,
@@ -206,6 +215,7 @@ class TeamsModel {
       id: id ?? this.id,
       teamName: teamName ?? this.teamName,
       description: description ?? this.description,
+      preferredSport: preferredSport ?? this.preferredSport,
       members: members ?? this.members,
       matches: matches ?? this.matches,
       active: active ?? this.active,
@@ -216,6 +226,6 @@ class TeamsModel {
 
   @override
   String toString() {
-    return 'TeamsModel(id: $id, teamName: $teamName, description: $description, members: $members, matches: $matches, active: $active, addMyself: $addMyself, invited: $invited)';
+    return 'TeamsModel(id: $id, teamName: $teamName, description: $description,preferredSport: $preferredSport, members: $members, matches: $matches, active: $active, addMyself: $addMyself, invited: $invited)';
   }
 }

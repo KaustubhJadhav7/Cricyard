@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cricyard/views/screens/MenuScreen/Football/Scorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/BasketballScorecard/basketballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/Scorecard/footballMatchScore.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
 import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
 import 'package:cricyard/views/screens/practice_match/view/practice_history_view.dart';
@@ -11,18 +12,17 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../practice_match/PracticeMatchScoreScreen.dart';
 
-class CreateFootballPracticeMatch extends StatefulWidget {
-  const CreateFootballPracticeMatch({super.key});
+class CreateBasketballPracticeMatch extends StatefulWidget {
+  const CreateBasketballPracticeMatch({super.key});
 
   @override
-  State<CreateFootballPracticeMatch> createState() =>
-      _CreateFootballPracticeMatchState();
+  State<CreateBasketballPracticeMatch> createState() =>
+      _CreateBasketballPracticeMatchState();
 }
 
-class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatch> {
-  TextEditingController _hostTeamController = TextEditingController();
+class _CreateBasketballPracticeMatchState extends State<CreateBasketballPracticeMatch> {
+  TextEditingController _homeTeamController = TextEditingController();
   TextEditingController _awayTeamController = TextEditingController();
   
   
@@ -42,13 +42,13 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
   void initState() {
     super.initState();
     Provider.of<PracticeMatchviewModel>(context, listen: false).getAllTeam();
-    _hostTeamController.addListener(_updateHostRadio);
+    _homeTeamController.addListener(_updateHostRadio);
     _awayTeamController.addListener(_updateAwayRadio);
   }
 
   @override
   void dispose() {
-    _hostTeamController.dispose();
+    _homeTeamController.dispose();
     _awayTeamController.dispose();
     _hostFocusNode.dispose();
     _awayFocusNode.dispose();
@@ -57,7 +57,7 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
 
   void _updateHostRadio() {
     setState(() {
-      selectedOption = _hostTeamController
+      selectedOption = _homeTeamController
           .text; // Whenever host team text changes, select the host radio
     });
   }
@@ -164,7 +164,7 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
   }
 
   void _submitForm(PracticeMatchviewModel model) async {
-    if (_hostTeamController.text.isEmpty ||
+    if (_homeTeamController.text.isEmpty ||
         _awayTeamController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -184,32 +184,25 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
       _isLoading = true;
     });
 
-    String hostTeam = _hostTeamController.text;
+    String homeTeam = _homeTeamController.text;
     String awayTeam = _awayTeamController.text;
-    String tossWinner = selectedOption;
-    String optedTo = selectedOptedOption;
+    // String tossWinner = selectedOption;
+    // String optedTo = selectedOptedOption;
 
     Map<String, String> formData = {
-      'hostTeam': hostTeam,
+      'homeTeam': homeTeam,
       'awayTeam': awayTeam,
-      'tossWinner': tossWinner,
-      'opted_to': optedTo,
+      // 'tossWinner': tossWinner,
+      // 'opted_to': optedTo,
     };
     print(formData);
 
     try {
-      // Map<String, dynamic> match = await model.createPracticeMatch(formData);
-      // print(" Football Practice match created successfully: $match");
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => PracticeMatchScoreScreen(entity: match),
-      //   ),
-      // );
+      
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FootballScoreboardScreen(entity: formData),
+          builder: (context) => BasketballScoreboardScreen(entity: formData),
         ),
       );
     } catch (e) {
@@ -273,11 +266,11 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
                         children: [
                           // _buildTextField(
                           //     _hostTeamController, 'Host Team', _hostFocusNode),
-                          _buildAutocompleteTextField(_hostTeamController,
-                              'Host Team', _hostFocusNode, value.createdTeams),
+                          _buildAutocompleteTextField(_homeTeamController,
+                              'Home Team', _hostFocusNode, value.createdTeams),
                           _buildAutocompleteTextField(
                               _awayTeamController,
-                              'Visitor Team',
+                              'Away Team',
                               _awayFocusNode,
                               value.createdTeams),
                         ],
@@ -285,67 +278,67 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
                     })),
               ),
               const SizedBox(height: 16),
-              Text(
-                "Toss Won by?",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _buildRadio(
-                        _hostTeamController.text.isEmpty
-                            ? 'Host'
-                            : _hostTeamController.text,
-                        _hostTeamController),
-                    _buildRadio(
-                        _awayTeamController.text.isEmpty
-                            ? 'Visitor'
-                            : _awayTeamController.text,
-                        _awayTeamController),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Opted For ?",
-                style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 1),
-                      blurRadius: 0.5,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _buildOptedRadio('Start - Kickoff'),
-                    _buildOptedRadio('Sides'),
-                  ],
-                ),
-              ),
+              // Text(
+              //   "Toss Won by?",
+              //   style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
+              // ),
+              // const SizedBox(height: 8),
+              // Container(
+              //   height: 60,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(12),
+              //     boxShadow: const [
+              //       BoxShadow(
+              //         color: Colors.grey,
+              //         offset: Offset(0, 1),
+              //         blurRadius: 0.5,
+              //       )
+              //     ],
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       _buildRadio(
+              //           _hostTeamController.text.isEmpty
+              //               ? 'Host'
+              //               : _hostTeamController.text,
+              //           _hostTeamController),
+              //       _buildRadio(
+              //           _awayTeamController.text.isEmpty
+              //               ? 'Visitor'
+              //               : _awayTeamController.text,
+              //           _awayTeamController),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(height: 16),
+              // Text(
+              //   "Opted For ?",
+              //   style: GoogleFonts.getFont('Poppins', color: Colors.blue,fontSize: 16),
+              // ),
+              // const SizedBox(height: 8),
+              // Container(
+              //   height: 60,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(12),
+              //     boxShadow: const [
+              //       BoxShadow(
+              //         color: Colors.grey,
+              //         offset: Offset(0, 1),
+              //         blurRadius: 0.5,
+              //       )
+              //     ],
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       _buildOptedRadio('Start - Kickoff'),
+              //       _buildOptedRadio('Sides'),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(height: 30),
             
               Consumer<PracticeMatchviewModel>(
@@ -366,7 +359,7 @@ class _CreateFootballPracticeMatchState extends State<CreateFootballPracticeMatc
                               color: Colors.white,
                             )
                           : Text(
-                              "Kick Off",
+                              "Start Match",
                               style: GoogleFonts.getFont('Poppins',
                                   color: Colors.white,
                                   fontSize: 16,

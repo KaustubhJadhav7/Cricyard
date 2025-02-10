@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../repository/My_Tournament_api_service.dart';
 import '/providers/token_manager.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -11,9 +12,14 @@ class MyTournamentProvider with ChangeNotifier {
   bool isListening = false;
   Future<void> createTournamentEntity(Map<String, dynamic> formData) async {
     final token = await TokenManager.getToken();
+    // final prefs = await SharedPreferences.getInstance();
 
     try {
-      // Create the entity
+      // // Fetch the preferred sport
+      // String? preferredSport = prefs.getString('preferred_sport') ?? 'Unknown';
+
+      // // Add preferred sport to formData
+      // formData['preferred_sport'] = preferredSport;
       Map<String, dynamic> createdEntity =
           await apiService.createEntity(token!, formData);
 
@@ -27,7 +33,6 @@ class MyTournamentProvider with ChangeNotifier {
           selectedImage['imageBytes'],
         );
       }
-
       print('Tournament entity created successfully: $createdEntity');
     } catch (e) {
       print('Failed to create tournament entity: $e');
@@ -310,27 +315,8 @@ class MyTournamentProvider with ChangeNotifier {
   final MyTournamentApiService apiService = MyTournamentApiService();
   List<Map<String, dynamic>> tournament_nameItems = [];
   var selectedtournament_nameValue;
-  // Future<void> fetchtournament_nameItems(Map<String, dynamic> entity) async {
-  //   final token = await TokenManager.getToken();
-  //   try {
-  //     final selectTdata = await apiService.getTournamentName(token!);
-  //     print('tournament_name data is : $selectTdata');
-  //     // Handle null or empty dropdownData
-  //     if (selectTdata != null && selectTdata.isNotEmpty) {
-  //       tournament_nameItems = selectTdata;
-  //       // Set the initial value of selectedselect_tValue based on the entity's value
-  //       selectedtournament_nameValue = entity['tournament_name'] ?? null;
-  //       notifyListeners();
-  //     } else {
-  //       print('tournament_name data is null or empty');
-  //     }
-  //   } catch (e) {
-  //     print('Failed to load tournament_name items: $e');
-  //   }
-  // }
 
   Future<void> fetchtournament_nameItems() async {
-    final token = await TokenManager.getToken();
     try {
       final selectTdata = await apiService.getTournamentName();
       print('tournament_name data is : $selectTdata');
@@ -346,7 +332,6 @@ class MyTournamentProvider with ChangeNotifier {
   }
 
   Future<void> loadTournamentNameItems() async {
-    // Placeholder for token fetching and API call
     try {
       // final token = await TokenManager.getToken();
       // final selectTdata = await apiService.getTournamentName(token!);

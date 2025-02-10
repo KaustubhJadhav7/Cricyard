@@ -683,6 +683,7 @@ class _MyTournamentCreateEntityScreenState
                   ),
                 ),
                 const SizedBox(height: 16),
+                
 
                 // Display selected images
                 provider.selectedLogoImages.isEmpty

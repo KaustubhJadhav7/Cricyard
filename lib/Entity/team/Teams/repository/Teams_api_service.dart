@@ -407,11 +407,11 @@ class teamsApiService {
     }
   }
 
-  Future<TeamsModel> createEntity(TeamsModel entity) async {
+  Future<TeamsModel> createEntity(Map<String, dynamic> entity) async {
     try {
       final response = await networkApiService.getPostApiResponse(
         ApiConstants.createEntityTeams,
-        entity.toJson(),
+        entity,
       );
       debugPrint("API Response---->: ${response}");
 
