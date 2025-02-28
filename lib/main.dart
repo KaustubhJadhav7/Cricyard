@@ -15,7 +15,14 @@ import 'package:cricyard/Entity/runs/Score_board/viewmodel/Score_board_viewmodel
 import 'package:cricyard/Entity/select_team/Select_Team/viewmodel/Select_Team_viewmodel.dart';
 import 'package:cricyard/Entity/start_inning/Start_inning/viewmodels/Start_inning_viewmodel.dart';
 import 'package:cricyard/Entity/team/Teams/viewmodels/Teams_viewmodel.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/viewmodel/basketballMatchScoreProvider.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/views/BasketballScorecard/basketballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/viewmodel/footballMatchScoreProvider.dart';
+import 'package:cricyard/views/screens/MenuScreen/Hockey/viewmodel/hockeyMatchScoreProvider.dart';
+import 'package:cricyard/views/screens/MenuScreen/Tennis/viewmodel/tennisDoublesScoreProvider.dart';
+import 'package:cricyard/views/screens/MenuScreen/Tennis/viewmodel/tennisSinglesScoreProvider.dart';
 import 'package:cricyard/views/screens/MenuScreen/teams_screen/teamViewModel/team_view_model.dart';
+import 'package:cricyard/views/screens/SportSelection/repository/sportSelectionApiService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +38,7 @@ import 'package:cricyard/Entity/event_management/Event_Management/viewmodel/Even
 import 'package:cricyard/Entity/feedback_form/FeedBack_Form/viewmodel/FeedBack_Form_viewmodel.dart';
 import 'package:cricyard/Entity/friends/Find_Friends/viewmodel/Find_Friends_viewmodel.dart';
 import 'package:cricyard/Entity/leaderboard/LeaderBoard/viewmodel/LeaderBoard_viewmodel.dart';
-import 'package:cricyard/views/screens/practice_match/viewmodel/practice_matchview_model.dart';
+import 'package:cricyard/views/screens/practice_match/practiceViewmodel/PracticeMatchViewmodel.dart';
 
 // lib\views\screens\practice_match\viewmodel\practice_matchview_model.dart
 //const simplePeriodicTask = "simplePeriodicTask";
@@ -152,6 +159,52 @@ void main() async {
       ChangeNotifierProvider(
         create: (_) => TeamViewModel(),
       ),
+      ChangeNotifierProvider(
+        create: (_) => SportSelectionProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FootballMatchScoreProvider(
+          hostTeam: "hostTeam",
+          visitorTeam: "visitorTeam",
+          tossWinner: "tossWinner",
+          optedTo: "optedTo",
+          matchId: 1,
+          // 1 is dummy number above
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => HockeyMatchScoreProvider(
+          hostTeam: "hostTeam",
+          visitorTeam: "visitorTeam",
+          tossWinner: "tossWinner",
+          optedTo: "optedTo",
+          matchId: 1,
+          // 1 is dummy number above
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => BasketballMatchScoreProvider(
+          hostTeam: "Lakers",
+          visitorTeam: "Bulls",
+          tossWinner: "tossWinner",
+          optedTo: "Bat",
+          matchId: 101,
+        ), // Your screen widget
+      ),
+      ChangeNotifierProvider(
+        create: (_) => TennisScoreProvider(
+          player1: "player10",
+          player2: "player20",
+          matchId: 101,
+        ), // Your screen widget
+      ),
+      ChangeNotifierProvider(
+          create: (_) => TennisDoublesProvider(
+            team1: ["Player AA", "Player BB"],
+            team2: ["Player CC", "Player DD"],
+            matchId: 102,
+          ),
+        ),
     ],
     child: MyApp(),
   ));

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cricyard/core/utils/size_utils.dart';
 import 'package:cricyard/views/screens/Login%20Screen/view/decision.dart';
-import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
+import 'package:cricyard/views/screens/SportSelection/view/sportSelection.dart';
 import 'package:cricyard/views/screens/main_app_screen/tabbed_layout_component_f.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -31,20 +30,24 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkSportSelection() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? selectedSport = prefs.getString('preferred_sport');
+    print('My sport is: $selectedSport');
 
     if (selectedSport != null) {
       // Sport is selected, navigate directly to the dashboard or home screen
-      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Newdashboard()),
-      ));
+      Future.delayed(Duration(seconds: 5))
+          .then((value) => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Newdashboard()),
+              ));
     } else {
       // No sport selected, navigate to the sport selection screen
       // Navigator.pushReplacement(
       //   context,
       //   MaterialPageRoute(builder: (context) => SportSelectionScreen()),
       // );
-      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SportSelectionScreen())));
+      Future.delayed(Duration(seconds: 5)).then((value) =>
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => SportSelectionScreen())));
     }
   }
 
@@ -103,6 +106,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
-
 }

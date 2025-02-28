@@ -9,11 +9,13 @@ class LogoutService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userData');
     await prefs.remove('isLoggedIn');
+    // await prefs.clear();
     const storage = FlutterSecureStorage();
     await storage.delete(key: 'token');
     navigatorKey.currentState!.pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => LoginScreenF(true)),
       (route) => false, // Remove all routes from the stack
     );
+    // prefs.clear();
   }
 }

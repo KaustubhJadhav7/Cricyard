@@ -1,17 +1,22 @@
+import 'package:cricyard/data/network/no-token_network_api_service.dart';
+import 'package:cricyard/data/network/no_token_base_network_service.dart';
 import 'package:cricyard/views/screens/practice_match/practiceAppUrls/practice_appurls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../data/network/base_network_service.dart';
-import '../../../../data/network/network_api_service.dart';
+// import '../../../../data/network/base_network_service.dart';
+// import '../../../../data/network/network_api_service.dart';
 
 class PracticeRepo {
-  final BaseNetworkService _networkService = NetworkApiService();
+  final NoTokenBaseNetworkService _networkService = NoTokenNetworkApiService();
 
   Future<dynamic> createPracticeMatch(
     dynamic data,
   ) async {
     try {
+      print("data is : $data");
       final response = await _networkService.getPostApiResponse(
           PracticeAppurls.createPracticeMatch, data);
+      print('create practice match res -- $response');
       return response;
     } catch (e) {
       rethrow;
@@ -42,8 +47,15 @@ class PracticeRepo {
 // get all teams
   Future<dynamic> getAllTeams() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      String? preferredSport = prefs.getString('preferred_sport') ?? '';
+
+      final url =
+          '${PracticeAppurls.getAllTeams}/?preferredSport=$preferredSport';
       final response =
-          await _networkService.getGetApiResponse(PracticeAppurls.getAllTeams);
+          // await _networkService.getGetApiResponse(PracticeAppurls.getAllTeams);
+          await _networkService.getGetApiResponse(url);
+      // print("Response Data for getAllTeams -- : $response"); // Debugging line
       return response;
     } catch (e) {
       rethrow;
@@ -66,11 +78,18 @@ class PracticeRepo {
 
 // // get last record of score
   Future<dynamic> getlastrecord(int matchId) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? preferredSport = prefs.getString('preferred_sport') ?? '';
     try {
+      // final response = await _networkService
+      //     .getGetApiResponse('${PracticeAppurls.getlastrecord}/$matchId&preferredSport=$preferredSport');
       final response = await _networkService
           .getGetApiResponse('${PracticeAppurls.getlastrecord}/$matchId');
+
+      print("Fetched last record !!: $response");
       return response;
     } catch (e) {
+      print("Error in getlastrecord: $e");
       rethrow;
     }
   }

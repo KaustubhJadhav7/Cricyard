@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:typed_data' as typed_data; // Import 'dart:typed_data' with prefix
 
 import 'package:cricyard/Entity/highlights/Highlights/views/Highlights_entity_list_screen.dart';
-import 'package:cricyard/views/screens/MenuScreen/Basketball/BasketballPracticeMatch/basketballPracticeHome.dart';
-import 'package:cricyard/views/screens/MenuScreen/Basketball/BasketballScorecard/basketballMatchScore.dart';
-import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/createFootballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/views/BasketballPracticeMatch/basketballPracticeHome.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/views/BasketballScorecard/basketballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/createFootballPracticeMatch.dart';
 import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/footballPracticeHome.dart';
-import 'package:cricyard/views/screens/MenuScreen/Football/views/Scorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballScorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Hockey/HockeyScorecard/hockeyMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Tennis/views/TennisScorecard/tennisMatchScoreDoubles.dart';
+import 'package:cricyard/views/screens/MenuScreen/Tennis/views/TennisScorecard/tennisMatchScoreSingles.dart';
 import 'package:cricyard/views/screens/MenuScreen/change_language/change_language.dart';
-import 'package:cricyard/views/screens/SportSelection/sportSelection.dart';
+import 'package:cricyard/views/screens/SportSelection/view/sportSelection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +31,7 @@ import 'package:cricyard/views/screens/Login%20Screen/view/login_screen_f.dart';
 
 import '../../../providers/token_manager.dart';
 import '../LogoutService/Logoutservice.dart';
-import '../practice_match/view/practice_match_home_View.dart';
+import '../practice_match/practiceView/practice_match_home_View.dart';
 import '../profileManagement/change_password_f.dart';
 
 class NewDrawer extends StatefulWidget {
@@ -44,12 +47,22 @@ class _NewDrawerState extends State<NewDrawer> {
   var isGuest = true;
   typed_data.Uint8List? _imageBytes;
   bool isLoading = false;
+  String? preferredSport;
 
   @override
   void initState() {
     getLoginState();
     fetchProfileImageData();
     super.initState();
+    _loadPreferredSport();
+  }
+
+  Future<void> _loadPreferredSport() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      preferredSport =
+          prefs.getString('preferred_sport') ?? 'Cricket'; // Default to Cricket
+    });
   }
 
   void getLoginState() async {
@@ -60,6 +73,31 @@ class _NewDrawerState extends State<NewDrawer> {
     });
   }
 
+  IconData _getSportIcon(String sport) {
+    switch (sport) {
+      case 'Football':
+        return Icons.sports_soccer_outlined;
+      case 'Basketball':
+        return Icons.sports_basketball;
+      case 'Cricket':
+      default:
+        return Icons.sports_cricket;
+    }
+  }
+
+  Widget _getPracticeMatchScreen(String sport) {
+    switch (sport) {
+      case 'Football':
+        // return FootballPracticeMatchHomeScreen();
+        return PracticeMatchHomeScreen();
+      case 'Basketball':
+        return PracticeMatchHomeScreen();
+      case 'Cricket':
+      default:
+        return PracticeMatchHomeScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -68,18 +106,47 @@ class _NewDrawerState extends State<NewDrawer> {
         padding: EdgeInsets.zero,
         children: [
           _createHeader(),
-          _createDrawerItem(
-            icon: Icons.sports_cricket,
-            text: 'Practice Match',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PracticeMatchHomeScreen(),
-                ),
-              );
-            },
-          ),
+          if (preferredSport != null)
+            _createDrawerItem(
+              icon: _getSportIcon(preferredSport!),
+              text: '$preferredSport Practice Match',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        _getPracticeMatchScreen(preferredSport!),
+                  ),
+                );
+              },
+            ),
+          // _createDrawerItem(
+          //   icon: Icons.sports_cricket,
+          //   text: 'Tennis Singles',
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => HockeyScoreboardScreen(,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
+          // _createDrawerItem(
+          //   icon: Icons.sports_cricket,
+          //   text: 'Tennis Doubles',
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => TennisDoublesScoreboardScreen(
+          //                 team1: ["Player A", "Player B"],
+          //                 team2: ["Player C", "Player D"],
+          //               )),
+          //     );
+          //   },
+          // ),
           _createDrawerItem(
             icon: Icons.person,
             text: 'Profile Setting',
@@ -96,39 +163,29 @@ class _NewDrawerState extends State<NewDrawer> {
               }
             },
           ),
-          _createDrawerItem(
-            icon: Icons.sports_soccer_outlined,
-            text: 'Football Practice Match',
-            onTap: () {
-              if (isGuest) {
-                showLoginAlert(context);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FootballPracticeMatchHomeScreen(),
-                  ),
-                );
-              }
-            },
-          ),
-          
-          _createDrawerItem(
-            icon: Icons.sports_basketball,
-            text: 'Basketball Practice Match',
-            onTap: () {
-              if (isGuest) {
-                showLoginAlert(context);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BasketballPracticeMatchHomeScreen(),
-                  ),
-                );
-              }
-            },
-          ),
+          // _createDrawerItem(
+          //     icon: Icons.sports_soccer_outlined,
+          //     text: 'Football Practice Match',
+          //     onTap: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => FootballPracticeMatchHomeScreen(),
+          //         ),
+          //       );
+          //     }),
+          // _createDrawerItem(
+          //   icon: Icons.sports_basketball,
+          //   text: 'Basketball Practice Match',
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => BasketballPracticeMatchHomeScreen(),
+          //       ),
+          //     );
+          //   },
+          // ),
           _createDrawerItem(
             icon: Icons.lock,
             text: 'Change Password',

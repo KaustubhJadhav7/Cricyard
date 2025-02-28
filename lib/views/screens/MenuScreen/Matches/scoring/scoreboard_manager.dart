@@ -57,6 +57,7 @@ class ScoreBoardManager {
   // get last record of player career
   Future<void> getLastRecOfPlayer() async {
     print('match id is $matchId');
+    
     await scoreservice.getlastrecordPlayerCareer(matchId, inning, striker);
     await scoreservice.getlastrecordPlayerCareer(matchId, inning, nonStriker);
     await scoreservice.getlastrecordPlayerCareer(matchId, inning, baller);

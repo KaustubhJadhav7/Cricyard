@@ -13,10 +13,11 @@ class SecondInningPlayerEntryScreen2 extends StatefulWidget {
 
   const SecondInningPlayerEntryScreen2(
       {super.key,
-        required this.lastRecord,
-        required this.match,
-        required this.battingTeamId,
-        required this.bowlingTeamId, required this.status});
+      required this.lastRecord,
+      required this.match,
+      required this.battingTeamId,
+      required this.bowlingTeamId,
+      required this.status});
 
   @override
   State<SecondInningPlayerEntryScreen2> createState() =>
@@ -86,15 +87,24 @@ class _SecondInningPlayerEntryScreen2State
       _isLoading = true;
     });
 
-    await scoreservice.newPlayerEntryInningend(_strikerController.text, _nonStrikerController.text, _bowlerController.text, widget.lastRecord,)
+    await scoreservice
+        .newPlayerEntryInningend(
+          _strikerController.text,
+          _nonStrikerController.text,
+          _bowlerController.text,
+          widget.lastRecord,
+        )
         .then(
           (value) => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MatchScoreScreen(entity: widget.match, status: widget.status,),
-        ),
-      ),
-    );
+            context,
+            MaterialPageRoute(
+              builder: (context) => CricketMatchScoreScreen(
+                entity: widget.match,
+                status: widget.status,
+              ),
+            ),
+          ),
+        );
 
     setState(() {
       _isLoading = false;
@@ -111,8 +121,8 @@ class _SecondInningPlayerEntryScreen2State
     SnackBar snackBar = SnackBar(
       margin: EdgeInsets.only(bottom: topMargin, left: 16.0, right: 16.0),
       behavior: SnackBarBehavior.floating,
-      backgroundColor:
-      Colors.transparent, // Make background transparent to show custom design
+      backgroundColor: Colors
+          .transparent, // Make background transparent to show custom design
       elevation: 0, // Remove default elevation to apply custom shadow
       content: Stack(
         clipBehavior: Clip.none,
@@ -223,7 +233,7 @@ class _SecondInningPlayerEntryScreen2State
         title: Text(
           "Select players for 2nd Innings",
           style:
-          GoogleFonts.getFont('Poppins', fontSize: 20, color: Colors.black),
+              GoogleFonts.getFont('Poppins', fontSize: 20, color: Colors.black),
         ),
       ),
       body: _buildTextFieldsAndButton(),
@@ -265,15 +275,14 @@ class _SecondInningPlayerEntryScreen2State
                   onPressed: _isLoading ? null : _startMatch,
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
                       : const Text(
-                    'Start Match',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
+                          'Start Match',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
             ],
@@ -325,7 +334,7 @@ class _SecondInningPlayerEntryScreen2State
               borderSide: BorderSide(color: Colors.blue, width: 2),
             ),
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
           style: const TextStyle(color: Colors.black),
           onSubmitted: (_) => onFieldSubmitted(),

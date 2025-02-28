@@ -23,7 +23,7 @@ import '../MenuScreen/go_live_screen/go_live_screen.dart';
 import '../MenuScreen/merch/screens/home_screen.dart';
 import '../MenuScreen/profile_screen/views/profile_screen.dart';
 import '../MenuScreen/tournament/views/tournamnetScreen.dart';
-import '../practice_match/view/practice_match_home_View.dart';
+import '../practice_match/practiceView/practice_match_home_View.dart';
 import '../profileManagement/change_password_f.dart';
 
 // Define custom theme for button color

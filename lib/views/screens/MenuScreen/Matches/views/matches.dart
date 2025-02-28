@@ -31,7 +31,6 @@ class MatchesState extends State<Matches>
     allMAtches();
   }
 
-
   Future<void> allMAtches() async {
     setState(() {
       isLoading = true;
@@ -39,7 +38,8 @@ class MatchesState extends State<Matches>
     try {
       // remove tournament id and pass dynamically
 
-      final fetchedEntities = await apiService.allmatches(2); //previously value was 1
+      final fetchedEntities =
+          await apiService.allmatches(2); //previously value was 1
       print('data is $fetchedEntities');
       setState(() {
         myMatchsEntities = fetchedEntities;
@@ -124,7 +124,10 @@ class MatchesState extends State<Matches>
     );
   }
 
-  Widget _buildCustomElevatedButton({required String text, VoidCallback? onPressed,}) {
+  Widget _buildCustomElevatedButton({
+    required String text,
+    VoidCallback? onPressed,
+  }) {
     return CustomElevatedButton(
       height: 50.v,
       width: MediaQuery.of(context).size.width * 0.1,
@@ -180,8 +183,9 @@ class MatchesState extends State<Matches>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MatchScoreScreen(
-              entity: entity, status: status,
+            builder: (context) => CricketMatchScoreScreen(
+              entity: entity,
+              status: status,
             ),
           ),
         );
@@ -272,11 +276,11 @@ class MatchesState extends State<Matches>
       ),
     );
   }
-  bool getStatus(String status){
-    if(status == 'Started'){
-      return  true;
-    }
-    else{
+
+  bool getStatus(String status) {
+    if (status == 'Started') {
+      return true;
+    } else {
       return false;
     }
   }

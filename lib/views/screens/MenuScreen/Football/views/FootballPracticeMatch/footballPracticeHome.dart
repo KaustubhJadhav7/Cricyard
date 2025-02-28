@@ -1,9 +1,9 @@
-import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/createFootballPractice.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballPracticeMatch/createFootballPracticeMatch.dart';
 import 'package:cricyard/views/screens/MenuScreen/new_dash/Newdashboard.dart';
-import 'package:cricyard/views/screens/practice_match/view/archived_matches_view.dart';
-import 'package:cricyard/views/screens/practice_match/view/create_practice_match_view.dart';
-import 'package:cricyard/views/screens/practice_match/view/practice_history_view.dart';
-import 'package:cricyard/views/screens/practice_match/view/practice_teams_view.dart';
+import 'package:cricyard/views/screens/practice_match/practiceView/archived_matches_view.dart';
+import 'package:cricyard/views/screens/practice_match/practiceView/create_practice_match_view.dart';
+import 'package:cricyard/views/screens/practice_match/practiceView/practice_history_view.dart';
+import 'package:cricyard/views/screens/practice_match/practiceView/practice_teams_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

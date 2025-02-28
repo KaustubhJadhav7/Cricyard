@@ -247,13 +247,13 @@ class _MyTournamentScreenState extends State<MyTournamnetScreen>
                 itemCount: _tournaments.length,
                 itemBuilder: (context, index) {
                   return ScoreboardcardlistItemWidget(
-                    tournamentData: _tournaments[index],
+                    tournamentData: _tournaments.reversed.toList()[index],
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyMatchById(
-                                  tournament: _tournaments[index])));
+                                  tournament: _tournaments.reversed.toList()[index])));
                     },
                     tournamentName: '',
                   );

@@ -492,8 +492,10 @@ class _ScoreBoardCreateEntityScreenState
         setState(() {
           selectedOptedOption = value!;
         });
-        provider.updateTeamsBasedOnToss(selectedTossWinner: selectedTossWinner,
-    selectedOptedOption: selectedOptedOption,);
+        provider.updateTeamsBasedOnToss(
+          selectedTossWinner: selectedTossWinner,
+          selectedOptedOption: selectedOptedOption,
+        );
       },
     );
   }

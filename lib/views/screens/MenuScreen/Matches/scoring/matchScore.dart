@@ -8,7 +8,6 @@ import 'package:cricyard/views/screens/MenuScreen/Matches/views/second_inning_pl
 import 'package:cricyard/views/screens/MenuScreen/Matches/tour_graphs/tour_score_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../../../../Entity/matches/Match/views/Match_update_entity_screen.dart';
 import '../../../../../Entity/matches/Start_Match/repository/Start_Match_api_service.dart';
@@ -16,22 +15,23 @@ import '../../../../../Entity/runs/Score_board/repository/Score_board_api_servic
 import '../../../../../Entity/runs/Score_board/views/Score_board_create_entity_screen.dart';
 import '../../../../../Entity/team/Teams/repository/Teams_api_service.dart';
 import '../../../../../core/utils/image_constant.dart';
-import '../../../practice_match/view/matchwon_view.dart';
+import '../../../practice_match/practiceView/matchwon_view.dart';
 import '../../NewStreamFolder/TestStreaming/publishVideoAudioWidgetTest.dart';
 import '../../tournament/score_board/tournament_scoreboard_screen.dart';
 
-class MatchScoreScreen extends StatefulWidget {
+class CricketMatchScoreScreen extends StatefulWidget {
   final Map<String, dynamic> entity;
   final bool status;
 
-  const MatchScoreScreen(
+  const CricketMatchScoreScreen(
       {super.key, required this.entity, required this.status});
 
   @override
-  _MatchScoreScreenState createState() => _MatchScoreScreenState();
+  _CricketMatchScoreScreenState createState() =>
+      _CricketMatchScoreScreenState();
 }
 
-class _MatchScoreScreenState extends State<MatchScoreScreen> {
+class _CricketMatchScoreScreenState extends State<CricketMatchScoreScreen> {
   final MatchApiService matchService = MatchApiService();
   final StartMatchApiService startmatchService = StartMatchApiService();
   final score_boardApiService scoreservice = score_boardApiService();
@@ -115,7 +115,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
 
     if (isdata) {
       tournamentId = widget.entity['tournament_id'];
-      getLastRecord();
+      getLastRecordCricket();
     }
   }
 
@@ -126,7 +126,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
     });
   }
 
-  Future<void> getLastRecord() async {
+  Future<void> getLastRecordCricket() async {
     setState(() {
       isLoadingData = true;
     });
@@ -505,7 +505,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                                         )),
                               )
                                   .then((value) => Navigator.of(context))
-                                  .then((value) => getLastRecord());
+                                  .then((value) => getLastRecordCricket());
                             },
                             child: Container(
                               color: Colors.black.withOpacity(0.6),
@@ -684,7 +684,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                       TextButton(
                         onPressed: () async {
                           await scoreservice.undo(tournamentId, matchId).then(
-                                (value) => getLastRecord(),
+                                (value) => getLastRecordCricket(),
                               );
                         },
                         child: const Text('Undo'),
@@ -837,7 +837,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                   try {
                     scoreservice.undo(tournamentId, matchId).then(
                       (value) {
-                        getLastRecord().then(
+                        getLastRecordCricket().then(
                           (_) {
                             showSnackBar(context, 'Success ', Colors.green);
                           },
@@ -864,7 +864,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                           .newPlayerEntry(tournamentId, 'Baller',
                               selectedPlayerId!, '', lastRecord)
                           .then((value) {
-                        getLastRecord().then(
+                        getLastRecordCricket().then(
                           (value) {
                             showSnackBar(context, 'Success ', Colors.green);
                           },
@@ -960,7 +960,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                TournamentScoreBoardScreen(
+                                                CricketTournamentScoreBoardScreen(
                                               matchId: matchId,
                                               team1: battingTeam,
                                               team2: ballingTeam,
@@ -1433,7 +1433,6 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
     );
   }
 
-
   Widget _newButton(
       BuildContext ctx, String text, int data, String type, Color color) {
     Map<String, dynamic> scoreboard = lastRecord;
@@ -1505,7 +1504,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                       context)
                   .then(
                 (_) {
-                  getLastRecord().then(
+                  getLastRecordCricket().then(
                     (_) {
                       showSnackBar(context, 'Success ', Colors.green);
                     },
@@ -1534,7 +1533,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                   .then(
                 (value) {
                   print("showWide details. then called");
-                  getLastRecord();
+                  getLastRecordCricket();
                 },
               );
               //_showWideDialog(ctx, type);
@@ -1560,7 +1559,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
       await scoreservice
           .updateScore(tournamentId, scdata, type, scoreboard)
           .then((_) {
-        getLastRecord().then(
+        getLastRecordCricket().then(
           (value) {
             setState(() {
               showOverLay = false;
@@ -1586,7 +1585,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
     print("Rotate Strike, called");
     await scoreservice.strikerotation(tourId, lastRecord).then(
       (value) async {
-        getLastRecord().then(
+        getLastRecordCricket().then(
           (value) {
             showSnackBar(context, 'Success', Colors.green);
           },
@@ -1823,7 +1822,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                             tempSelectedOption, lastRecord)
                         .then(
                       (value) {
-                        getLastRecord().then(
+                        getLastRecordCricket().then(
                           (value) =>
                               showSnackBar(context, 'Success', Colors.green),
                         );
@@ -1983,7 +1982,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                           });
                           scoreservice.undo(tournamentId, matchId).then(
                             (_) {
-                              getLastRecord().then(
+                              getLastRecordCricket().then(
                                 (value) {
                                   setState(() {
                                     _isLoading = false;
@@ -2523,7 +2522,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                                 lastRec: lastRecord,
                                 runs: runs,
                               )
-                              .then((_) => getLastRecord());
+                              .then((_) => getLastRecordCricket());
                         } else {
                           await scoreservice
                               .wicket(
@@ -2540,7 +2539,7 @@ class _MatchScoreScreenState extends State<MatchScoreScreen> {
                                     selectedBatsmanId.value?.toString() ?? '',
                                 lastRec: lastRecord,
                               )
-                              .then((_) => getLastRecord());
+                              .then((_) => getLastRecordCricket());
                         }
                       } finally {
                         setState(() {

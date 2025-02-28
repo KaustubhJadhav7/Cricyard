@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../resources/api_constants.dart';
 
 class PracticeAppurls {
@@ -13,6 +15,10 @@ class PracticeAppurls {
   static const getAllWithPagination =
       '$baseUrl/token/Practice/score/Score_board/getall/page';
 
+  static Future<String?> getPreferredSport() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('preferred_sport');
+  }
 // Teams Uurls
   static const getAllTeams =
       '$baseUrl/token/Practice/Teams/PracticeTeam/myTeam';

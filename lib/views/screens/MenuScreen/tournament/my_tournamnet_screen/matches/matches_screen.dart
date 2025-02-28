@@ -1,6 +1,11 @@
 import 'package:cricyard/core/app_export.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/views/BasketballScorecard/basketballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Basketball/views/BasketballScorecard/basketballMatchScoreTour.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballScorecard/footballMatchScore.dart';
+import 'package:cricyard/views/screens/MenuScreen/Football/views/FootballScorecard/footballMatchScoreTour.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Entity/matches/Match/repository/Match_api_service.dart';
 import '../../../../../../theme/custom_button_style.dart';
@@ -286,6 +291,60 @@ class _MatchesScreenState extends State<MatchesScreen> {
     );
   }
 
+  Future<String> getPreferredSport() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('preferred_sport') ??
+        'Cricket'; // Default to cricket
+  }
+
+  void _navigateToScoreboard(BuildContext context, Map<String, dynamic> entity,
+      bool isMatchOver, bool status) async {
+    String preferredSport = await getPreferredSport();
+    print('This is current sport: $preferredSport');
+
+    final matchDateTime = DateTime.parse(entity['datetime_field']);
+    final now = DateTime.now();
+    final timeRemaining = matchDateTime.difference(now);
+    final hours = timeRemaining.inHours;
+    final minutes = timeRemaining.inMinutes % 60;
+    final formattedTimeRemaining = "${hours}h : ${minutes}m";
+    // bool isMatchOver = DateTime.parse(entity['datetime_field']).isBefore(DateTime.now());
+
+    Widget screen;
+    // if (isMatchOver) {
+    switch (preferredSport) {
+      case 'Football':
+        screen = FootballScoreboardScreenTournament(
+            matchId: entity['id'],
+            team1: entity['team_1_name'],
+            team2: entity['team_2_name']);
+        break;
+      case 'Basketball':
+        screen = BasketballScoreboardScreenTournament(
+            matchId: entity['id'],
+            team1: entity['team_1_name'],
+            team2: entity['team_2_name']);
+        break;
+      case 'Cricket':
+        formattedTimeRemaining.contains('-')
+            ? screen = CricketTournamentScoreBoardScreen(
+                matchId: entity['id'],
+                team1: entity['team_1_name'],
+                team2: entity['team_2_name'])
+            : screen = CricketMatchScoreScreen(
+                entity: entity,
+                status: status,
+              );
+        break;
+      default:
+        screen = CricketTournamentScoreBoardScreen(
+            matchId: entity['id'],
+            team1: entity['team_1_name'],
+            team2: entity['team_2_name']);
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  }
+
   Widget _buildListItem(Map<String, dynamic> entity) {
     final matchDateTime = DateTime.parse(entity['datetime_field']);
     final now = DateTime.now();
@@ -303,25 +362,31 @@ class _MatchesScreenState extends State<MatchesScreen> {
         //***** implement scoreboard navigator screen *******//
         // matchStatus == 'Startedd' ? Navigator.push(context, MaterialPageRoute(builder: (context) => streamVideoWidget(),)) :
 
-        formattedTimeRemaining.contains('-')
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TournamentScoreBoardScreen(
-                    matchId: entity['id'],
-                    team1: '',
-                    team2: '',
-                  ),
-                ))
-            : Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MatchScoreScreen(
-                    entity: entity,
-                    status: status,
-                  ),
-                ),
-              );
+        bool isMatchOver =
+            DateTime.parse(entity['datetime_field']).isBefore(DateTime.now());
+        _navigateToScoreboard(context, entity, isMatchOver, status);
+
+        // OLD Code before preferred sport -------
+        // formattedTimeRemaining.contains('-')
+        //     ? Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => CricketTournamentScoreBoardScreen(
+        //             matchId: entity['id'],
+        //             team1: '',
+        //             team2: '',
+        //           ),
+        //         ))
+        //     : Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => CricketMatchScoreScreen(
+        //             entity: entity,
+        //             status: status,
+        //           ),
+        //         ),
+        //       );
+        // OLD Code before preferred sport -------
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 6),

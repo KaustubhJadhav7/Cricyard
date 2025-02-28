@@ -93,7 +93,7 @@ class _LoginScreenFState extends State<LoginScreenF> {
       data: {"email": userInput, "password": password},
     );
 
-    print(dataReceived);
+    print('Data Recieved --  ${dataReceived}');
 
     if (dataReceived.containsKey('ClientException')) {
       ScaffoldMessenger.of(context).showSnackBar(ShowSnackAlert.CustomMessenger(
